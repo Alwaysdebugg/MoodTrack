@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Home, Heart, History } from 'lucide-react'
+import { Home, Heart, History, Users } from 'lucide-react'
 import { ReactNode } from 'react'
 
 interface LayoutProps {
@@ -12,6 +12,7 @@ const Layout = ({ children }: LayoutProps) => {
   const navItems = [
     { path: '/home', label: '首页', icon: Home },
     { path: '/track', label: '记录心情', icon: Heart },
+    { path: '/social', label: '情绪社交', icon: Users },
     { path: '/history', label: '历史记录', icon: History }
   ]
 

@@ -54,7 +54,7 @@ Thumbs.db
 *.temp
 
 # PDF documents (excluding project documentation)
-*.pdf
+# *.pdf
 
 # Cache
 .cache/

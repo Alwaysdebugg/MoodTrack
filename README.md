@@ -1,6 +1,9 @@
 # MoodTrack
 
-A React-based mood tracking and social sharing application that helps users record, analyze, and share emotional states.
+A React-based mood tracking and social sharing application that helps users record, analyze, and share emotional states. 
+
+**Try it out** 
+[MoodTrack](https://mood-track-eight.vercel.app/)
 
 ## 📱 Features
 

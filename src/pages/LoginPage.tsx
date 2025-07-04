@@ -52,14 +52,7 @@ const LoginPage = () => {
           </div>
 
           <div className="flex justify-center">
-            <GoogleLoginButton
-              onSuccess={() => {
-                console.log('Google login button rendered successfully')
-              }}
-              onError={(error) => {
-                console.error('Google login button error:', error)
-              }}
-            />
+            <GoogleLoginButton />
           </div>
 
           <div className="mt-6 text-center">

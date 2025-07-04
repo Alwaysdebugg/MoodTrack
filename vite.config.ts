@@ -5,6 +5,23 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    open: true
+    open: true,
+    proxy: {
+      '/api': {
+        target: 'https://moodtrack-romv.onrender.com',
+        changeOrigin: true,
+        secure: true,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        }
+      }
+    }
+  },
+  resolve: {
+    alias: {
+      '@': '/src'
+    }
   }
 })

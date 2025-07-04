@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { User, AuthContextType, GoogleCredentialResponse, GoogleJwtPayload } from '../types'
+import { User, AuthContextType } from '../types'
+import { authAPI } from '../utils/api'
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -15,101 +16,79 @@ interface AuthProviderProps {
   children: ReactNode
 }
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
-
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  const decodeJwtResponse = (token: string): GoogleJwtPayload => {
-    const base64Url = token.split('.')[1]
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
-    )
-    return JSON.parse(jsonPayload)
-  }
-
-  const handleCredentialResponse = (response: GoogleCredentialResponse) => {
+  // 处理来自OAuth回调的token
+  const handleCallbackToken = async (token: string) => {
     try {
-      const userObject = decodeJwtResponse(response.credential)
-      const userData: User = {
-        id: userObject.sub,
-        email: userObject.email,
-        name: userObject.name,
-        picture: userObject.picture
-      }
+      setIsLoading(true)
       
-      setUser(userData)
-      localStorage.setItem('user', JSON.stringify(userData))
+      // 发送token到后端进行验证
+      const { user, accessToken } = await authAPI.verifyCallbackToken(token)
+      
+      setUser(user)
+      localStorage.setItem('user', JSON.stringify(user))
+      localStorage.setItem('accessToken', accessToken)
       setIsLoading(false)
+      
+      return { success: true, user }
     } catch (error) {
-      console.error('Failed to decode JWT:', error)
+      console.error('Authentication failed:', error)
       setIsLoading(false)
+      return { success: false, error }
     }
   }
 
   const login = () => {
-    if (window.google) {
-      window.google.accounts.id.prompt()
+    // 重定向到Google OAuth登录
+    const googleLoginUrl = authAPI.getGoogleLoginUrl()
+    window.location.href = googleLoginUrl
+  }
+
+  const logout = async () => {
+    try {
+      // 通知后端登出
+      await authAPI.logout()
+    } catch (error) {
+      console.error('Logout API failed:', error)
+    } finally {
+      // 清除本地状态
+      setUser(null)
+      localStorage.removeItem('user')
+      localStorage.removeItem('accessToken')
     }
   }
 
-  const logout = () => {
-    setUser(null)
-    localStorage.removeItem('user')
-    if (window.google) {
-      window.google.accounts.id.disableAutoSelect()
-    }
-  }
-
-  useEffect(() => {
+  const refreshUserFromStorage = () => {
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
       try {
-        setUser(JSON.parse(storedUser))
+        const parsedUser = JSON.parse(storedUser)
+        setUser(parsedUser)
+        return parsedUser
       } catch (error) {
         console.error('Failed to parse stored user:', error)
         localStorage.removeItem('user')
+        localStorage.removeItem('accessToken')
       }
     }
-    setIsLoading(false)
-  }, [])
+    return null
+  }
 
   useEffect(() => {
-    const initializeGoogleSignIn = () => {
-      if (window.google && GOOGLE_CLIENT_ID) {
-        window.google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: handleCredentialResponse,
-          auto_select: false,
-          cancel_on_tap_outside: true
-        })
-      }
-    }
-
-    if (window.google) {
-      initializeGoogleSignIn()
-    } else {
-      const checkGoogle = setInterval(() => {
-        if (window.google) {
-          initializeGoogleSignIn()
-          clearInterval(checkGoogle)
-        }
-      }, 100)
-
-      return () => clearInterval(checkGoogle)
-    }
+    refreshUserFromStorage()
+    setIsLoading(false)
   }, [])
 
   const value: AuthContextType = {
     user,
     isLoading,
     login,
-    logout
+    logout,
+    handleCallbackToken,
+    refreshUserFromStorage
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

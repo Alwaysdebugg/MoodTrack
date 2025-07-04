@@ -7,6 +7,7 @@ import MoodMatchPage from './pages/MoodMatchPage'
 import CommunityPage from './pages/CommunityPage'
 import SocialInsightsPage from './pages/SocialInsightsPage'
 import LoginPage from './pages/LoginPage'
+import LoginCallback from './components/LoginCallback'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 import { AuthProvider } from './contexts/AuthContext'
@@ -17,6 +18,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/login-callback" element={<LoginCallback />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/home" element={
             <ProtectedRoute>

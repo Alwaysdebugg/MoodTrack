@@ -1,9 +1,13 @@
 import { useState } from 'react'
 import { Smile, Frown, Meh, Heart, Star } from 'lucide-react'
+import { apiRequest } from '../utils/api'
+import { Loader2 } from 'lucide-react'
+
 
 const TrackMoodPage = () => {
   const [selectedMood, setSelectedMood] = useState<number | null>(null)
   const [note, setNote] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const moods = [
     { id: 1, label: '很糟糕', icon: Frown, color: 'text-red-500', bg: 'bg-red-50' },
@@ -13,31 +17,48 @@ const TrackMoodPage = () => {
     { id: 5, label: '很棒', icon: Heart, color: 'text-pink-500', bg: 'bg-pink-50' }
   ]
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (selectedMood === null) return
 
     const moodEntry = {
       mood: selectedMood,
       note,
+      share_to_public: true,
+      is_anonymous: false,
       timestamp: new Date().toISOString()
     }
 
+    console.log('Mood Entry:', moodEntry)
+
+    try {
+      setLoading(true)
+      // 调用API保存心情记录
+      await apiRequest('/api/mood/submit', {
+        method: 'POST',
+        body: JSON.stringify(moodEntry),
+      })
+      console.log('心情记录已保存！')
+    } catch (error) {
+      console.error('保存心情记录失败:', error)
+    } finally {
+      setLoading(false)
+    }
+
+    // 本地保存记录
     const existingEntries = JSON.parse(localStorage.getItem('moodEntries') || '[]')
     existingEntries.push(moodEntry)
     localStorage.setItem('moodEntries', JSON.stringify(existingEntries))
 
     setSelectedMood(null)
     setNote('')
-    alert('心情记录已保存！')
+    console.log('心情记录已保存！')
   }
 
   return (
     <div className="max-w-2xl mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          记录你的心情
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">记录你的心情</h1>
         <p className="text-lg text-gray-600">
           选择最符合当前感受的心情，并添加一些备注
         </p>
@@ -54,8 +75,8 @@ const TrackMoodPage = () => {
                 onClick={() => setSelectedMood(id)}
                 className={`p-4 rounded-lg border-2 transition-all ${
                   selectedMood === id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-gray-200 hover:border-gray-300"
                 } ${bg}`}
               >
                 <Icon className={`w-8 h-8 mx-auto mb-2 ${color}`} />
@@ -79,20 +100,29 @@ const TrackMoodPage = () => {
         <div className="text-center">
           <button
             type="submit"
-            disabled={selectedMood === null}
+            disabled={selectedMood === null || loading}
             className={`btn text-lg px-8 py-3 ${
               selectedMood === null
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'btn-primary'
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "btn-primary"
             }`}
           >
-            <Star className="w-5 h-5" />
-            保存心情记录
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+              "分享中..."
+              </>
+            ) : (
+              <>
+                <Star className="w-5 h-5" />
+                分享心情
+              </>
+            )}
           </button>
         </div>
       </form>
     </div>
-  )
+  );
 }
 
 export default TrackMoodPage

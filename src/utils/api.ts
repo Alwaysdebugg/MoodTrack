@@ -12,7 +12,7 @@ export const apiRequest = async (endpoint: string, options: RequestInit = {}) =>
   }
 
   // 如果有access token，添加到请求头
-  const accessToken = localStorage.getItem('accessToken')
+  const accessToken = localStorage.getItem('token')
   if (accessToken) {
     config.headers = {
       ...config.headers,

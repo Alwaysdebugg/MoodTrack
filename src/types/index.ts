@@ -21,7 +21,7 @@ export interface User {
 export interface AuthContextType {
   user: User | null
   isLoading: boolean
-  login: () => void
+  login: (token: string) => void
   logout: () => void
   handleCallbackToken: (token: string) => Promise<{ success: boolean; user?: User; error?: any }>
   refreshUserFromStorage: () => User | null

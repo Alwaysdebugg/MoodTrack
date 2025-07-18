@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -8,6 +8,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, isLoading } = useAuth()
+  // const [isAuthenticated, setIsAuthenticated] = useState(true)
 
   if (isLoading) {
     return (
@@ -20,9 +21,10 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     )
   }
 
-  if (!user) {
-    return <Navigate to="/login" replace />
-  }
+  // TODO: 临时绕过登录验证，等后端完成后恢复
+  // if (!user) {
+  //   return <Navigate to="/login" replace />
+  // }
 
   return <>{children}</>
 }

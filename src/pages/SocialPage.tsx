@@ -58,7 +58,7 @@ const SocialPage = () => {
       )}
 
       {/* 实时统计 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         <div className="card text-center bg-orange-50 border-orange-200">
           <Users className="w-8 h-8 text-orange-600 mx-auto mb-2" />
           <p className="text-2xl font-bold text-orange-700">{onlineUsers}</p>
@@ -68,16 +68,6 @@ const SocialPage = () => {
           <Heart className="w-8 h-8 text-teal-600 mx-auto mb-2" />
           <p className="text-2xl font-bold text-teal-700">1.2k</p>
           <p className="text-sm text-teal-600">今日互动</p>
-        </div>
-        <div className="card text-center bg-purple-50 border-purple-200">
-          <MessageCircle className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-          <p className="text-2xl font-bold text-purple-700">86</p>
-          <p className="text-sm text-purple-600">活跃话题</p>
-        </div>
-        <div className="card text-center bg-green-50 border-green-200">
-          <TrendingUp className="w-8 h-8 text-green-600 mx-auto mb-2" />
-          <p className="text-2xl font-bold text-green-700">94%</p>
-          <p className="text-sm text-green-600">积极互动</p>
         </div>
       </div>
 
@@ -128,75 +118,9 @@ const SocialPage = () => {
               </div>
             </div>
           </Link>
-
-          <div className="card bg-gray-50">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center">
-                <Settings className="w-6 h-6 text-white" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-gray-800">隐私设置</h3>
-                <p className="text-gray-600 text-sm">管理你的社交偏好和隐私控制</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* 最近互动预览 */}
-      <div className="card">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">最近互动</h3>
-        <div className="space-y-3">
-          <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-            <span className="text-2xl">🤝</span>
-            <div className="flex-1">
-              <p className="text-sm text-gray-700">
-                <span className="font-medium">温暖的云朵</span> 对你的分享表示同感
-              </p>
-              <p className="text-xs text-gray-500">5分钟前</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-            <span className="text-2xl">🤗</span>
-            <div className="flex-1">
-              <p className="text-sm text-gray-700">
-                <span className="font-medium">勇敢的小树</span> 给了你一个拥抱
-              </p>
-              <p className="text-xs text-gray-500">12分钟前</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
-            <span className="text-2xl">💡</span>
-            <div className="flex-1">
-              <p className="text-sm text-gray-700">
-                你的分享帮助了 <span className="font-medium">平静的湖水</span>
-              </p>
-              <p className="text-xs text-gray-500">25分钟前</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="mt-4 text-center">
-          <Link to="/social/insights" className="text-blue-600 hover:text-blue-700 text-sm">
-            查看所有互动 →
-          </Link>
-        </div>
-      </div>
-
-      {/* 隐私提醒 */}
-      <div className="card bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200">
-        <div className="flex items-start space-x-3">
-          <Shield className="w-6 h-6 text-amber-600 mt-1" />
-          <div>
-            <h4 className="font-semibold text-amber-800 mb-1">隐私保护提醒</h4>
-            <p className="text-sm text-amber-700">
-              我们使用匿名身份保护你的隐私，所有数据都经过脱敏处理。你可以随时刷新身份或退出社交功能。
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

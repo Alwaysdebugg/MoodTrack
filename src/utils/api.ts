@@ -1,7 +1,9 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
 
 export const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
-  const url = `${API_BASE_URL}${endpoint}`
+  // In production (Vercel), use relative URLs to leverage rewrites
+  // In development, use the proxy setup in vite.config.ts
+  const url = API_BASE_URL ? `${API_BASE_URL}${endpoint}` : endpoint
   
   const config: RequestInit = {
     ...options,
@@ -38,8 +40,10 @@ export const authAPI = {
   
   // 获取Google OAuth登录URL
   getGoogleLoginUrl: () => {
+    // In production (Vercel), use relative URL to leverage rewrites
+    // In development, use current origin since Vite proxy handles /oauth2
     const baseUrl = API_BASE_URL || window.location.origin
-    return `${baseUrl}/oauth2/authorization/google`
+    return API_BASE_URL ? `${baseUrl}/oauth2/authorization/google` : '/oauth2/authorization/google'
   },
   
   // 验证从回调中获取的token

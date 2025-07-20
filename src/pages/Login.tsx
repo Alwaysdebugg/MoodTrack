@@ -91,9 +91,12 @@ const LoginPage = () => {
     }
 
     const data = await response.json()
+    // console.log('登录成功:', data)
     
-    // 保存token到localStorage
-    localStorage.setItem('token', data.token)
+    if(data.success) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user_info', JSON.stringify(data.user));
+    }
     
     // 触发AuthContext更新
     if (login) {

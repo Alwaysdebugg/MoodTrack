@@ -21,10 +21,9 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     )
   }
 
-  // TODO: 临时绕过登录验证，等后端完成后恢复
-  // if (!user) {
-  //   return <Navigate to="/login" replace />
-  // }
+  if (!user) {
+    return <Navigate to="/login" replace />
+  }
 
   return <>{children}</>
 }

@@ -41,29 +41,54 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }
 
-  const login = () => {
-    // 重定向到Google OAuth登录
-    const googleLoginUrl = authAPI.getGoogleLoginUrl()
-    window.location.href = googleLoginUrl
+  const login = (token: string) => {
+    // 解析token获取用户信息
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      console.error('Parsed payload:', payload)
+      const user: User = {
+        id: payload.sub || payload.id,
+        email: payload.email,
+        name: payload.name || payload.username,
+        picture: payload.picture
+      }
+      
+      setUser(user)
+      localStorage.setItem('user', JSON.stringify(user))
+      localStorage.setItem('token', token)
+    } catch (error) {
+      console.error('Failed to parse token:', error)
+    }
   }
 
   const logout = async () => {
     try {
       // 通知后端登出
-      await authAPI.logout()
+      const token = localStorage.getItem('token')
+      if (token) {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+      }
     } catch (error) {
       console.error('Logout API failed:', error)
     } finally {
       // 清除本地状态
       setUser(null)
       localStorage.removeItem('user')
-      localStorage.removeItem('accessToken')
+      localStorage.removeItem('token')
     }
   }
 
   const refreshUserFromStorage = () => {
     const storedUser = localStorage.getItem('user')
-    if (storedUser) {
+    const storedToken = localStorage.getItem('token')
+    
+    if (storedUser && storedToken) {
       try {
         const parsedUser = JSON.parse(storedUser)
         setUser(parsedUser)
@@ -71,7 +96,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       } catch (error) {
         console.error('Failed to parse stored user:', error)
         localStorage.removeItem('user')
-        localStorage.removeItem('accessToken')
+        localStorage.removeItem('token')
       }
     }
     return null

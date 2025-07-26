@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { User, AuthContextType } from '../types'
 import { authAPI } from '../utils/api'
+import { useNavigate } from 'react-router-dom'
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -19,6 +20,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const navigate = useNavigate()
 
   // 处理来自OAuth回调的token
   const handleCallbackToken = async (token: string) => {
@@ -81,6 +83,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUser(null)
       localStorage.removeItem('user')
       localStorage.removeItem('token')
+      navigate('/login') // 重定向到登录页
     }
   }
 

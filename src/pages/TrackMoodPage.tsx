@@ -34,7 +34,7 @@ const TrackMoodPage = () => {
     2: 'bad',
     3: 'neutral',
     4: 'good',
-    5: 'very_good'
+    5: 'excellent'
   }
 
   const triggerOptions = [

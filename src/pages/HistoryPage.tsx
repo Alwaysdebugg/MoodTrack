@@ -13,11 +13,11 @@ interface MoodEntry {
 }
 
 const moodTypeMapping: { [key: string]: number } = {
-  "very bad": 1,
+  "very_bad": 1,
   "bad": 2,
   "neutral": 3,
   "good": 4,
-  "very good": 5,
+  "excellent": 5,
 };
 
 const HistoryPage = () => {
@@ -45,8 +45,6 @@ const HistoryPage = () => {
   };
 
   useEffect(() => {
-    // const savedEntries = JSON.parse(localStorage.getItem('moodEntries') || '[]')
-    // setEntries(savedEntries.reverse())
     fetchMoodEntries();
   }, []);
 

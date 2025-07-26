@@ -1,152 +1,56 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Heart, TrendingUp, Calendar, Brain, Loader2, FileText } from 'lucide-react'
-import { MoodEntry } from '../types'
+import { apiRequest } from '../utils/api'
 
 const HomePage = () => {
   const [isGenerating, setIsGenerating] = useState(false)
   const [analysisResult, setAnalysisResult] = useState<string | null>(null)
 
-  // 获取近7天的心情记录
-  const getLast7DaysEntries = (): MoodEntry[] => {
-    const allEntries: MoodEntry[] = JSON.parse(localStorage.getItem('moodEntries') || '[]')
-    const sevenDaysAgo = new Date()
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+  // 获取近7天的日期范围
+  const getLast7DateRange = (): { startDate: string; endDate: string } => {
+    const endDate = new Date()
+    const startDate = new Date(endDate)
+    startDate.setDate(endDate.getDate() - 6)
     
-    return allEntries.filter(entry => {
-      const entryDate = new Date(entry.timestamp)
-      return entryDate >= sevenDaysAgo
-    })
+    return {
+      startDate: startDate.toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0]
+    };
   }
 
-  // 模拟AI分析API调用
+  // AI分析API调用
   const generateAnalysisReport = async () => {
     setIsGenerating(true)
     setAnalysisResult(null)
 
     try {
-      const last7DaysEntries = getLast7DaysEntries()
-      
-      if (last7DaysEntries.length === 0) {
-        setAnalysisResult('抱歉，暂无足够的心情数据进行分析。请先记录一些心情后再试。')
-        return
-      }
-
-      // 模拟API延迟
-      await new Promise(resolve => setTimeout(resolve, 2000))
-
-      // 这里将来会替换为真实的API调用
-      // const response = await fetch('/api/analyze-mood', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ entries: last7DaysEntries })
-      // })
-      // const result = await response.json()
-
-      // 生成更详细的AI分析结果
-      const avgMood = last7DaysEntries.reduce((sum, entry) => sum + entry.mood, 0) / last7DaysEntries.length
-      const moodVariance = last7DaysEntries.reduce((sum, entry) => sum + Math.pow(entry.mood - avgMood, 2), 0) / last7DaysEntries.length
-      const stability = moodVariance < 0.5 ? '非常稳定' : moodVariance < 1 ? '较为稳定' : moodVariance < 2 ? '有波动' : '波动较大'
-      
-      // 分析心情分布
-      const moodCounts = [0, 0, 0, 0, 0, 0] // 索引1-5对应心情1-5
-      last7DaysEntries.forEach(entry => moodCounts[entry.mood]++)
-      const dominantMood = moodCounts.indexOf(Math.max(...moodCounts.slice(1)))
-      
-      // 分析最近趋势（最后3天vs前4天）
-      const recentEntries = last7DaysEntries.slice(-3)
-      const earlierEntries = last7DaysEntries.slice(0, -3)
-      const recentAvg = recentEntries.length > 0 ? recentEntries.reduce((sum, entry) => sum + entry.mood, 0) / recentEntries.length : avgMood
-      const earlierAvg = earlierEntries.length > 0 ? earlierEntries.reduce((sum, entry) => sum + entry.mood, 0) / earlierEntries.length : avgMood
-      const trend = recentAvg > earlierAvg + 0.3 ? '上升' : recentAvg < earlierAvg - 0.3 ? '下降' : '平稳'
-      
-      // 生成个性化建议
-      const getPersonalizedAdvice = () => {
-        const advice = []
-        
-        if (avgMood < 2.5) {
-          advice.push('🌟 **优先关注心理健康**')
-          advice.push('- 建议寻求专业心理咨询师的帮助')
-          advice.push('- 尝试每天进行10-15分钟的深呼吸练习')
-          advice.push('- 与信任的朋友或家人分享您的感受')
-          advice.push('- 考虑加入情感支持小组或在线社区')
-        } else if (avgMood < 3.5) {
-          advice.push('💪 **提升情绪状态的建议**')
-          advice.push('- 制定每日小目标，增强成就感')
-          advice.push('- 尝试新的爱好或重拾旧时兴趣')
-          advice.push('- 每天至少30分钟户外活动或运动')
-          advice.push('- 练习感恩日记，记录每天的积极事件')
-        } else {
-          advice.push('✨ **保持积极状态的方法**')
-          advice.push('- 继续当前的良好习惯和生活方式')
-          advice.push('- 可以尝试帮助他人，分享正能量')
-          advice.push('- 设定新的个人成长目标')
-          advice.push('- 定期反思和庆祝自己的进步')
+      const dateRange = getLast7DateRange()
+      const reqBody = { 
+        analysisType: "weekly",
+        dateRange,
+        preferences: {
+          language: "zh-CN",
+          depth: "detailed",
+          focusAreas: ["stress", "sleep", "work"] 
         }
-        
-        if (moodVariance > 1.5) {
-          advice.push('')
-          advice.push('🎯 **情绪稳定性建议**')
-          advice.push('- 建立规律的日常作息时间')
-          advice.push('- 学习情绪管理技巧，如正念冥想')
-          advice.push('- 识别并避免情绪触发因素')
-          advice.push('- 使用情绪日记追踪情绪变化的原因')
-        }
-        
-        if (trend === '下降') {
-          advice.push('')
-          advice.push('⚠️ **近期趋势关注**')
-          advice.push('- 最近几天心情呈下降趋势，需要特别关注')
-          advice.push('- 回顾最近发生的事件，找出可能的影响因素')
-          advice.push('- 主动寻求支持，不要独自承受压力')
-          advice.push('- 如果趋势持续，建议咨询专业人士')
-        } else if (trend === '上升') {
-          advice.push('')
-          advice.push('🎉 **积极趋势强化**')
-          advice.push('- 最近心情有所改善，继续保持！')
-          advice.push('- 总结最近做对了什么，继续这些积极行为')
-          advice.push('- 可以适当增加挑战，进一步提升自己')
-        }
-        
-        return advice.join('\n')
       }
-
       
-    const mockAnalysis = `🤖 **AI心情分析报告**
+      const response = await apiRequest('/api/v1/ai-analysis/generate', {
+        method: 'POST',
+        body: JSON.stringify(reqBody)
+      })
+      
+      const result = await response.json()
 
-      📊 **数据概览**
-      - 分析周期：过去 ${last7DaysEntries.length} 天
-      - 平均心情指数：${avgMood.toFixed(1)}/5.0
-      - 情绪稳定性：${stability}
-      - 近期趋势：${trend}
-
-      🔍 **深度分析**
-      ${avgMood >= 4 
-        ? '您的心情状态非常积极！这表明您有良好的情绪管理能力和生活满意度。'
-        : avgMood >= 3.5 
-        ? '您的心情状态整体良好，大部分时间都能保持积极的心态。'
-        : avgMood >= 2.5 
-        ? '您的心情状态处于中等水平，有改善的空间，建议采取一些积极措施。'
-        : '您最近的心情状态需要关注，建议寻求支持和专业帮助。'
+      if (!response.ok) {
+        throw new Error(result.message || '分析请求失败')
       }
-
-      在过去一周中，您${dominantMood === 5 ? '经常感到很棒' : dominantMood === 4 ? '多数时候心情不错' : dominantMood === 3 ? '心情平平居多' : dominantMood <= 2 ? '经历了一些困难时期' : '心情变化较大'}。
-
-      ${getPersonalizedAdvice()}
-
-      📈 **下周建议**
-      - 继续记录心情，建立长期观察数据
-      - 尝试实施上述1-2项建议，观察效果
-      - 设定小目标，逐步改善生活质量
-      - 记住：每一天都是新的开始
-
-      💝 **温馨提醒**
-      情绪波动是正常的人类体验。这份分析旨在帮助您更好地了解自己的情绪模式，但不能替代专业的心理健康咨询。如果您持续感到困扰，请寻求专业帮助。
-
-      *本分析基于AI算法生成，结合了心理学研究和情绪管理最佳实践*`
-
-      setAnalysisResult(mockAnalysis)
+      
+      console.log('AI分析结果:', result.data)
+      setAnalysisResult(result.data)
     } catch (error) {
+      console.error('分析生成失败:', error)
       setAnalysisResult('分析过程中出现错误，请稍后重试。')
     } finally {
       setIsGenerating(false)

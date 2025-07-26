@@ -14,8 +14,8 @@ import { AuthProvider } from './contexts/AuthContext'
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/login-callback" element={<LoginCallback />} />
@@ -70,8 +70,8 @@ function App() {
             </ProtectedRoute>
           } />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   )
 }
 

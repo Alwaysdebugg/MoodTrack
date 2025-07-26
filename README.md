@@ -1,313 +1,274 @@
 # MoodTrack
 
-A React-based mood tracking and social sharing application that helps users record, analyze, and share emotional states.
+一个现代化的心情追踪和社交分享应用，帮助用户记录、分析和分享情绪状态，基于React和TypeScript构建的全栈应用。
 
-## 📱 Features
+## ✨ 功能特点
 
-### Core Features
+### 🎯 核心功能
+- **心情记录**：5级心情量表记录，支持详细备注和影响因素标记
+- **AI智能分析**：基于心情数据生成个性化情绪分析报告
+- **历史趋势**：可视化心情变化趋势和历史数据分析
+- **匿名社交**：基于心情相似度的匿名用户匹配系统
 
-- **Mood Tracking**: 5-level mood scale recording with detailed notes support
-- **History Records**: Visualized mood trend analysis and historical data
-- **Anonymous Social**: Anonymous user social system based on similarity matching
-- **Social Interactions**: 5 types of interactions (Empathy, Support, Helpful, Grateful, Encourage)
-- **Community Features**: Mood matching, community posts, social insights
+### 🔐 认证系统
+- **Google OAuth**：安全的Google账户登录
+- **路由保护**：基于认证状态的页面访问控制
+- **会话管理**：自动登录状态保持和会话持久化
 
-### Authentication System
+### 🌐 社交功能
+- **心情匹配**：智能匹配相似心情状态的用户
+- **社区互动**：5种互动类型（共鸣、支持、帮助、感谢、鼓励）
+- **社交洞察**：个人社交数据分析和见解
 
-- **Google OAuth**: Secure Google account login
-- **Route Protection**: Authentication-based page access control
-- **Session Management**: Automatic login state and session persistence
+## 🚀 快速开始
 
-## 🚀 Quick Start
-
-### Requirements
-
+### 环境要求
 - Node.js 18+
-- npm or yarn
+- npm 或 yarn
 
-### Install Dependencies
-
+### 安装依赖
 ```bash
 npm install
 ```
 
-### Environment Variables Setup
-
-Copy the environment variables template and configure Google Client ID:
-
+### 环境变量配置
+复制环境变量模板并配置：
 ```bash
 cp .env.example .env
 ```
 
-Set your Google Client ID in the `.env` file:
-
+在 `.env` 文件中设置必要的环境变量：
 ```env
+VITE_API_BASE_URL=https://moodtrack-romv.onrender.com/api
 VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 ```
 
-### Get Google Client ID
-
-1. Visit [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing project
-3. Enable Google+ API
-4. Create OAuth 2.0 Client ID
-5. Add authorized JavaScript origins
-
-### Development Commands
-
+### 开发命令
 ```bash
-# Start development server (port 3000)
+# 启动开发服务器 (端口 3000)
 npm run dev
 
-# Build for production
+# 构建生产版本
 npm run build
 
-# Preview production build
+# 预览生产构建
 npm run preview
 
-# Code linting
+# 代码检查
 npm run lint
 
-# Auto-fix code format
+# 自动修复代码格式
 npm run lint:fix
 ```
 
-## 🏗️ Architecture
+## 🏗️ 技术架构
 
-### Tech Stack
+### 技术栈
+- **前端框架**：React 18 + TypeScript
+- **构建工具**：Vite
+- **路由管理**：React Router DOM v6
+- **样式框架**：Tailwind CSS v4
+- **图标组件**：Lucide React
+- **认证服务**：Google Identity Services
+- **API通信**：自定义apiRequest工具
+- **后端服务**：Spring Boot (独立部署)
 
-- **Frontend Framework**: React 18 + TypeScript
-- **Build Tool**: Vite
-- **Routing**: React Router DOM
-- **Styling**: Tailwind CSS
-- **Icons**: Lucide React
-- **Authentication**: Google Identity Services
-- **Data Storage**: localStorage (no backend)
-
-### Project Structure
-
-```text
+### 项目结构
+```
 src/
-├── components/        # Reusable UI components
-│   ├── AnonymousAvatar.tsx
-│   ├── GoogleLoginButton.tsx
-│   ├── InteractionButtons.tsx
-│   ├── Layout.tsx
-│   ├── MoodBadge.tsx
-│   ├── NotificationToast.tsx
-│   ├── ProtectedRoute.tsx
-│   └── SimilarityBadge.tsx
-├── contexts/          # React Context
-│   └── AuthContext.tsx
-├── pages/             # Page components
-│   ├── HomePage.tsx
-│   ├── TrackMoodPage.tsx
-│   ├── HistoryPage.tsx
-│   ├── SocialPage.tsx
-│   ├── MoodMatchPage.tsx
-│   ├── CommunityPage.tsx
-│   ├── SocialInsightsPage.tsx
-│   └── LoginPage.tsx
-├── types/             # TypeScript type definitions
-│   ├── index.ts
-│   └── social.ts
-├── utils/             # Utility functions
-│   └── socialUtils.ts
-└── App.tsx            # Router configuration
+├── components/           # 可复用UI组件
+│   ├── AnonymousAvatar.tsx      # 匿名头像组件
+│   ├── GoogleLoginButton.tsx    # Google登录按钮
+│   ├── InteractionButtons.tsx   # 社交互动按钮
+│   ├── Layout.tsx              # 页面布局组件
+│   ├── LoginCallback.tsx       # 登录回调处理
+│   ├── MoodBadge.tsx           # 心情标识组件
+│   ├── NotificationToast.tsx   # 通知提示组件
+│   ├── ProtectedRoute.tsx      # 路由保护组件
+│   └── SimilarityBadge.tsx     # 相似度标识组件
+├── contexts/            # React Context
+│   └── AuthContext.tsx         # 认证状态管理
+├── hooks/               # 自定义Hooks
+├── pages/               # 页面组件
+│   ├── HomePage.tsx            # 首页
+│   ├── TrackMoodPage.tsx       # 心情记录页
+│   ├── HistoryPage.tsx         # 历史记录页
+│   ├── SocialPage.tsx          # 社交中心页
+│   ├── MoodMatchPage.tsx       # 心情匹配页
+│   ├── CommunityPage.tsx       # 社区页面
+│   ├── SocialInsightsPage.tsx  # 社交洞察页
+│   └── Login.tsx               # 登录页面
+├── types/               # TypeScript类型定义
+│   ├── index.ts                # 基础类型定义
+│   └── social.ts               # 社交功能类型
+├── utils/               # 工具函数
+│   ├── api.ts                  # API请求工具
+│   └── socialUtils.ts          # 社交功能工具
+└── App.tsx              # 应用路由配置
 ```
 
-### Core Pages
+### 核心页面
+1. **首页** (`/home`) - 心情概览和AI分析功能
+2. **心情记录** (`/track`) - 记录当前心情状态
+3. **历史记录** (`/history`) - 查看心情历史趋势
+4. **社交中心** (`/social`) - 匿名社交功能入口
+5. **心情匹配** (`/social/match`) - 寻找相似心情用户
+6. **社区互动** (`/social/community`) - 查看社区动态
+7. **社交洞察** (`/social/insights`) - 个人社交数据分析
 
-1. **Home** (`/home`) - Mood overview and quick actions
-2. **Track Mood** (`/track`) - Record current mood state
-3. **History** (`/history`) - View mood history trends
-4. **Social Center** (`/social`) - Anonymous social features entry
-5. **Mood Match** (`/social/match`) - Find users with similar moods
-6. **Community** (`/social/community`) - View community posts
-7. **Social Insights** (`/social/insights`) - Personal social data analysis
+## 🔧 API集成
 
-## 🔐 Security Features
+### 后端架构
+项目采用前后端分离架构，后端服务独立部署在 Render.com：
+- **后端地址**：https://moodtrack-romv.onrender.com
+- **API代理**：通过Vite开发代理和Vercel重写规则转发请求
+- **认证方式**：Bearer Token认证，自动从localStorage获取
 
-- **Environment Variables Protection**: Sensitive information managed through environment variables
-- **Anonymous Social**: Privacy-protected anonymous identity system
-- **OAuth Authentication**: Google secure authentication system
-- **Route Protection**: Unauthenticated users automatically redirected to login page
+### API请求工具
+使用封装的`apiRequest`工具处理所有API调用：
+- 自动添加认证头部
+- 统一错误处理
+- 环境适配（开发/生产）
+- TypeScript类型安全
 
-## 🚀 Deployment
+### 主要API接口
+```typescript
+// 心情记录
+POST /api/v1/moods
+GET /api/v1/moods
 
-### Vercel Deployment
+// AI分析
+POST /api/v1/ai-analysis/generate
 
-Project configured for Vercel deployment with SPA routing rewrite rules.
+// 用户认证
+POST /api/auth/login
+POST /api/auth/register
+POST /api/auth/logout
+POST /api/auth/verify-token
+```
 
-1. Connect GitHub repository to Vercel
-2. Set `VITE_GOOGLE_CLIENT_ID` in Vercel environment variables
-3. Automatic deployment complete
+## 🚀 部署配置
 
-### Environment Variables Setup
+### Vercel部署
+项目已配置完整的Vercel部署支持：
 
-Add in Vercel project settings:
+**vercel.json配置**：
+```json
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://moodtrack-romv.onrender.com/api/$1"
+    },
+    {
+      "source": "/oauth2/(.*)",
+      "destination": "https://moodtrack-romv.onrender.com/oauth2/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+```
 
-- `VITE_GOOGLE_CLIENT_ID`: Your Google OAuth Client ID
+### 环境变量
+在Vercel项目设置中添加：
+- `VITE_API_BASE_URL`：后端API基础URL
+- `VITE_GOOGLE_CLIENT_ID`：Google OAuth客户端ID
 
-## 📱 Design Features
+### 部署步骤
+1. 将GitHub仓库连接到Vercel
+2. 设置环境变量
+3. 自动部署完成
 
-### Anonymous Social System
+## 🔐 安全特性
 
-- Randomly generated user avatars and usernames
-- User matching based on mood similarity
-- Geographic location simulation (privacy protection)
-- Privacy-first content processing
+- **环境变量保护**：敏感信息通过环境变量管理
+- **匿名社交系统**：隐私保护的匿名身份系统
+- **OAuth认证**：Google安全认证系统
+- **路由保护**：未认证用户自动重定向到登录页
+- **HTTPS通信**：所有API通信使用HTTPS加密
 
-### Responsive Design
+## 🎨 设计特色
 
-- Mobile-first responsive layout
-- Dark mode support
-- Accessibility features
-- Smooth animation interactions
+### 响应式设计
+- **移动优先**：响应式布局设计
+- **深色模式**：支持系统主题切换
+- **无障碍访问**：完整的可访问性支持
+- **流畅动画**：平滑的交互动画效果
 
-## 🔄 State Management
+### 匿名社交系统
+- **随机身份**：自动生成匿名头像和用户名
+- **智能匹配**：基于心情相似度的用户匹配
+- **隐私保护**：地理位置模拟和内容隐私处理
+- **社交互动**：5种类型的情感互动支持
 
-- **Local State**: React Hooks (useState, useEffect)
-- **Global State**: React Context (authentication state)
-- **Data Persistence**: localStorage
-- **Mock Data**: setTimeout delay simulating backend API
+## 🔄 状态管理
 
-## 🛠️ Development Notes
+- **本地状态**：React Hooks (useState, useEffect)
+- **全局状态**：React Context (认证状态)
+- **数据持久化**：localStorage + 后端API
+- **实时更新**：基于API的数据同步
 
-### TypeScript Configuration
+## 🛠️ 开发配置
 
-- Path alias: `@/*` → `./src/*`
-- Strict mode enabled
-- ES2020 target with React JSX support
+### TypeScript配置
+- **路径别名**：`@/*` → `./src/*`
+- **严格模式**：启用TypeScript严格模式
+- **目标平台**：ES2020 + React JSX
 
-### Styling Approach
+### 样式系统
+- **Tailwind CSS**：自定义组件类
+- **响应式设计**：移动优先设计原则
+- **可访问性**：完整的ARIA支持
+- **社交样式**：社交功能特定的样式模式
 
-- Tailwind CSS custom component classes
-- Mobile-first responsive design
-- Accessibility support features
-- Social-specific styling patterns
+### 代码质量
+- **ESLint**：TypeScript规则集
+- **自动格式化**：ESLint自动修复
+- **类型安全**：严格的TypeScript类型检查
 
-### Backend Integration Ready
+## 📊 项目进度
 
-- API call patterns ready
-- Mock data easily replaceable with real API
-- Complete type definitions for easy backend integration
+### 当前状态：90% 完成
 
-## 📄 License
+#### ✅ 已完成功能
+- **核心功能** (95%)：心情追踪、历史记录、AI分析
+- **认证系统** (100%)：Google OAuth、路由保护
+- **API集成** (95%)：完整的后端API集成
+- **社交功能** (85%)：匿名系统、心情匹配
+- **UI/UX** (90%)：响应式设计、组件系统
+
+#### 🟡 进行中功能
+- **社区互动** (70%)：社区动态、实时互动
+- **数据分析** (60%)：高级统计、趋势图表
+- **性能优化** (40%)：代码分割、懒加载
+
+#### ❌ 待开发功能
+- **测试覆盖** (0%)：单元测试、集成测试
+- **推送通知** (0%)：心情提醒、社交通知
+- **数据导出** (0%)：心情数据导出功能
+
+## 🤝 贡献指南
+
+欢迎通过Issue和Pull Request来改进这个项目。
+
+### 开发流程
+1. Fork项目仓库
+2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 创建Pull Request
+
+## 📄 许可证
 
 [MIT License](LICENSE)
 
-## 🤝 Contributing
+## 📞 联系我们
 
-Issues and Pull Requests are welcome to improve this project.
+如有问题或建议，请通过GitHub Issues联系我们。
 
-## 📋 To-Do & Project Progress
+---
 
-### Current Status: ~75% Complete
-
-#### ✅ Completed Features
-
-**Core Functionality (90% Complete)**
-- [x] Mood tracking system with 5-point scale
-- [x] Note-taking functionality for mood entries
-- [x] Mood history viewing and management
-- [x] localStorage data persistence
-
-**Authentication System (95% Complete)**
-- [x] Google OAuth integration
-- [x] Auth context and state management
-- [x] Protected routes implementation
-- [x] Login/logout flow
-- [x] Session persistence
-
-**Social Features Foundation (85% Complete)**
-- [x] Anonymous identity system
-- [x] Social page main hub
-- [x] Mood matching algorithm and UI
-- [x] Social utilities and helper functions
-- [x] Complete TypeScript definitions
-
-**UI/UX & Infrastructure (85% Complete)**
-- [x] All 7 main pages designed and implemented
-- [x] Responsive mobile-first design
-- [x] Tailwind CSS styling system
-- [x] Component architecture (MoodBadge, AnonymousAvatar, etc.)
-- [x] React Router DOM setup
-- [x] Vercel deployment configuration
-
-**Code Quality (80% Complete)**
-- [x] TypeScript strict mode implementation
-- [x] ESLint configuration
-- [x] Path aliases setup
-- [x] Development commands structure
-
-#### 🟡 In Progress / Partially Complete
-
-**Social Community Features (30% Complete)**
-- [x] Community page structure
-- [ ] Real community post interactions
-- [ ] Advanced social insights data processing
-- [ ] Real-time social features
-
-**Advanced Analytics (20% Complete)**
-- [x] Basic mood history display
-- [ ] Mood trend analysis and charts
-- [ ] Statistical insights and patterns
-- [ ] Data visualization components
-
-#### ❌ Pending Features
-
-**Backend Integration (20% Complete)**
-- [x] API structure and mock patterns ready
-- [ ] Real backend API development
-- [ ] Database integration
-- [ ] Cloud data synchronization
-- [ ] Real-time data updates
-
-**Testing Infrastructure (0% Complete)**
-- [ ] Unit tests setup
-- [ ] Integration tests
-- [ ] End-to-end testing
-- [ ] Testing framework configuration (Jest/Vitest)
-
-**Production Features (30% Complete)**
-- [x] Basic error handling
-- [ ] Comprehensive error boundaries
-- [ ] Push notifications system
-- [ ] Data export/import functionality
-- [ ] Mood reminder scheduling
-- [ ] Advanced privacy controls
-
-**Performance Optimization (20% Complete)**
-- [x] Basic Vite build optimization
-- [ ] Code splitting and lazy loading
-- [ ] Service worker implementation
-- [ ] Image optimization
-- [ ] Caching strategies
-
-#### 🚀 Next Priority Tasks
-
-1. **Backend Development**: Implement real API to replace mock data
-2. **Testing Suite**: Add comprehensive test coverage
-3. **Advanced Analytics**: Implement mood trend charts and insights
-4. **Performance**: Add code splitting and optimization
-5. **Real-time Features**: WebSocket integration for social interactions
-
-#### 📊 Feature Completion Breakdown
-
-| Category | Progress | Status |
-|----------|----------|--------|
-| Core Mood Tracking | 90% | ✅ Production Ready |
-| Authentication | 95% | ✅ Production Ready |
-| Social Foundation | 85% | ✅ MVP Complete |
-| UI/UX Design | 85% | ✅ MVP Complete |
-| Backend Integration | 20% | ❌ Development Needed |
-| Testing | 0% | ❌ Critical Missing |
-| Advanced Features | 30% | 🟡 Ongoing |
-| Performance | 20% | 🟡 Optimization Needed |
-
-**Overall Project Completion: 75%**
-
-## 📞 Contact
-
-For questions or suggestions, please contact us through GitHub Issues.
+**MoodTrack** - 让每一天的心情都有意义 ❤️

@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { Smile, Frown, Meh, Heart, Calendar, Tag } from "lucide-react";
-import { apiRequest } from "@/utils/api";
-import { Loader2 } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { Smile, Frown, Meh, Heart, Calendar, Tag } from 'lucide-react';
+import { apiRequest } from '@/utils/api';
+import { Loader2 } from 'lucide-react';
 
 interface MoodEntry {
   emotion_type: string;
@@ -13,11 +13,11 @@ interface MoodEntry {
 }
 
 const moodTypeMapping: { [key: string]: number } = {
-  "very_bad": 1,
-  "bad": 2,
-  "neutral": 3,
-  "good": 4,
-  "excellent": 5,
+  very_bad: 1,
+  bad: 2,
+  neutral: 3,
+  good: 4,
+  excellent: 5,
 };
 
 const HistoryPage = () => {
@@ -29,16 +29,16 @@ const HistoryPage = () => {
     try {
       setLoading(true);
       // 调用API获取心情记录
-      const res = await apiRequest("/api/v1/moods", {
-        method: "GET",
+      const res = await apiRequest('/api/v1/moods', {
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
-      console.log("获取心情记录成功:", res);
+      console.log('获取心情记录成功:', res);
       setEntries(res.data.moods || []);
     } catch (error) {
-      console.error("获取心情记录失败:", error);
+      console.error('获取心情记录失败:', error);
     } finally {
       setLoading(false);
     }
@@ -65,18 +65,18 @@ const HistoryPage = () => {
   };
 
   const getMoodLabel = (mood: string) => {
-    const labels = ["", "很糟糕", "不好", "一般", "不错", "很棒"];
-    return labels[moodTypeMapping[mood]] || "未知";
+    const labels = ['', '很糟糕', '不好', '一般', '不错', '很棒'];
+    return labels[moodTypeMapping[mood]] || '未知';
   };
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleDateString("zh-CN", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    return date.toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
@@ -119,7 +119,9 @@ const HistoryPage = () => {
                     </span>
                   </div>
                   {entry.mood_description && (
-                    <p className="text-gray-700 mb-3">{entry.mood_description}</p>
+                    <p className="text-gray-700 mb-3">
+                      {entry.mood_description}
+                    </p>
                   )}
                   {/* Triggers 显示 */}
                   {entry.triggers && entry.triggers.length > 0 && (

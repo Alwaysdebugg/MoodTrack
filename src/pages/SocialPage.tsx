@@ -1,29 +1,35 @@
-import { Link } from 'react-router-dom'
-import { Heart, Users, TrendingUp, MessageCircle, Search, Settings, Shield } from 'lucide-react'
-import { useState, useEffect } from 'react'
-import { generateAnonymousUser } from '../utils/socialUtils'
-import { AnonymousUser } from '../types/social'
+import { Link } from 'react-router-dom';
+import {
+  Heart,
+  Users,
+  TrendingUp,
+  MessageCircle,
+  Search,
+  Settings,
+  Shield,
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { generateAnonymousUser } from '../utils/socialUtils';
+import { AnonymousUser } from '../types/social';
 
 const SocialPage = () => {
-  const [currentUser, setCurrentUser] = useState<AnonymousUser | null>(null)
-  const [onlineUsers, setOnlineUsers] = useState(0)
+  const [currentUser, setCurrentUser] = useState<AnonymousUser | null>(null);
+  const [onlineUsers, setOnlineUsers] = useState(0);
 
   useEffect(() => {
     // 生成当前用户的匿名身份
-    const user = generateAnonymousUser()
-    setCurrentUser(user)
-    
+    const user = generateAnonymousUser();
+    setCurrentUser(user);
+
     // 模拟在线用户数量
-    setOnlineUsers(Math.floor(Math.random() * 200) + 50)
-  }, [])
+    setOnlineUsers(Math.floor(Math.random() * 200) + 50);
+  }, []);
 
   return (
     <div className="space-y-6">
       {/* 头部欢迎区域 */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          情绪社交空间
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">情绪社交空间</h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
           在匿名安全的环境中，与有相似感受的人建立温暖连接
         </p>
@@ -34,13 +40,17 @@ const SocialPage = () => {
         <div className="card bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className={`w-12 h-12 rounded-full ${currentUser.avatar} flex items-center justify-center`}>
+              <div
+                className={`w-12 h-12 rounded-full ${currentUser.avatar} flex items-center justify-center`}
+              >
                 <span className="text-white font-bold text-lg">😊</span>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-800">当前身份</h3>
                 <p className="text-gray-600">{currentUser.nickname}</p>
-                <p className="text-sm text-gray-500">匿名ID: {currentUser.id.slice(-8)}</p>
+                <p className="text-sm text-gray-500">
+                  匿名ID: {currentUser.id.slice(-8)}
+                </p>
               </div>
             </div>
             <div className="text-right">
@@ -75,28 +85,38 @@ const SocialPage = () => {
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-800">发现与连接</h2>
-          
-          <Link to="/social/match" className="card block hover:shadow-md transition-shadow">
+
+          <Link
+            to="/social/match"
+            className="card block hover:shadow-md transition-shadow"
+          >
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full flex items-center justify-center">
                 <Search className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-800">寻找同感者</h3>
-                <p className="text-gray-600 text-sm">找到与你有相似情绪体验的人</p>
+                <p className="text-gray-600 text-sm">
+                  找到与你有相似情绪体验的人
+                </p>
                 <p className="text-sm text-blue-600 mt-1">发现 3 个匹配用户</p>
               </div>
             </div>
           </Link>
 
-          <Link to="/social/community" className="card block hover:shadow-md transition-shadow">
+          <Link
+            to="/social/community"
+            className="card block hover:shadow-md transition-shadow"
+          >
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-blue-400 rounded-full flex items-center justify-center">
                 <MessageCircle className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-800">情绪社区</h3>
-                <p className="text-gray-600 text-sm">参与话题讨论，分享情绪体验</p>
+                <p className="text-gray-600 text-sm">
+                  参与话题讨论，分享情绪体验
+                </p>
                 <p className="text-sm text-green-600 mt-1">7 个热门话题</p>
               </div>
             </div>
@@ -105,24 +125,28 @@ const SocialPage = () => {
 
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-800">个人洞察</h2>
-          
-          <Link to="/social/insights" className="card block hover:shadow-md transition-shadow">
+
+          <Link
+            to="/social/insights"
+            className="card block hover:shadow-md transition-shadow"
+          >
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-800">社交洞察</h3>
-                <p className="text-gray-600 text-sm">了解你的社交影响力和成长</p>
+                <p className="text-gray-600 text-sm">
+                  了解你的社交影响力和成长
+                </p>
                 <p className="text-sm text-purple-600 mt-1">本月互动 +25%</p>
               </div>
             </div>
           </Link>
         </div>
       </div>
-
     </div>
-  )
-}
+  );
+};
 
-export default SocialPage
+export default SocialPage;

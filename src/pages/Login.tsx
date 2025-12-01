@@ -1,114 +1,103 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { Heart, Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { authAPI } from '../utils/api';
+import { Heart, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 
 const LoginPage = () => {
-  const { user, isLoading, login } = useAuth()
-  const navigate = useNavigate()
-  const [isRegisterMode, setIsRegisterMode] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
+  const { user, isLoading, login } = useAuth();
+  const navigate = useNavigate();
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    username: '',
+    name: '',
     email: '',
-    password: ''
-  })
-  const [errors, setErrors] = useState<{[key: string]: string}>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
+    password: '',
+  });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateForm = () => {
-    const newErrors: {[key: string]: string} = {}
+    const newErrors: { [key: string]: string } = {};
 
-    if (isRegisterMode && !formData.username.trim()) {
-      newErrors.username = '用户名不能为空'
+    if (isRegisterMode && !formData.name.trim()) {
+      newErrors.name = '用户名不能为空';
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = '邮箱不能为空'
+      newErrors.email = '邮箱不能为空';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = '邮箱格式不正确'
+      newErrors.email = '邮箱格式不正确';
     }
 
     if (!formData.password) {
-      newErrors.password = '密码不能为空'
+      newErrors.password = '密码不能为空';
     } else if (isRegisterMode && formData.password.length < 6) {
-      newErrors.password = '密码至少需要6个字符'
+      newErrors.password = '密码至少需要6个字符';
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!validateForm()) {
-      return
+      return;
     }
 
-    setIsSubmitting(true)
-    setErrors({})
+    setIsSubmitting(true);
+    setErrors({});
 
     try {
-      if (isRegisterMode) {
-        const response = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        })
+      if (isRegisterMode) await authAPI.userRegister(formData);
+      const response = await authAPI.userLogin({
+        email: formData.email,
+        password: formData.password,
+      });
+      console.log('登录成功:', response);
 
-        if (!response.ok) {
-          const errorData = await response.json()
-          throw new Error(errorData.message || '注册失败')
-        }
-
-        // 注册成功后自动登录
-        await loginUser(formData.email, formData.password)
-      } else {
-        await loginUser(formData.email, formData.password)
+      // 触发AuthContext更新
+      if (login) {
+        login(response.data.token);
       }
     } catch (error) {
-      setErrors({ general: error instanceof Error ? error.message : '操作失败，请重试' })
+      setErrors({
+        general: error instanceof Error ? error.message : '操作失败，请重试',
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
-  const loginUser = async (email: string, password: string) => {
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    })
+  const handleGoogleLoginSuccess = useCallback(
+    (res: any) => {
+      debugger;
+      if (res) {
+        const { token } = res.data;
+        // 触发AuthContext更新
+        if (login) {
+          login(token);
+        }
+      }
+    },
+    [login]
+  );
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      throw new Error(errorData.message || '登录失败')
-    }
-
-    const data = await response.json()
-    // console.log('登录成功:', data)
-    
-    if(data.success) {
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user_info', JSON.stringify(data.user));
-    }
-    
-    // 触发AuthContext更新
-    if (login) {
-      login(data.token)
-    }
-  }
+  const handleGoogleLoginError = useCallback((error: any) => {
+    console.error('Google login error:', error);
+    setErrors({
+      general: error instanceof Error ? error.message : '操作失败，请重试',
+    });
+  }, []);
 
   useEffect(() => {
     if (user && !isLoading) {
-      navigate('/home')
+      navigate('/home');
     }
-  }, [user, isLoading, navigate])
+  }, [user, isLoading, navigate]);
 
   if (isLoading) {
     return (
@@ -118,7 +107,7 @@ const LoginPage = () => {
           <p className="text-gray-600">加载中...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -150,27 +139,37 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {isRegisterMode && (
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   用户名
                 </label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <input
-                    id="username"
+                    id="name"
                     type="text"
-                    value={formData.username}
-                    onChange={(e) => setFormData({...formData, username: e.target.value})}
+                    value={formData.name}
+                    onChange={e =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="请输入用户名"
                     required={isRegisterMode}
                   />
                 </div>
-                {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                )}
               </div>
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 邮箱
               </label>
               <div className="relative">
@@ -179,17 +178,24 @@ const LoginPage = () => {
                   id="email"
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  onChange={e =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="请输入邮箱地址"
                   required
                 />
               </div>
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 密码
               </label>
               <div className="relative">
@@ -198,7 +204,9 @@ const LoginPage = () => {
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  onChange={e =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="请输入密码"
                   required
@@ -208,10 +216,16 @@ const LoginPage = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
                 </button>
               </div>
-              {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+              )}
             </div>
 
             {errors.general && (
@@ -225,16 +239,36 @@ const LoginPage = () => {
               disabled={isSubmitting}
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {isSubmitting ? '提交中...' : (isRegisterMode ? '创建账户' : '登录')}
+              {isSubmitting
+                ? '提交中...'
+                : isRegisterMode
+                  ? '创建账户'
+                  : '登录'}
             </button>
           </form>
+
+          <div className="mt-6 flex items-center justify-between">
+            <div className="border-t border-gray-300 w-full mr-2"></div>
+            <span className="text-sm text-gray-500 whitespace-nowrap">
+              或者
+            </span>
+            <div className="border-t border-gray-300 w-full ml-2"></div>
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <GoogleLoginButton
+              onSuccess={handleGoogleLoginSuccess}
+              onError={handleGoogleLoginError}
+              className="w-full"
+            />
+          </div>
 
           <div className="mt-6 text-center">
             <button
               onClick={() => {
-                setIsRegisterMode(!isRegisterMode)
-                setFormData({ username: '', email: '', password: '' })
-                setErrors({})
+                setIsRegisterMode(!isRegisterMode);
+                setFormData({ name: '', email: '', password: '' });
+                setErrors({});
               }}
               className="text-blue-600 hover:text-blue-800 text-sm font-medium"
             >
@@ -244,7 +278,8 @@ const LoginPage = () => {
 
           <div className="mt-4 text-center">
             <p className="text-xs text-gray-500">
-              {isRegisterMode ? '注册' : '登录'}即表示你同意我们的服务条款和隐私政策
+              {isRegisterMode ? '注册' : '登录'}
+              即表示你同意我们的服务条款和隐私政策
             </p>
           </div>
         </div>
@@ -267,7 +302,7 @@ const LoginPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

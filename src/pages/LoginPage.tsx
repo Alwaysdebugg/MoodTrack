@@ -1,18 +1,18 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import GoogleLoginButton from '../components/GoogleLoginButton'
-import { Heart } from 'lucide-react'
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import GoogleLoginButton from '../components/GoogleLoginButton';
+import { Heart } from 'lucide-react';
 
 const LoginPage = () => {
-  const { user, isLoading } = useAuth()
-  const navigate = useNavigate()
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user && !isLoading) {
-      navigate('/home')
+      navigate('/home');
     }
-  }, [user, isLoading, navigate])
+  }, [user, isLoading, navigate]);
 
   if (isLoading) {
     return (
@@ -22,7 +22,7 @@ const LoginPage = () => {
           <p className="text-gray-600">加载中...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -80,7 +80,7 @@ const LoginPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

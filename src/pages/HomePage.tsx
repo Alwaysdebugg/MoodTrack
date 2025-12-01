@@ -1,61 +1,68 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Heart, TrendingUp, Calendar, Brain, Loader2, FileText } from 'lucide-react'
-import { apiRequest } from '../utils/api'
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  Heart,
+  TrendingUp,
+  Calendar,
+  Brain,
+  Loader2,
+  FileText,
+} from 'lucide-react';
+import { apiRequest } from '../utils/api';
 
 const HomePage = () => {
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [analysisResult, setAnalysisResult] = useState<string | null>(null)
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<string | null>(null);
 
   // 获取近7天的日期范围
   const getLast7DateRange = (): { startDate: string; endDate: string } => {
-    const endDate = new Date()
-    const startDate = new Date(endDate)
-    startDate.setDate(endDate.getDate() - 6)
-    
+    const endDate = new Date();
+    const startDate = new Date(endDate);
+    startDate.setDate(endDate.getDate() - 6);
+
     return {
       startDate: startDate.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0]
+      endDate: endDate.toISOString().split('T')[0],
     };
-  }
+  };
 
   // AI分析API调用
   const generateAnalysisReport = async () => {
-    setIsGenerating(true)
-    setAnalysisResult(null)
+    setIsGenerating(true);
+    setAnalysisResult(null);
 
     try {
-      const dateRange = getLast7DateRange()
-      const reqBody = { 
-        analysisType: "weekly",
+      const dateRange = getLast7DateRange();
+      const reqBody = {
+        analysisType: 'weekly',
         dateRange,
         preferences: {
-          language: "zh-CN",
-          depth: "detailed",
-          focusAreas: ["stress", "sleep", "work"] 
-        }
-      }
-      
+          language: 'zh-CN',
+          depth: 'detailed',
+          focusAreas: ['stress', 'sleep', 'work'],
+        },
+      };
+
       const response = await apiRequest('/api/v1/ai-analysis/generate', {
         method: 'POST',
-        body: JSON.stringify(reqBody)
-      })
-      
-      const result = await response.json()
+        body: JSON.stringify(reqBody),
+      });
+
+      const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || '分析请求失败')
+        throw new Error(result.message || '分析请求失败');
       }
-      
-      console.log('AI分析结果:', result.data)
-      setAnalysisResult(result.data)
+
+      console.log('AI分析结果:', result.data);
+      setAnalysisResult(result.data);
     } catch (error) {
-      console.error('分析生成失败:', error)
-      setAnalysisResult('分析过程中出现错误，请稍后重试。')
+      console.error('分析生成失败:', error);
+      setAnalysisResult('分析过程中出现错误，请稍后重试。');
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -72,9 +79,7 @@ const HomePage = () => {
         <div className="card text-center">
           <Heart className="w-12 h-12 text-red-500 mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">记录心情</h3>
-          <p className="text-gray-600 mb-4">
-            快速记录当下的心情状态
-          </p>
+          <p className="text-gray-600 mb-4">快速记录当下的心情状态</p>
           <Link to="/track" className="btn btn-primary">
             开始记录
           </Link>
@@ -83,9 +88,7 @@ const HomePage = () => {
         <div className="card text-center">
           <TrendingUp className="w-12 h-12 text-green-500 mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">趋势分析</h3>
-          <p className="text-gray-600 mb-4">
-            查看心情变化趋势和统计
-          </p>
+          <p className="text-gray-600 mb-4">查看心情变化趋势和统计</p>
           <Link to="/history" className="btn btn-secondary">
             查看分析
           </Link>
@@ -94,9 +97,7 @@ const HomePage = () => {
         <div className="card text-center">
           <Calendar className="w-12 h-12 text-blue-500 mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">历史记录</h3>
-          <p className="text-gray-600 mb-4">
-            浏览过往的心情记录
-          </p>
+          <p className="text-gray-600 mb-4">浏览过往的心情记录</p>
           <Link to="/history" className="btn btn-secondary">
             查看历史
           </Link>
@@ -115,7 +116,7 @@ const HomePage = () => {
           <p className="text-gray-600 mb-6">
             基于您的心情记录，生成个性化的情绪分析报告
           </p>
-          
+
           {!analysisResult ? (
             <button
               onClick={generateAnalysisReport}
@@ -167,7 +168,7 @@ const HomePage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

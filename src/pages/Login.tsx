@@ -74,7 +74,6 @@ const LoginPage = () => {
 
   const handleGoogleLoginSuccess = useCallback(
     (res: any) => {
-      debugger;
       if (res) {
         const { token } = res.data;
         // 触发AuthContext更新

@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Smile, Frown, Meh, Heart, Calendar, Tag } from 'lucide-react';
-import { apiRequest } from '@/utils/api';
+import { moodAPI } from '@/utils/api';
 import { Loader2 } from 'lucide-react';
 
 interface MoodEntry {
-  emotion_type: string;
-  mood_description: string;
+  mood_type: string;
+  note: string;
   triggers: string[];
-  share_to_public: boolean;
+  is_public: boolean;
   is_anonymous: boolean;
-  record_time: string;
+  created_at: string;
 }
 
 const moodTypeMapping: { [key: string]: number } = {
@@ -29,14 +29,9 @@ const HistoryPage = () => {
     try {
       setLoading(true);
       // 调用API获取心情记录
-      const res = await apiRequest('/api/v1/moods', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const res = await moodAPI.getMoods();
       console.log('获取心情记录成功:', res);
-      setEntries(res.data.moods || []);
+      setEntries(res || []);
     } catch (error) {
       console.error('获取心情记录失败:', error);
     } finally {
@@ -107,21 +102,19 @@ const HistoryPage = () => {
             <div key={index} className="card">
               <div className="flex items-start space-x-4">
                 <div className="flex-shrink-0">
-                  {getMoodIcon(entry.emotion_type)}
+                  {getMoodIcon(entry.mood_type)}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-semibold">
-                      {getMoodLabel(entry.emotion_type)}
+                      {getMoodLabel(entry.mood_type)}
                     </h3>
                     <span className="text-sm text-gray-500">
-                      {formatDate(entry.record_time)}
+                      {formatDate(entry.created_at)}
                     </span>
                   </div>
-                  {entry.mood_description && (
-                    <p className="text-gray-700 mb-3">
-                      {entry.mood_description}
-                    </p>
+                  {entry.note && (
+                    <p className="text-gray-700 mb-3">{entry.note}</p>
                   )}
                   {/* Triggers 显示 */}
                   {entry.triggers && entry.triggers.length > 0 && (

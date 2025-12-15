@@ -45,7 +45,7 @@ const HomePage = () => {
 
       const response = await apiRequest('/api/v1/ai-analysis/generate', {
         method: 'POST',
-        body: JSON.stringify(reqBody),
+        data: reqBody,
       });
 
       const result = await response.json();

@@ -70,8 +70,8 @@ npm run lint:fix
 - **样式框架**：Tailwind CSS v4
 - **图标组件**：Lucide React
 - **认证服务**：Google Identity Services
-- **API通信**：自定义apiRequest工具
-- **后端服务**：Spring Boot (独立部署)
+- **HTTP客户端**：Axios（封装apiRequest工具）
+- **后端服务**：Express.js + Supabase (独立部署在 Render.com)
 
 ### 项目结构
 ```
@@ -102,7 +102,7 @@ src/
 │   ├── index.ts                # 基础类型定义
 │   └── social.ts               # 社交功能类型
 ├── utils/               # 工具函数
-│   ├── api.ts                  # API请求工具
+│   ├── api.ts                  # API请求工具（authAPI, moodAPI, communityAPI）
 │   └── socialUtils.ts          # 社交功能工具
 └── App.tsx              # 应用路由配置
 ```
@@ -125,26 +125,84 @@ src/
 - **认证方式**：Bearer Token认证，自动从localStorage获取
 
 ### API请求工具
-使用封装的`apiRequest`工具处理所有API调用：
-- 自动添加认证头部
+使用封装的`apiRequest`工具（基于Axios）处理所有API调用：
+- 自动添加认证头部（Bearer Token）
+- 请求/响应拦截器统一处理
 - 统一错误处理
 - 环境适配（开发/生产）
 - TypeScript类型安全
+- 10秒请求超时
 
 ### 主要API接口
+
+#### 认证 API (authAPI)
 ```typescript
-// 心情记录
-POST /api/v1/moods
-GET /api/v1/moods
+// Google OAuth 登录验证
+POST /api/auth/verify-google-credential
+Body: { credential: string }
 
-// AI分析
-POST /api/v1/ai-analysis/generate
-
-// 用户认证
-POST /api/auth/login
+// 用户注册
 POST /api/auth/register
-POST /api/auth/logout
+Body: { name: string, email: string, password: string }
+
+// 用户登录
+POST /api/auth/login
+Body: { email: string, password: string }
+
+// 验证回调 Token
 POST /api/auth/verify-token
+Body: { token: string }
+
+// 刷新 Token
+POST /api/auth/refresh
+Body: { refreshToken: string }
+
+// 登出
+POST /api/auth/logout
+```
+
+#### 心情记录 API (moodAPI)
+```typescript
+// 创建心情记录
+POST /api/moods
+Body: {
+  mood_type: 'very_bad' | 'bad' | 'neutral' | 'good' | 'excellent',
+  note?: string,
+  triggers?: string[],
+  is_public?: boolean,
+  is_anonymous?: boolean
+}
+
+// 获取心情记录列表
+GET /api/moods
+
+// 获取心情记录详情
+GET /api/moods/:id
+
+// 删除心情记录
+DELETE /api/moods/:id
+```
+
+#### 社区 API (communityAPI)
+```typescript
+// 获取在线用户
+GET /api/community/online-users
+
+// 获取社区心情列表
+GET /api/community/moods
+
+// 获取社区心情详情
+GET /api/community/moods/:id
+
+// 点赞社区心情
+POST /api/community/moods/:id/like
+
+// 取消点赞
+POST /api/community/moods/:id/unlike
+
+// 回复社区心情
+POST /api/community/moods/:id/reply
+Body: { content: string }
 ```
 
 ## 🚀 部署配置
@@ -234,15 +292,19 @@ POST /api/auth/verify-token
 ### 当前状态：90% 完成
 
 #### ✅ 已完成功能
-- **核心功能** (95%)：心情追踪、历史记录、AI分析
-- **认证系统** (100%)：Google OAuth、路由保护
-- **API集成** (95%)：完整的后端API集成
+- **核心功能** (95%)：心情追踪、历史记录
+- **认证系统** (100%)：Google OAuth、JWT Token、路由保护
+- **API集成** (95%)：
+  - 认证 API：登录、注册、Google OAuth、Token 验证
+  - 心情 API：创建、列表、详情、删除
+  - 社区 API：在线用户、心情列表、点赞、回复
 - **社交功能** (85%)：匿名系统、心情匹配
 - **UI/UX** (90%)：响应式设计、组件系统
 
 #### 🟡 进行中功能
 - **社区互动** (70%)：社区动态、实时互动
 - **数据分析** (60%)：高级统计、趋势图表
+- **AI分析** (50%)：基于心情数据的智能分析
 - **性能优化** (40%)：代码分割、懒加载
 
 #### ❌ 待开发功能

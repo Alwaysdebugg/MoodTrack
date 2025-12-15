@@ -1,40 +1,74 @@
+import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
+const apiClient: AxiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+
+// 请求拦截器
+apiClient.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    const accessToken = localStorage.getItem('token');
+    if (accessToken && config.headers) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error: AxiosError) => {
+    console.error('API request failed:', error);
+    return Promise.reject(error);
+  }
+)
+
+// 响应拦截器
+apiClient.interceptors.response.use(
+  (response: AxiosResponse) => {
+    return response;
+  },
+  async (error: AxiosError) => {
+    const { response, message } = error;
+    if (response) {
+      const { status, data } = response;
+
+      // TODO: 业务错误处理
+      console.error('API response error:', status, data);
+      return Promise.reject(data);
+    }
+    return Promise.reject(error);
+  }
+)
+
+
+// 封装请求方法
 export const apiRequest = async (
   endpoint: string,
-  options: RequestInit = {}
+  options: {
+    method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+    data?: any;
+    params?: any;
+    headers?: Record<string, string>;
+  } = {}
 ) => {
-
-  const url = API_BASE_URL ? `${API_BASE_URL}${endpoint}` : endpoint;
-
-  const config: RequestInit = {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  };
-
-  // 如果有access token，添加到请求头
-  const accessToken = localStorage.getItem('token');
-  if (accessToken) {
-    config.headers = {
-      ...config.headers,
-      Authorization: `Bearer ${accessToken}`,
-    };
-  }
+  const { method = 'GET', data, params, headers } = options;
 
   try {
-    const response = await fetch(url, config);
+    const response = await apiClient({
+      url: endpoint,
+      method,
+      data,
+      params,
+      headers,
+    });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
-
+    return response.data;
   } catch (error) {
-    console.error('API request failed:', error);
+    console.error('apiRequest', error);
     throw error;
   }
 };
@@ -45,7 +79,7 @@ export const authAPI = {
   verifyGoogleCredential: async (credential: string) => {
     const res = await apiRequest('/api/auth/verify-google-credential', {
       method: 'POST',
-      body: JSON.stringify({ credential }),
+      data: { credential },
     });
 
     if (res.success && res.data) {
@@ -61,7 +95,7 @@ export const authAPI = {
   userRegister: async (userData: any) => {
     await apiRequest('/api/auth/register', {
       method: 'POST',
-      body: JSON.stringify(userData),
+      data: userData,
     });
   },
 
@@ -69,7 +103,7 @@ export const authAPI = {
   userLogin: async (userData: any) => {
     const res = await apiRequest('/api/auth/login', {
       method: 'POST',
-      body: JSON.stringify(userData),
+      data: userData,
     });
 
     if (res.success && res.data) {
@@ -85,13 +119,13 @@ export const authAPI = {
   verifyCallbackToken: (token: string) =>
     apiRequest('/api/auth/verify-token', {
       method: 'POST',
-      body: JSON.stringify({ token }),
+      data: { token },
     }),
 
   refreshToken: (refreshToken: string) =>
     apiRequest('/api/auth/refresh', {
       method: 'POST',
-      body: JSON.stringify({ refreshToken }),
+      data: { refreshToken },
     }),
 
   logout: () =>
@@ -99,5 +133,75 @@ export const authAPI = {
       method: 'POST',
     }),
 };
+
+export const moodAPI = {
+  // 创建心情记录
+  createMood: async (moodData: any) => {
+    return await apiRequest('/api/moods', {
+      method: 'POST',
+      data: moodData,
+    });
+  },
+  // 获取心情记录列表
+  getMoods: async () => {
+    const res = await apiRequest('/api/moods', {
+      method: 'GET',
+    });
+    return res.data;
+  },
+  // 获取心情记录详情
+  getMood: async (moodId: string) => {
+    return await apiRequest(`/api/moods/${moodId}`, {
+      method: 'GET',
+    });
+  },
+  // 删除心情记录
+  deleteMood: async (moodId: string) => {
+    return await apiRequest(`/api/moods/${moodId}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+export const communityAPI = {
+  // 获取当前在线用户
+  getOnlineUsers: async () => {
+    return await apiRequest('/api/community/online-users', {
+      method: 'GET',
+    });
+  },
+  // 获取社区心情列表
+  getCommunityMoods: async () => {
+    return await apiRequest('/api/community/moods', {
+      method: 'GET',
+    });
+  },
+  // 获取社区心情详情
+  getCommunityMood: async (moodId: string) => {
+    return await apiRequest(`/api/community/moods/${moodId}`, {
+      method: 'GET',
+    });
+  },
+  // 点赞
+  likeCommunityMood: async (moodId: string) => {
+    return await apiRequest(`/api/community/moods/${moodId}/like`, {
+      method: 'POST',
+    });
+  },
+  // 取消点赞
+  unlikeCommunityMood: async (moodId: string) => {
+    return await apiRequest(`/api/community/moods/${moodId}/unlike`, {
+      method: 'POST',
+    });
+  },
+  // 回复社区心情
+  replyToCommunityMood: async (moodId: string, replyData: any) => {
+    return await apiRequest(`/api/community/moods/${moodId}/reply`, {
+      method: 'POST',
+      data: replyData,
+    });
+  },
+}
+
 
 export default API_BASE_URL;

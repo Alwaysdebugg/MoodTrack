@@ -99,10 +99,10 @@ const TrackMoodPage = () => {
     const moodEntry = {
       triggers: selectedTriggers,
       mood_type: moodTypeMapping[selectedMood],
-      mood_description: note,
-      share_to_public: true,
+      note: note,
+      is_public: true,
       is_anonymous: false,
-      record_time: new Date().toISOString(),
+      created_at: new Date().toISOString(),
     };
 
     console.log('Mood Entry:', moodEntry);
@@ -110,9 +110,9 @@ const TrackMoodPage = () => {
     try {
       setLoading(true);
       // 调用API保存心情记录
-      await apiRequest('/api/v1/moods', {
+      await apiRequest('/api/moods', {
         method: 'POST',
-        body: JSON.stringify(moodEntry),
+        data: moodEntry,
       });
       console.log('心情记录已保存！');
       setShowSuccess(true);

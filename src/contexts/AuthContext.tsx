@@ -6,7 +6,7 @@ import {
   ReactNode,
 } from 'react';
 import { User, AuthContextType } from '../types';
-import { authAPI } from '../utils/api';
+import { authAPI, AUTH_ERROR_EVENT } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -115,6 +115,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     refreshUserFromStorage();
     setIsLoading(false);
   }, []);
+
+  // 监听401错误
+  useEffect(() => {
+    const handleAuthError = () => {
+      // 清除本地状态
+      setUser(null);
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('google_token');
+      localStorage.removeItem('google_user_info');
+      localStorage.removeItem('user_info');
+
+      // 跳转到登录页
+      navigate('/login', { replace: true });
+    };
+
+    window.addEventListener(AUTH_ERROR_EVENT, handleAuthError);
+
+    return () => {
+      window.addEventListener(AUTH_ERROR_EVENT, handleAuthError);
+    };
+  }, [navigate]);
 
   const value: AuthContextType = {
     user,

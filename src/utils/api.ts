@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+export const AUTH_ERROR_EVENT = 'auth-error';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -36,6 +37,11 @@ apiClient.interceptors.response.use(
     if (response) {
       const { status, data } = response;
 
+      if (status === 401) {
+        console.error('Unauthorized');
+        window.dispatchEvent(new CustomEvent(AUTH_ERROR_EVENT));
+        return Promise.reject({ message: 'Unauthorized', data });
+      }
       // TODO: 业务错误处理
       console.error('API response error:', status, data);
       return Promise.reject(data);
@@ -164,6 +170,21 @@ export const moodAPI = {
 };
 
 export const communityAPI = {
+
+  // 更新在线状态（心跳）
+  updateOnlineStatus: async (sessionId?: string) => {
+    return await apiRequest('/api/community/online-status/heartbeat', {
+      method: 'POST',
+      data: { sessionId },
+    });
+  },
+  // 移除在线状态
+  removeOnlineStatus: async (sessionId?: string) => {
+    return await apiRequest('/api/community/online-status/remove', {
+      method: 'POST',
+      data: { sessionId },
+    });
+  },
   // 获取当前在线用户
   getOnlineUsers: async () => {
     return await apiRequest('/api/community/online-users', {

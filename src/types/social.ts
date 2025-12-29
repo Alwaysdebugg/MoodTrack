@@ -1,9 +1,10 @@
 export interface AnonymousUser {
   id: string;
-  nickname: string;
-  avatar: string;
-  isOnline: boolean;
-  lastActive: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  isOnline?: boolean;
+  lastActive?: string;
 }
 
 export interface MoodMatch {
@@ -36,7 +37,8 @@ export interface SocialInteraction {
 
 export interface EmotionTopic {
   id: string;
-  title: string;
+  name: string;
+  slug: string;
   description: string;
   emoji: string;
   participantCount: number;
@@ -49,10 +51,12 @@ export interface CommunityPost {
   id: string;
   user: AnonymousUser;
   content: string;
-  processedContent: string;
+  note: string;
+  processedContent?: string;
   mood: number;
-  moodLabel: string;
-  timestamp: string;
+  mood_type: string;
+  created_at: string;
+  updated_at: string;
   interactions: {
     empathy: number;
     support: number;

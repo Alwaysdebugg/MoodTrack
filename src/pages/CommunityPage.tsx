@@ -7,6 +7,7 @@ import {
   Heart,
   Users,
   Hash,
+  Loader2,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { EmotionTopic, CommunityPost } from '../types/social';
@@ -15,113 +16,82 @@ import {
   interactionTypes,
   formatTimeAgo,
 } from '../utils/socialUtils';
+import { communityAPI } from '@/utils/api';
 
 const CommunityPage = () => {
   const [topics, setTopics] = useState<EmotionTopic[]>([]);
   const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [showingPosts, setShowingPosts] = useState(false);
+  const [loading, setLoading] = useState(false);
+  // 添加心情标签映射
+  const getMoodLabel = (moodType: string): string => {
+    const labels: Record<string, string> = {
+      very_bad: '很糟糕',
+      bad: '不好',
+      neutral: '一般',
+      good: '不错',
+      excellent: '很棒',
+    };
+    return labels[moodType] || moodType;
+  };
 
   useEffect(() => {
-    // 生成模拟话题数据
-    const mockTopics: EmotionTopic[] = [
-      {
-        id: 'work-stress',
-        title: '工作压力与焦虑',
-        description: '分享工作中的压力体验和应对方法',
-        emoji: '💼',
-        participantCount: 156,
-        trending: true,
-        recentPosts: 23,
-        tags: ['工作', '压力', '焦虑', '职场'],
-      },
-      {
-        id: 'relationship',
-        title: '人际关系困扰',
-        description: '探讨人际交往中的情感问题',
-        emoji: '💝',
-        participantCount: 89,
-        trending: false,
-        recentPosts: 12,
-        tags: ['人际关系', '友情', '亲情', '社交'],
-      },
-      {
-        id: 'self-growth',
-        title: '个人成长与迷茫',
-        description: '一起探索自我，寻找人生方向',
-        emoji: '🌱',
-        participantCount: 134,
-        trending: true,
-        recentPosts: 18,
-        tags: ['成长', '迷茫', '自我探索', '人生'],
-      },
-      {
-        id: 'daily-mood',
-        title: '日常小情绪',
-        description: '分享生活中的小确幸与小烦恼',
-        emoji: '🌈',
-        participantCount: 203,
-        trending: false,
-        recentPosts: 31,
-        tags: ['日常', '情绪', '生活', '分享'],
-      },
-      {
-        id: 'mental-health',
-        title: '心理健康关爱',
-        description: '互相支持，共同关注心理健康',
-        emoji: '🧠',
-        participantCount: 78,
-        trending: true,
-        recentPosts: 9,
-        tags: ['心理健康', '自我关爱', '支持', '治愈'],
-      },
-      {
-        id: 'positive-energy',
-        title: '正能量分享',
-        description: '传递温暖，分享积极的生活态度',
-        emoji: '☀️',
-        participantCount: 167,
-        trending: false,
-        recentPosts: 15,
-        tags: ['正能量', '积极', '温暖', '鼓励'],
-      },
-    ];
-    setTopics(mockTopics);
+    fetchCommunityTopics();
+    // fetchCommunityPosts();
   }, []);
 
-  const generateMockPosts = (topicId: string): CommunityPost[] => {
-    const postContents = [
-      { content: '最近工作压力特别大，每天都感觉被任务追着跑...', mood: 2 },
-      { content: '今天终于完成了一个重要项目，感觉轻松了很多', mood: 4 },
-      { content: '和同事的沟通出现了问题，不知道该怎么处理', mood: 2 },
-      { content: '学会了一些时间管理的方法，想分享给大家', mood: 4 },
-      { content: '有时候感觉自己在职场中很迷茫，不知道方向在哪里', mood: 2 },
-      { content: '今天收到了来自同事的感谢，心情特别好', mood: 5 },
-    ];
-
-    return postContents.slice(0, 4).map((item, index) => ({
-      id: `post-${topicId}-${index}`,
-      user: generateAnonymousUser(),
-      content: item.content,
-      processedContent: item.content,
-      mood: item.mood,
-      moodLabel: ['', '很糟糕', '不好', '一般', '不错', '很棒'][item.mood],
-      timestamp: new Date(Date.now() - Math.random() * 86400000).toISOString(),
-      interactions: {
-        empathy: Math.floor(Math.random() * 20),
-        support: Math.floor(Math.random() * 15),
-        helpful: Math.floor(Math.random() * 10),
-        grateful: Math.floor(Math.random() * 8),
-        encourage: Math.floor(Math.random() * 12),
-      },
-      replies: [],
-      tags: topics.find(t => t.id === topicId)?.tags.slice(0, 2) || [],
-    }));
+  // 获取社区话题
+  const fetchCommunityTopics = async () => {
+    const res = await communityAPI.getCommunityTopics();
+    if (res.success && res.data) {
+      setTopics(res.data || []);
+    }
   };
+  // 获取community posts
+  const fetchCommunityPosts = async () => {
+    setLoading(true);
+    const res = await communityAPI.getCommunityPosts();
+    if (res.success && res.data) {
+      setPosts(res.data || []);
+    } else {
+      console.error('获取社区心情列表失败:', res.message);
+    }
+    setLoading(false);
+  };
+  // const generateMockPosts = (topicId: string): CommunityPost[] => {
+  //   const postContents = [
+  //     { content: '最近工作压力特别大，每天都感觉被任务追着跑...', mood: 2 },
+  //     { content: '今天终于完成了一个重要项目，感觉轻松了很多', mood: 4 },
+  //     { content: '和同事的沟通出现了问题，不知道该怎么处理', mood: 2 },
+  //     { content: '学会了一些时间管理的方法，想分享给大家', mood: 4 },
+  //     { content: '有时候感觉自己在职场中很迷茫，不知道方向在哪里', mood: 2 },
+  //     { content: '今天收到了来自同事的感谢，心情特别好', mood: 5 },
+  //   ];
+
+  //   return postContents.slice(0, 4).map((item, index) => ({
+  //     id: `post-${topicId}-${index}`,
+  //     user: generateAnonymousUser(),
+  //     content: item.content,
+  //     processedContent: item.content,
+  //     mood: item.mood,
+  //     moodLabel: ['', '很糟糕', '不好', '一般', '不错', '很棒'][item.mood],
+  //     timestamp: new Date(Date.now() - Math.random() * 86400000).toISOString(),
+  //     interactions: {
+  //       empathy: Math.floor(Math.random() * 20),
+  //       support: Math.floor(Math.random() * 15),
+  //       helpful: Math.floor(Math.random() * 10),
+  //       grateful: Math.floor(Math.random() * 8),
+  //       encourage: Math.floor(Math.random() * 12),
+  //     },
+  //     replies: [],
+  //     tags: topics.find(t => t.id === topicId)?.tags.slice(0, 2) || [],
+  //   }));
+  // };
 
   const handleTopicClick = (topicId: string) => {
     setSelectedTopic(topicId);
-    setPosts(generateMockPosts(topicId));
+    fetchCommunityPosts();
     setShowingPosts(true);
   };
 
@@ -186,7 +156,7 @@ const CommunityPage = () => {
           )}
           <h1 className="text-2xl font-bold text-gray-900">
             {showingPosts
-              ? topics.find(t => t.id === selectedTopic)?.title
+              ? topics.find(t => t.id === selectedTopic)?.name
               : '情绪社区'}
           </h1>
         </div>
@@ -255,7 +225,7 @@ const CommunityPage = () => {
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
                             <h3 className="font-semibold text-gray-800">
-                              {topic.title}
+                              {topic.name}
                             </h3>
                             <span className="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">
                               热门
@@ -311,7 +281,7 @@ const CommunityPage = () => {
                         <span className="text-2xl">{topic.emoji}</span>
                         <div className="flex-1">
                           <h3 className="font-semibold text-gray-800 mb-1">
-                            {topic.title}
+                            {topic.name}
                           </h3>
                           <p className="text-gray-600 text-sm mb-3">
                             {topic.description}
@@ -346,7 +316,7 @@ const CommunityPage = () => {
                 </span>
                 <div>
                   <h2 className="text-xl font-semibold text-gray-800">
-                    {topics.find(t => t.id === selectedTopic)?.title}
+                    {topics.find(t => t.id === selectedTopic)?.name}
                   </h2>
                   <p className="text-gray-600">
                     {topics.find(t => t.id === selectedTopic)?.description}
@@ -386,16 +356,16 @@ const CommunityPage = () => {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-3">
                         <span className="font-medium text-gray-800">
-                          {post.user.nickname}
+                          {post.user.name}
                         </span>
                         <span
                           className={`px-2 py-1 rounded-full text-xs ${getMoodColor(post.mood)}`}
                         >
-                          {post.moodLabel}
+                          {post.mood_type}
                         </span>
                         <div className="flex items-center text-gray-500 text-xs">
                           <Clock className="w-3 h-3 mr-1" />
-                          {formatTimeAgo(new Date(post.timestamp))}
+                          {formatTimeAgo(new Date(post.created_at))}
                         </div>
                       </div>
                     </div>
@@ -446,10 +416,17 @@ const CommunityPage = () => {
             ))}
           </div>
 
-          {/* 加载更多 */}
-          <div className="text-center">
-            <button className="btn btn-secondary">加载更多讨论</button>
-          </div>
+          {/* 加载状态 */}
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="animate-spin w-8 h-8 text-blue-500" />
+              <span className="ml-2 text-gray-600">加载中...</span>
+            </div>
+          ) : (
+            <div className="text-center">
+              <button className="btn btn-secondary">加载更多讨论</button>
+            </div>
+          )}
         </div>
       )}
     </div>

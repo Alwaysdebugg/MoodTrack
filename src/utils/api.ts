@@ -171,6 +171,12 @@ export const moodAPI = {
 
 export const communityAPI = {
 
+  // 获取社区话题
+  getCommunityTopics: async () => {
+    return await apiRequest('/api/community/topics', {
+      method: 'GET',
+    });
+  },
   // 更新在线状态（心跳）
   updateOnlineStatus: async (sessionId?: string) => {
     return await apiRequest('/api/community/online-status/heartbeat', {
@@ -192,7 +198,7 @@ export const communityAPI = {
     });
   },
   // 获取社区心情列表
-  getCommunityMoods: async () => {
+  getCommunityPosts: async () => {
     return await apiRequest('/api/community/moods', {
       method: 'GET',
     });

@@ -45,7 +45,7 @@ const Layout = ({ children }: LayoutProps) => {
                   }`}
                 >
                   <Icon size={18} />
-                  <span>{label}</span>
+                  <span className="max-w-24 truncate">{label}</span>
                 </Link>
               ))}
 

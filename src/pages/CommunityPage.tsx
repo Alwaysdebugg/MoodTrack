@@ -4,19 +4,20 @@ import {
   TrendingUp,
   MessageCircle,
   Clock,
-  Heart,
   Users,
   Hash,
   Loader2,
+  ChevronUp,
+  ChevronDown,
+  Share2,
+  Bookmark,
+  Send,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { EmotionTopic, CommunityPost } from '../types/social';
-import {
-  generateAnonymousUser,
-  interactionTypes,
-  formatTimeAgo,
-} from '../utils/socialUtils';
+import { formatTimeAgo } from '../utils/socialUtils';
 import { communityAPI } from '@/utils/api';
+import { useAuth } from '../contexts/AuthContext';
 
 const CommunityPage = () => {
   const [topics, setTopics] = useState<EmotionTopic[]>([]);
@@ -24,17 +25,22 @@ const CommunityPage = () => {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [showingPosts, setShowingPosts] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyContent, setReplyContent] = useState('');
+  const [submittingReply, setSubmittingReply] = useState(false);
+  const { user } = useAuth();
+
   // 添加心情标签映射
-  const getMoodLabel = (moodType: string): string => {
-    const labels: Record<string, string> = {
-      very_bad: '很糟糕',
-      bad: '不好',
-      neutral: '一般',
-      good: '不错',
-      excellent: '很棒',
-    };
-    return labels[moodType] || moodType;
-  };
+  // const getMoodLabel = (moodType: string): string => {
+  //   const labels: Record<string, string> = {
+  //     very_bad: '很糟糕',
+  //     bad: '不好',
+  //     neutral: '一般',
+  //     good: '不错',
+  //     excellent: '很棒',
+  //   };
+  //   return labels[moodType] || moodType;
+  // };
 
   useEffect(() => {
     fetchCommunityTopics();
@@ -59,6 +65,7 @@ const CommunityPage = () => {
     }
     setLoading(false);
   };
+
   // const generateMockPosts = (topicId: string): CommunityPost[] => {
   //   const postContents = [
   //     { content: '最近工作压力特别大，每天都感觉被任务追着跑...', mood: 2 },
@@ -101,24 +108,121 @@ const CommunityPage = () => {
     setPosts([]);
   };
 
-  const handleInteraction = (postId: string, interactionType: string) => {
-    setPosts(prev =>
-      prev.map(post => {
-        if (post.id === postId) {
-          return {
-            ...post,
-            interactions: {
-              ...post.interactions,
-              [interactionType]:
-                post.interactions[
-                  interactionType as keyof typeof post.interactions
-                ] + 1,
-            },
-          };
-        }
-        return post;
-      })
-    );
+  const handleInteraction = async (postId: string, interactionType: string) => {
+    if (!user) {
+      alert('请先登录');
+      return;
+    }
+
+    // 找到当前post
+    const currentPost = posts.find(p => p.id === postId);
+    if (!currentPost) return;
+
+    const currentUserInteraction = currentPost.userInteraction;
+    const isRemovingInteraction = currentUserInteraction === interactionType;
+
+    try {
+      // 乐观更新UI
+      setPosts(prev =>
+        prev.map(post => {
+          if (post.id === postId) {
+            const newInteractions = { ...post.interactions };
+
+            // 如果是取消互动
+            if (isRemovingInteraction) {
+              newInteractions[
+                interactionType as keyof typeof post.interactions
+              ] = Math.max(
+                0,
+                newInteractions[
+                interactionType as keyof typeof post.interactions
+                ] - 1
+              );
+              return {
+                ...post,
+                interactions: newInteractions,
+                userInteraction: null,
+              };
+            }
+            // 如果是切换互动类型
+            else if (currentUserInteraction) {
+              newInteractions[
+                currentUserInteraction as keyof typeof post.interactions
+              ] = Math.max(
+                0,
+                newInteractions[
+                currentUserInteraction as keyof typeof post.interactions
+                ] - 1
+              );
+              newInteractions[
+                interactionType as keyof typeof post.interactions
+              ] += 1;
+              return {
+                ...post,
+                interactions: newInteractions,
+                userInteraction: interactionType as 'like' | 'unlike',
+              };
+            }
+            // 如果是新增互动
+            else {
+              newInteractions[
+                interactionType as keyof typeof post.interactions
+              ] += 1;
+              return {
+                ...post,
+                interactions: newInteractions,
+                userInteraction: interactionType as 'like' | 'unlike',
+              };
+            }
+          }
+          return post;
+        })
+      );
+
+      // 调用后端API
+      const res = await communityAPI.addInteraction(postId, interactionType);
+      if (res.success && res.data) {
+        // 使用后端返回的准确数据更新
+        setPosts(prev =>
+          prev.map(post => {
+            if (post.id === postId) {
+              return {
+                ...post,
+                interactions: {
+                  like: res.data.like,
+                  unlike: res.data.unlike,
+                },
+                userInteraction: res.data.userInteraction || null,
+              };
+            }
+            return post;
+          })
+        );
+      } else {
+        // 如果失败，回滚到原始状态
+        setPosts(prev =>
+          prev.map(post => {
+            if (post.id === postId) {
+              return currentPost;
+            }
+            return post;
+          })
+        );
+        alert(res.message || '互动失败');
+      }
+    } catch (error: any) {
+      console.error('互动失败:', error);
+      // 回滚到原始状态
+      setPosts(prev =>
+        prev.map(post => {
+          if (post.id === postId) {
+            return currentPost;
+          }
+          return post;
+        })
+      );
+      alert(error instanceof Error ? error.message : '互动失败');
+    }
   };
 
   const getMoodColor = (mood: number) => {
@@ -130,6 +234,36 @@ const CommunityPage = () => {
       5: 'bg-blue-100 text-blue-700',
     };
     return colors[mood as keyof typeof colors] || colors[3];
+  };
+
+  const handleReplySubmit = async (postId: string) => {
+    if (!replyContent.trim()) return;
+
+    if (!user) {
+      alert('请先登录');
+      return;
+    }
+
+    setSubmittingReply(true);
+    try {
+      const res = await communityAPI.replyToCommunityMood(postId, {
+        content: replyContent.trim(),
+        isAnonymous: false,
+      });
+
+      if (res.success && res.data) {
+        await fetchCommunityPosts();
+        setReplyingTo(null);
+        setReplyContent('');
+      } else {
+        alert(res.message || '回复失败');
+      }
+    } catch (error) {
+      console.error('回复社区心情失败:', error);
+      alert(error instanceof Error ? error.message : '回复失败');
+    } finally {
+      setSubmittingReply(false);
+    }
   };
 
   return (
@@ -160,12 +294,6 @@ const CommunityPage = () => {
               : '情绪社区'}
           </h1>
         </div>
-        {showingPosts && (
-          <button className="btn btn-primary">
-            <MessageCircle className="w-4 h-4" />
-            发表感受
-          </button>
-        )}
       </div>
 
       {!showingPosts ? (
@@ -204,7 +332,7 @@ const CommunityPage = () => {
           </div>
 
           {/* 话题分类 */}
-          <div>
+          {/* <div>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-800">热门话题</h2>
               <span className="text-sm text-gray-600">点击话题查看讨论</span>
@@ -260,7 +388,7 @@ const CommunityPage = () => {
                   </div>
                 ))}
             </div>
-          </div>
+          </div> */}
 
           {/* 所有话题 */}
           <div>
@@ -339,81 +467,195 @@ const CommunityPage = () => {
             </div>
           )}
 
-          {/* 帖子列表 */}
-          <div className="space-y-4">
-            {posts.map(post => (
-              <div key={post.id} className="card">
-                <div className="flex items-start space-x-4">
-                  {/* 用户头像 */}
-                  <div
-                    className={`w-10 h-10 rounded-full ${post.user.avatar} flex items-center justify-center flex-shrink-0`}
-                  >
-                    <span className="text-white text-sm">😊</span>
-                  </div>
+          {/* 帖子列表 - Reddit 风格 */}
+          <div className="space-y-2">
+            {posts.map(post => {
+              const totalScore =
+                (post.interactions.like || 0) - (post.interactions.unlike || 0);
+              const isLiked = post.userInteraction === 'like';
+              const isDisliked = post.userInteraction === 'unlike';
 
-                  {/* 帖子内容 */}
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center space-x-3">
-                        <span className="font-medium text-gray-800">
+              return (
+                <div
+                  key={post.id}
+                  className="bg-white rounded-md border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden"
+                >
+                  <div className="flex">
+                    {/* 左侧投票区域 - Reddit 风格 */}
+                    <div className="flex flex-col items-center bg-gray-50 px-2 py-2 min-w-[40px]">
+                      <button
+                        onClick={() => handleInteraction(post.id, 'like')}
+                        className={`p-1 rounded hover:bg-gray-200 transition-colors ${isLiked
+                          ? 'text-orange-500'
+                          : 'text-gray-400 hover:text-orange-500'
+                          }`}
+                        title="点赞"
+                      >
+                        <ChevronUp className="w-5 h-5" />
+                      </button>
+                      <span
+                        className={`text-xs font-semibold py-1 ${totalScore > 0
+                          ? 'text-orange-500'
+                          : totalScore < 0
+                            ? 'text-blue-500'
+                            : 'text-gray-500'
+                          }`}
+                      >
+                        {totalScore > 0 ? '+' : ''}
+                        {totalScore}
+                      </span>
+                      <button
+                        onClick={() => handleInteraction(post.id, 'unlike')}
+                        className={`p-1 rounded hover:bg-gray-200 transition-colors ${isDisliked
+                          ? 'text-blue-500'
+                          : 'text-gray-400 hover:text-blue-500'
+                          }`}
+                        title="不喜欢"
+                      >
+                        <ChevronDown className="w-5 h-5" />
+                      </button>
+                    </div>
+
+                    {/* 帖子内容区域 */}
+                    <div className="flex-1 p-3">
+                      {/* 元信息 - 更紧凑 */}
+                      <div className="flex items-center gap-2 mb-2 text-xs text-gray-500">
+                        <span className="font-medium text-gray-900 hover:underline cursor-pointer">
                           {post.user.name}
                         </span>
+                        <span className="text-gray-400">•</span>
                         <span
-                          className={`px-2 py-1 rounded-full text-xs ${getMoodColor(post.mood)}`}
+                          className={`px-1.5 py-0.5 rounded text-xs font-medium ${getMoodColor(post.mood)}`}
                         >
                           {post.mood_type}
                         </span>
-                        <div className="flex items-center text-gray-500 text-xs">
-                          <Clock className="w-3 h-3 mr-1" />
+                        <span className="text-gray-400">•</span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
                           {formatTimeAgo(new Date(post.created_at))}
+                        </span>
+                      </div>
+
+                      {/* 帖子内容 */}
+                      <div className="mb-3">
+                        <p className="text-gray-900 text-sm leading-relaxed whitespace-pre-wrap">
+                          {post.content}
+                        </p>
+                      </div>
+
+                      {/* 标签 */}
+                      {post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-3">
+                          {post.tags.map((tag, index) => (
+                            <span
+                              key={index}
+                              className="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded hover:bg-blue-100 cursor-pointer"
+                            >
+                              #{tag}
+                            </span>
+                          ))}
                         </div>
-                      </div>
-                    </div>
+                      )}
 
-                    <p className="text-gray-700 mb-3">{post.content}</p>
+                      {/* 回复列表 - 更清晰的嵌套 */}
+                      {post.replies && post.replies.length > 0 && (
+                        <div className="mt-3 space-y-2">
+                          {post.replies.slice(0, 3).map(reply => (
+                            <div
+                              key={reply.id}
+                              className="pl-3 border-l-2 border-gray-200 hover:border-gray-300 transition-colors"
+                            >
+                              <div className="flex items-center gap-2 mb-1 text-xs text-gray-500">
+                                <span className="font-medium text-gray-700">
+                                  {reply.user.name}
+                                </span>
+                                <span className="text-gray-400">•</span>
+                                <span>
+                                  {formatTimeAgo(new Date(reply.timestamp))}
+                                </span>
+                              </div>
+                              <p className="text-gray-700 text-sm leading-relaxed">
+                                {reply.content}
+                              </p>
+                            </div>
+                          ))}
+                          {post.replies.length > 3 && (
+                            <button className="text-xs text-blue-600 hover:text-blue-700 font-medium ml-3">
+                              查看全部 {post.replies.length} 条回复
+                            </button>
+                          )}
+                        </div>
+                      )}
 
-                    {/* 标签 */}
-                    {post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        {post.tags.map((tag, index) => (
-                          <span
-                            key={index}
-                            className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
-                          >
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                      {/* 回复输入框 */}
+                      {replyingTo === post.id && (
+                        <div className="mt-3 p-3 bg-gray-50 rounded border border-gray-200">
+                          <textarea
+                            value={replyContent}
+                            onChange={e => setReplyContent(e.target.value)}
+                            placeholder="写下你的回复..."
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm"
+                            rows={3}
+                          />
+                          <div className="flex items-center justify-end gap-2 mt-2">
+                            <button
+                              onClick={() => {
+                                setReplyingTo(null);
+                                setReplyContent('');
+                              }}
+                              className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded transition-colors"
+                            >
+                              取消
+                            </button>
+                            <button
+                              onClick={() => handleReplySubmit(post.id)}
+                              disabled={!replyContent.trim() || submittingReply}
+                              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 transition-colors"
+                            >
+                              {submittingReply ? (
+                                <>
+                                  <Loader2 className="w-3 h-3 animate-spin" />
+                                  <span>发送中...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Send className="w-3 h-3" />
+                                  <span>发送</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      )}
 
-                    {/* 互动区域 */}
-                    <div className="flex items-center space-x-4">
-                      {interactionTypes.map(type => (
+                      {/* 底部操作栏 - Reddit 风格 */}
+                      <div className="flex items-center gap-1 mt-2 pt-2 border-t border-gray-100">
                         <button
-                          key={type.id}
-                          onClick={() => handleInteraction(post.id, type.id)}
-                          className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800 transition-colors"
-                          title={type.description}
-                        >
-                          <span>{type.emoji}</span>
-                          <span>
-                            {
-                              post.interactions[
-                                type.id as keyof typeof post.interactions
-                              ]
+                          onClick={() => {
+                            if (!user) {
+                              alert('请先登录');
+                              return;
                             }
-                          </span>
+                            setReplyingTo(
+                              replyingTo === post.id ? null : post.id
+                            );
+                          }}
+                          className="flex items-center gap-1 px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 rounded transition-colors"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          <span>{post.replies?.length || 0}</span>
+                          <span className="hidden sm:inline">评论</span>
                         </button>
-                      ))}
-                      <button className="flex items-center space-x-1 text-sm text-blue-600 hover:text-blue-700">
-                        <MessageCircle className="w-4 h-4" />
-                        <span>回复</span>
-                      </button>
+                        <button className="flex items-center gap-1 px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 rounded transition-colors">
+                          <Bookmark className="w-4 h-4" />
+                          <span className="hidden sm:inline">收藏</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* 加载状态 */}
@@ -422,11 +664,7 @@ const CommunityPage = () => {
               <Loader2 className="animate-spin w-8 h-8 text-blue-500" />
               <span className="ml-2 text-gray-600">加载中...</span>
             </div>
-          ) : (
-            <div className="text-center">
-              <button className="btn btn-secondary">加载更多讨论</button>
-            </div>
-          )}
+          ) : null}
         </div>
       )}
     </div>

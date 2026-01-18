@@ -144,34 +144,16 @@ export const formatTimeAgo = (date: Date): string => {
 // 互动类型定义
 export const interactionTypes: InteractionType[] = [
   {
-    id: 'empathy',
-    label: '我也有同感',
-    emoji: '🤝',
-    description: '表示经历相似，建立共鸣',
+    id: 'like',
+    label: '点赞',
+    emoji: '👍',
+    description: '点赞',
   },
   {
-    id: 'support',
-    label: '给你一个拥抱',
-    emoji: '🤗',
-    description: '提供情感支持和安慰',
-  },
-  {
-    id: 'helpful',
-    label: '这很有帮助',
-    emoji: '💡',
-    description: '表示从分享中获得启发',
-  },
-  {
-    id: 'grateful',
-    label: '感谢分享',
-    emoji: '🙏',
-    description: '对真诚分享表示感谢',
-  },
-  {
-    id: 'encourage',
-    label: '一起加油',
-    emoji: '💪',
-    description: '相互鼓励和打气',
+    id: 'unlike',
+    label: '不喜欢',
+    emoji: '☹️',
+    description: '不喜欢',
   },
 ];
 

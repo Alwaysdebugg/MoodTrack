@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Smile, Frown, Meh, Heart, Star, CheckCircle, Tag } from 'lucide-react';
 import { apiRequest } from '../utils/api';
 import { Loader2 } from 'lucide-react';
+import Switch from '../components/Switch';
 
 const TrackMoodPage = () => {
   const [selectedMood, setSelectedMood] = useState<number | null>(null);
@@ -9,6 +10,8 @@ const TrackMoodPage = () => {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
+  const [isPublic, setIsPublic] = useState(true); // 是否公开到社区
+  const [isAnonymous, setIsAnonymous] = useState(false); // 是否匿名
 
   // 自动隐藏成功提示
   useEffect(() => {
@@ -100,8 +103,8 @@ const TrackMoodPage = () => {
       triggers: selectedTriggers,
       mood_type: moodTypeMapping[selectedMood],
       note: note,
-      is_public: true,
-      is_anonymous: false,
+      is_public: isPublic,
+      is_anonymous: isAnonymous,
       created_at: new Date().toISOString(),
     };
 
@@ -132,6 +135,8 @@ const TrackMoodPage = () => {
     setSelectedMood(null);
     setNote('');
     setSelectedTriggers([]);
+    setIsPublic(true);
+    setIsAnonymous(false);
   };
 
   return (
@@ -160,11 +165,10 @@ const TrackMoodPage = () => {
                 key={id}
                 type="button"
                 onClick={() => setSelectedMood(id)}
-                className={`p-4 rounded-lg border-2 transition-all ${
-                  selectedMood === id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300'
-                } ${bg}`}
+                className={`p-4 rounded-lg border-2 transition-all ${selectedMood === id
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 hover:border-gray-300'
+                  } ${bg}`}
               >
                 <Icon className={`w-8 h-8 mx-auto mb-2 ${color}`} />
                 <span className="text-sm font-medium">{label}</span>
@@ -176,7 +180,7 @@ const TrackMoodPage = () => {
         <div className="card">
           <h2 className="text-xl font-semibold mb-4 flex items-center">
             <Tag className="w-5 h-5 mr-2" />
-            影响因素（可选）
+            Trigger
           </h2>
           <div className="grid grid-cols-3 gap-3 mb-2">
             {triggerOptions.map(trigger => (
@@ -184,11 +188,10 @@ const TrackMoodPage = () => {
                 key={trigger}
                 type="button"
                 onClick={() => toggleTrigger(trigger)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                  selectedTriggers.includes(trigger)
-                    ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
-                    : 'bg-gray-100 text-gray-700 border-2 border-transparent hover:bg-gray-200'
-                }`}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${selectedTriggers.includes(trigger)
+                  ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
+                  : 'bg-gray-100 text-gray-700 border-2 border-transparent hover:bg-gray-200'
+                  }`}
               >
                 {trigger}
               </button>
@@ -212,7 +215,7 @@ const TrackMoodPage = () => {
         </div>
 
         <div className="card">
-          <h2 className="text-xl font-semibold mb-4">添加备注（可选）</h2>
+          <h2 className="text-xl font-semibold mb-4">添加备注</h2>
           <textarea
             value={note}
             onChange={e => setNote(e.target.value)}
@@ -222,15 +225,54 @@ const TrackMoodPage = () => {
           />
         </div>
 
+        {/* 公开到社区选项 */}
+        <div className="card">
+          <h2 className="text-xl font-semibold mb-4">分享设置</h2>
+
+          {/* 公开到社区开关 */}
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
+            <div className="flex-1">
+              <label htmlFor="public-switch" className="text-sm font-medium text-gray-700 cursor-pointer">
+                公开到社区
+              </label>
+              <p className="text-xs text-gray-500 mt-1">
+                开启后，你的心情记录将在社区中展示
+              </p>
+            </div>
+            <Switch
+              id="public-switch"
+              checked={isPublic}
+              onCheckedChange={setIsPublic}
+            />
+          </div>
+
+          {/* 匿名分享开关 - 只在公开时显示 */}
+          {isPublic && (
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <label htmlFor="anonymous-switch" className="text-sm font-medium text-gray-700 cursor-pointer">
+                  匿名分享
+                </label>
+                <p className="text-xs text-gray-500 mt-1">
+                  开启后，你的用户名将不会显示
+                </p>
+              </div>
+              <Switch
+                id="anonymous-switch"
+                checked={isAnonymous}
+                onCheckedChange={setIsAnonymous}
+              />
+            </div>
+          )}
+        </div>
         <div className="text-center">
           <button
             type="submit"
             disabled={selectedMood === null || loading}
-            className={`btn text-lg px-8 py-3 ${
-              selectedMood === null
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'btn-primary'
-            }`}
+            className={`btn text-lg px-8 py-3 ${selectedMood === null
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'btn-primary'
+              }`}
           >
             {loading ? (
               <>

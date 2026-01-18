@@ -58,12 +58,10 @@ export interface CommunityPost {
   created_at: string;
   updated_at: string;
   interactions: {
-    empathy: number;
-    support: number;
-    helpful: number;
-    grateful: number;
-    encourage: number;
+    like: number;
+    unlike: number;
   };
+  userInteraction?: 'like' | 'unlike' | null; // 当前用户的互动状态
   replies: CommunityReply[];
   tags: string[];
 }

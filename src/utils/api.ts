@@ -1,4 +1,9 @@
-import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, {
+  AxiosInstance,
+  AxiosError,
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+} from 'axios';
 export const AUTH_ERROR_EVENT = 'auth-error';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
@@ -10,7 +15,6 @@ const apiClient: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
 
 // 请求拦截器
 apiClient.interceptors.request.use(
@@ -25,7 +29,7 @@ apiClient.interceptors.request.use(
     console.error('API request failed:', error);
     return Promise.reject(error);
   }
-)
+);
 
 // 响应拦截器
 apiClient.interceptors.response.use(
@@ -48,8 +52,7 @@ apiClient.interceptors.response.use(
     }
     return Promise.reject(error);
   }
-)
-
+);
 
 // 封装请求方法
 export const apiRequest = async (
@@ -80,7 +83,6 @@ export const apiRequest = async (
 };
 
 export const authAPI = {
-
   // 验证Credential
   verifyGoogleCredential: async (credential: string) => {
     const res = await apiRequest('/api/auth/verify-google-credential', {
@@ -170,7 +172,6 @@ export const moodAPI = {
 };
 
 export const communityAPI = {
-
   // 获取社区话题
   getCommunityTopics: async () => {
     return await apiRequest('/api/community/topics', {
@@ -210,25 +211,47 @@ export const communityAPI = {
     });
   },
   // 点赞
-  likeCommunityMood: async (moodId: string) => {
-    return await apiRequest(`/api/community/moods/${moodId}/like`, {
-      method: 'POST',
-    });
-  },
-  // 取消点赞
-  unlikeCommunityMood: async (moodId: string) => {
-    return await apiRequest(`/api/community/moods/${moodId}/unlike`, {
-      method: 'POST',
-    });
-  },
+  // likeCommunityMood: async (moodId: string) => {
+  //   return await apiRequest(`/api/community/moods/${moodId}/like`, {
+  //     method: 'POST',
+  //   });
+  // },
+  // // 取消点赞
+  // unlikeCommunityMood: async (moodId: string) => {
+  //   return await apiRequest(`/api/community/moods/${moodId}/unlike`, {
+  //     method: 'POST',
+  //   });
+  // },
   // 回复社区心情
-  replyToCommunityMood: async (moodId: string, replyData: any) => {
+  replyToCommunityMood: async (
+    moodId: string,
+    replyData: {
+      content: string;
+      isAnonymous: boolean;
+      parentId?: string | null;
+    }
+  ) => {
     return await apiRequest(`/api/community/moods/${moodId}/reply`, {
       method: 'POST',
       data: replyData,
     });
   },
-}
 
+  // 添加互动
+  addInteraction: async (moodId: string, interactionType: string) => {
+    return await apiRequest(`/api/community/moods/${moodId}/interaction`, {
+      method: 'POST',
+      data: { interactionType },
+    });
+  },
+
+  // 删除互动
+  removeInteraction: async (moodId: string, interactionType: string) => {
+    return await apiRequest(`/api/community/moods/${moodId}/interaction`, {
+      method: 'DELETE',
+      data: { interactionType },
+    });
+  },
+};
 
 export default API_BASE_URL;

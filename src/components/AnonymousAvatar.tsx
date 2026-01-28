@@ -28,7 +28,7 @@ const AnonymousAvatar = ({
     }
   };
 
-  // 根据用户ID生成一致的emoji
+  // Generate consistent emoji based on user ID
   const getAvatarEmoji = (userId: string) => {
     const emojis = [
       '😊',
@@ -61,7 +61,7 @@ const AnonymousAvatar = ({
         <span className="text-white font-bold">{getAvatarEmoji(user.id)}</span>
       </div>
 
-      {/* 在线状态指示器 */}
+      {/* Online status indicator */}
       {showStatus && (
         <div
           className={`absolute -bottom-1 -right-1 ${

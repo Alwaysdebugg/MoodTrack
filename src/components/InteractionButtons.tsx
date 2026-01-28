@@ -32,16 +32,16 @@ const InteractionButtons = ({
 
   const handleInteraction = (interactionType: string) => {
     if (selectedInteraction === interactionType) {
-      // 取消选择
+      // Deselect
       setSelectedInteraction(null);
     } else {
       setSelectedInteraction(interactionType);
       setIsAnimating(interactionType);
 
-      // 触发动画
+      // Trigger animation
       setTimeout(() => setIsAnimating(null), 300);
 
-      // 调用回调
+      // Call callback
       onInteraction(targetId, interactionType);
     }
   };
@@ -120,7 +120,7 @@ const InteractionButtons = ({
         );
       })}
 
-      {/* 回复按钮 */}
+      {/* Reply button */}
       {showReplyButton && onReply && (
         <button
           onClick={() => onReply(targetId)}
@@ -135,7 +135,7 @@ const InteractionButtons = ({
               size === 'sm' ? 'w-3 h-3' : size === 'lg' ? 'w-5 h-5' : 'w-4 h-4'
             }
           />
-          <span className="font-medium">回复</span>
+          <span className="font-medium">Reply</span>
         </button>
       )}
     </div>

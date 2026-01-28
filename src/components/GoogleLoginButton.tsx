@@ -19,7 +19,7 @@ const GoogleLoginButton = ({
 
   const handleCallbackResponse = async (response: any) => {
     try {
-      // 后端验证Google Credential
+      // Verify Google Credential with backend
       const res = await authAPI.verifyGoogleCredential(response.credential);
       if (res) {
         if (onSuccess) onSuccess(res);
@@ -53,7 +53,7 @@ const GoogleLoginButton = ({
   if (!GOOGLE_CLIENT_ID) {
     return (
       <button disabled className={className}>
-        Google 登录未配置
+        Google login not configured
       </button>
     );
   }

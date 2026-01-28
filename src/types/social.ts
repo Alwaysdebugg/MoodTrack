@@ -61,7 +61,7 @@ export interface CommunityPost {
     like: number;
     unlike: number;
   };
-  userInteraction?: 'like' | 'unlike' | null; // 当前用户的互动状态
+  userInteraction?: 'like' | 'unlike' | null; // Current user's interaction state
   replies: CommunityReply[];
   tags: string[];
 }

@@ -24,16 +24,16 @@ const HistoryPage = () => {
   const [entries, setEntries] = useState<MoodEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 获取后端心情记录
+  // Fetch mood entries from backend
   const fetchMoodEntries = async () => {
     try {
       setLoading(true);
-      // 调用API获取心情记录
+      // Call API to get mood entries
       const res = await moodAPI.getMoods();
-      console.log('获取心情记录成功:', res);
+      console.log('Successfully fetched mood entries:', res);
       setEntries(res || []);
     } catch (error) {
-      console.error('获取心情记录失败:', error);
+      console.error('Failed to fetch mood entries:', error);
     } finally {
       setLoading(false);
     }
@@ -60,13 +60,13 @@ const HistoryPage = () => {
   };
 
   const getMoodLabel = (mood: string) => {
-    const labels = ['', '很糟糕', '不好', '一般', '不错', '很棒'];
-    return labels[moodTypeMapping[mood]] || '未知';
+    const labels = ['', 'Very Bad', 'Bad', 'Neutral', 'Good', 'Excellent'];
+    return labels[moodTypeMapping[mood]] || 'Unknown';
   };
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleDateString('zh-CN', {
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -76,14 +76,14 @@ const HistoryPage = () => {
   };
 
   if (entries.length === 0 && !loading) {
-    // 如果没有心情记录，显示提示
+    // If no mood entries, show prompt
     return (
       <div className="text-center py-12">
         <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
         <h2 className="text-2xl font-semibold text-gray-600 mb-2">
-          暂无心情记录
+          No Mood Records Yet
         </h2>
-        <p className="text-gray-500">开始记录你的第一个心情吧！</p>
+        <p className="text-gray-500">Start recording your first mood!</p>
       </div>
     );
   }
@@ -91,11 +91,11 @@ const HistoryPage = () => {
   return (
     <div>
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">心情历史</h1>
-        <p className="text-lg text-gray-600">查看你的心情变化记录</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">Mood History</h1>
+        <p className="text-lg text-gray-600">View your mood change records</p>
       </div>
 
-      {/* 心情记录列表 */}
+      {/* Mood entries list */}
       {entries.length > 0 && !loading && (
         <div className="space-y-4">
           {entries.map((entry, index) => (
@@ -116,7 +116,7 @@ const HistoryPage = () => {
                   {entry.note && (
                     <p className="text-gray-700 mb-3">{entry.note}</p>
                   )}
-                  {/* Triggers 显示 */}
+                  {/* Triggers display */}
                   {entry.triggers && entry.triggers.length > 0 && (
                     <div className="flex items-center space-x-2">
                       <Tag className="w-4 h-4 text-gray-500" />
@@ -139,11 +139,11 @@ const HistoryPage = () => {
         </div>
       )}
 
-      {/* 加载状态 */}
+      {/* Loading state */}
       {loading && (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="animate-spin w-8 h-8 text-blue-500" />
-          <span className="ml-2 text-gray-600">加载中...</span>
+          <span className="ml-2 text-gray-600">Loading...</span>
         </div>
       )}
     </div>

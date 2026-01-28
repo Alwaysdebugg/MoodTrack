@@ -16,7 +16,7 @@ const apiClient: AxiosInstance = axios.create({
   },
 });
 
-// 请求拦截器
+// Request interceptor
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const accessToken = localStorage.getItem('token');
@@ -31,7 +31,7 @@ apiClient.interceptors.request.use(
   }
 );
 
-// 响应拦截器
+// Response interceptor
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
@@ -46,7 +46,7 @@ apiClient.interceptors.response.use(
         window.dispatchEvent(new CustomEvent(AUTH_ERROR_EVENT));
         return Promise.reject({ message: 'Unauthorized', data });
       }
-      // TODO: 业务错误处理
+      // TODO: Business error handling
       console.error('API response error:', status, data);
       return Promise.reject(data);
     }
@@ -54,7 +54,7 @@ apiClient.interceptors.response.use(
   }
 );
 
-// 封装请求方法
+// Wrapper request method
 export const apiRequest = async (
   endpoint: string,
   options: {
@@ -83,7 +83,7 @@ export const apiRequest = async (
 };
 
 export const authAPI = {
-  // 验证Credential
+  // Verify Credential
   verifyGoogleCredential: async (credential: string) => {
     const res = await apiRequest('/api/auth/verify-google-credential', {
       method: 'POST',
@@ -99,7 +99,7 @@ export const authAPI = {
     return res;
   },
 
-  // 用户注册
+  // User registration
   userRegister: async (userData: any) => {
     await apiRequest('/api/auth/register', {
       method: 'POST',
@@ -107,7 +107,7 @@ export const authAPI = {
     });
   },
 
-  // 用户登录
+  // User login
   userLogin: async (userData: any) => {
     const res = await apiRequest('/api/auth/login', {
       method: 'POST',
@@ -123,7 +123,7 @@ export const authAPI = {
     return res;
   },
 
-  // 验证从回调中获取的token
+  // Verify token from callback
   verifyCallbackToken: (token: string) =>
     apiRequest('/api/auth/verify-token', {
       method: 'POST',
@@ -143,27 +143,27 @@ export const authAPI = {
 };
 
 export const moodAPI = {
-  // 创建心情记录
+  // Create mood entry
   createMood: async (moodData: any) => {
     return await apiRequest('/api/moods', {
       method: 'POST',
       data: moodData,
     });
   },
-  // 获取心情记录列表
+  // Get mood entries list
   getMoods: async () => {
     const res = await apiRequest('/api/moods', {
       method: 'GET',
     });
     return res.data;
   },
-  // 获取心情记录详情
+  // Get mood entry details
   getMood: async (moodId: string) => {
     return await apiRequest(`/api/moods/${moodId}`, {
       method: 'GET',
     });
   },
-  // 删除心情记录
+  // Delete mood entry
   deleteMood: async (moodId: string) => {
     return await apiRequest(`/api/moods/${moodId}`, {
       method: 'DELETE',
@@ -172,57 +172,57 @@ export const moodAPI = {
 };
 
 export const communityAPI = {
-  // 获取社区话题
+  // Get community topics
   getCommunityTopics: async () => {
     return await apiRequest('/api/community/topics', {
       method: 'GET',
     });
   },
-  // 更新在线状态（心跳）
+  // Update online status (heartbeat)
   updateOnlineStatus: async (sessionId?: string) => {
     return await apiRequest('/api/community/online-status/heartbeat', {
       method: 'POST',
       data: { sessionId },
     });
   },
-  // 移除在线状态
+  // Remove online status
   removeOnlineStatus: async (sessionId?: string) => {
     return await apiRequest('/api/community/online-status/remove', {
       method: 'POST',
       data: { sessionId },
     });
   },
-  // 获取当前在线用户
+  // Get current online users
   getOnlineUsers: async () => {
     return await apiRequest('/api/community/online-users', {
       method: 'GET',
     });
   },
-  // 获取社区心情列表
+  // Get community mood posts list
   getCommunityPosts: async () => {
     return await apiRequest('/api/community/moods', {
       method: 'GET',
     });
   },
-  // 获取社区心情详情
+  // Get community mood post details
   getCommunityMood: async (moodId: string) => {
     return await apiRequest(`/api/community/moods/${moodId}`, {
       method: 'GET',
     });
   },
-  // 点赞
+  // Like
   // likeCommunityMood: async (moodId: string) => {
   //   return await apiRequest(`/api/community/moods/${moodId}/like`, {
   //     method: 'POST',
   //   });
   // },
-  // // 取消点赞
+  // // Unlike
   // unlikeCommunityMood: async (moodId: string) => {
   //   return await apiRequest(`/api/community/moods/${moodId}/unlike`, {
   //     method: 'POST',
   //   });
   // },
-  // 回复社区心情
+  // Reply to community mood post
   replyToCommunityMood: async (
     moodId: string,
     replyData: {
@@ -237,7 +237,7 @@ export const communityAPI = {
     });
   },
 
-  // 添加互动
+  // Add interaction
   addInteraction: async (moodId: string, interactionType: string) => {
     return await apiRequest(`/api/community/moods/${moodId}/interaction`, {
       method: 'POST',
@@ -245,7 +245,7 @@ export const communityAPI = {
     });
   },
 
-  // 删除互动
+  // Remove interaction
   removeInteraction: async (moodId: string, interactionType: string) => {
     return await apiRequest(`/api/community/moods/${moodId}/interaction`, {
       method: 'DELETE',

@@ -17,25 +17,25 @@ const SocialPage = () => {
   const [onlineUsers, setOnlineUsers] = useState(0);
 
   useEffect(() => {
-    // 生成当前用户的匿名身份
+    // Generate anonymous identity for current user
     const user = generateAnonymousUser();
     setCurrentUser(user);
 
-    // 模拟在线用户数量
+    // Simulate online user count
     setOnlineUsers(Math.floor(Math.random() * 200) + 50);
   }, []);
 
   return (
     <div className="space-y-6">
-      {/* 头部欢迎区域 */}
+      {/* Header welcome area */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">情绪社交空间</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">Emotion Social Space</h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          在匿名安全的环境中，与有相似感受的人建立温暖连接
+          Build warm connections with people who share similar feelings in an anonymous and safe environment
         </p>
       </div>
 
-      {/* 当前匿名身份卡片 */}
+      {/* Current anonymous identity card */}
       {currentUser && (
         <div className="card bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100">
           <div className="flex items-center justify-between">
@@ -46,45 +46,45 @@ const SocialPage = () => {
                 <span className="text-white font-bold text-lg">😊</span>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-800">当前身份</h3>
+                <h3 className="font-semibold text-gray-800">Current Identity</h3>
                 <p className="text-gray-600">{currentUser.nickname}</p>
                 <p className="text-sm text-gray-500">
-                  匿名ID: {currentUser.id.slice(-8)}
+                  Anonymous ID: {currentUser.id.slice(-8)}
                 </p>
               </div>
             </div>
             <div className="text-right">
               <div className="flex items-center space-x-2 text-green-600 mb-1">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="text-sm">在线</span>
+                <span className="text-sm">Online</span>
               </div>
               <button className="text-sm text-blue-600 hover:text-blue-700">
                 <Shield className="w-4 h-4 inline mr-1" />
-                隐私设置
+                Privacy Settings
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* 实时统计 */}
+      {/* Real-time statistics */}
       <div className="grid grid-cols-2 gap-4">
         <div className="card text-center bg-orange-50 border-orange-200">
           <Users className="w-8 h-8 text-orange-600 mx-auto mb-2" />
           <p className="text-2xl font-bold text-orange-700">{onlineUsers}</p>
-          <p className="text-sm text-orange-600">在线用户</p>
+          <p className="text-sm text-orange-600">Online Users</p>
         </div>
         <div className="card text-center bg-teal-50 border-teal-200">
           <Heart className="w-8 h-8 text-teal-600 mx-auto mb-2" />
           <p className="text-2xl font-bold text-teal-700">1.2k</p>
-          <p className="text-sm text-teal-600">今日互动</p>
+          <p className="text-sm text-teal-600">Today's Interactions</p>
         </div>
       </div>
 
-      {/* 主要功能区域 */}
+      {/* Main feature areas */}
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800">发现与连接</h2>
+          <h2 className="text-xl font-semibold text-gray-800">Discover & Connect</h2>
 
           <Link
             to="/social/match"
@@ -95,11 +95,11 @@ const SocialPage = () => {
                 <Search className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-800">寻找同感者</h3>
+                <h3 className="font-semibold text-gray-800">Find Like-Minded</h3>
                 <p className="text-gray-600 text-sm">
-                  找到与你有相似情绪体验的人
+                  Find people with similar emotional experiences
                 </p>
-                <p className="text-sm text-blue-600 mt-1">发现 3 个匹配用户</p>
+                <p className="text-sm text-blue-600 mt-1">Found 3 matching users</p>
               </div>
             </div>
           </Link>
@@ -113,18 +113,18 @@ const SocialPage = () => {
                 <MessageCircle className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-800">情绪社区</h3>
+                <h3 className="font-semibold text-gray-800">Emotion Community</h3>
                 <p className="text-gray-600 text-sm">
-                  参与话题讨论，分享情绪体验
+                  Participate in topic discussions and share emotional experiences
                 </p>
-                <p className="text-sm text-green-600 mt-1">7 个热门话题</p>
+                <p className="text-sm text-green-600 mt-1">7 trending topics</p>
               </div>
             </div>
           </Link>
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800">个人洞察</h2>
+          <h2 className="text-xl font-semibold text-gray-800">Personal Insights</h2>
 
           <Link
             to="/social/insights"
@@ -135,11 +135,11 @@ const SocialPage = () => {
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-800">社交洞察</h3>
+                <h3 className="font-semibold text-gray-800">Social Insights</h3>
                 <p className="text-gray-600 text-sm">
-                  了解你的社交影响力和成长
+                  Understand your social influence and growth
                 </p>
-                <p className="text-sm text-purple-600 mt-1">本月互动 +25%</p>
+                <p className="text-sm text-purple-600 mt-1">Interactions this month +25%</p>
               </div>
             </div>
           </Link>

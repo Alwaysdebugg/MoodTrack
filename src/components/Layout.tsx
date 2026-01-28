@@ -13,10 +13,10 @@ const Layout = ({ children }: LayoutProps) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const navItems = [
-    { path: '/home', label: '首页', icon: Home },
-    { path: '/track', label: '记录心情', icon: Heart },
-    { path: '/social', label: '情绪社交', icon: Users },
-    { path: '/history', label: '历史记录', icon: History },
+    { path: '/home', label: 'Home', icon: Home },
+    { path: '/track', label: 'Track Mood', icon: Heart },
+    { path: '/social', label: 'Social', icon: Users },
+    { path: '/history', label: 'History', icon: History },
   ];
 
   const handleLogout = () => {
@@ -80,7 +80,7 @@ const Layout = ({ children }: LayoutProps) => {
                         className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         <LogOut size={16} className="mr-2" />
-                        退出登录
+                        Logout
                       </button>
                     </div>
                   )}

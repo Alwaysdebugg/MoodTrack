@@ -16,27 +16,27 @@ const MoodBadge = ({
   const getMoodData = (moodValue: number) => {
     const moodMap = {
       1: {
-        label: '很糟糕',
+        label: 'Very Bad',
         color: 'bg-red-100 text-red-700 border-red-200',
         icon: '😰',
       },
       2: {
-        label: '不好',
+        label: 'Bad',
         color: 'bg-orange-100 text-orange-700 border-orange-200',
         icon: '😔',
       },
       3: {
-        label: '一般',
+        label: 'Neutral',
         color: 'bg-yellow-100 text-yellow-700 border-yellow-200',
         icon: '😐',
       },
       4: {
-        label: '不错',
+        label: 'Good',
         color: 'bg-green-100 text-green-700 border-green-200',
         icon: '😊',
       },
       5: {
-        label: '很棒',
+        label: 'Excellent',
         color: 'bg-blue-100 text-blue-700 border-blue-200',
         icon: '😄',
       },

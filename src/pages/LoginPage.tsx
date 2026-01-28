@@ -19,7 +19,7 @@ const LoginPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">加载中...</p>
+          <p className="text-gray-600">Loading...</p>
         </div>
       </div>
     );
@@ -34,20 +34,20 @@ const LoginPage = () => {
             <h1 className="text-4xl font-bold text-gray-900">MoodTrack</h1>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            欢迎使用心情追踪器
+            Welcome to Mood Tracker
           </h2>
           <p className="text-gray-600 mb-8">
-            记录你的每日心情，与他人分享情感体验，建立更好的情绪健康习惯
+            Record your daily moods, share emotional experiences with others, and build better emotional health habits
           </p>
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-8">
           <div className="text-center mb-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              登录你的账户
+              Login to Your Account
             </h3>
             <p className="text-gray-600 text-sm">
-              使用Google账号快速登录，安全便捷
+              Quick login with Google account, secure and convenient
             </p>
           </div>
 
@@ -57,7 +57,7 @@ const LoginPage = () => {
 
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500">
-              登录即表示你同意我们的服务条款和隐私政策
+              By logging in, you agree to our Terms of Service and Privacy Policy
             </p>
           </div>
         </div>
@@ -66,15 +66,15 @@ const LoginPage = () => {
           <div className="flex justify-center space-x-8 text-sm text-gray-600">
             <div className="flex items-center">
               <div className="w-2 h-2 bg-blue-600 rounded-full mr-2"></div>
-              心情记录
+              Mood Tracking
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-purple-600 rounded-full mr-2"></div>
-              社交分享
+              Social Sharing
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-green-600 rounded-full mr-2"></div>
-              数据分析
+              Data Analysis
             </div>
           </div>
         </div>

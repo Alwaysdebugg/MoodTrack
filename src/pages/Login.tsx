@@ -22,19 +22,19 @@ const LoginPage = () => {
     const newErrors: { [key: string]: string } = {};
 
     if (isRegisterMode && !formData.name.trim()) {
-      newErrors.name = '用户名不能为空';
+      newErrors.name = 'Username cannot be empty';
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = '邮箱不能为空';
+      newErrors.email = 'Email cannot be empty';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = '邮箱格式不正确';
+      newErrors.email = 'Invalid email format';
     }
 
     if (!formData.password) {
-      newErrors.password = '密码不能为空';
+      newErrors.password = 'Password cannot be empty';
     } else if (isRegisterMode && formData.password.length < 6) {
-      newErrors.password = '密码至少需要6个字符';
+      newErrors.password = 'Password must be at least 6 characters';
     }
 
     setErrors(newErrors);
@@ -57,15 +57,15 @@ const LoginPage = () => {
         email: formData.email,
         password: formData.password,
       });
-      console.log('登录成功:', response);
+      console.log('Login successful:', response);
 
-      // 触发AuthContext更新
+      // Trigger AuthContext update
       if (login) {
         login(response.data.token);
       }
     } catch (error) {
       setErrors({
-        general: error instanceof Error ? error.message : '操作失败，请重试',
+        general: error instanceof Error ? error.message : 'Operation failed, please try again',
       });
     } finally {
       setIsSubmitting(false);
@@ -76,7 +76,7 @@ const LoginPage = () => {
     (res: any) => {
       if (res) {
         const { token } = res.data;
-        // 触发AuthContext更新
+        // Trigger AuthContext update
         if (login) {
           login(token);
         }
@@ -88,7 +88,7 @@ const LoginPage = () => {
   const handleGoogleLoginError = useCallback((error: any) => {
     console.error('Google login error:', error);
     setErrors({
-      general: error instanceof Error ? error.message : '操作失败，请重试',
+      general: error instanceof Error ? error.message : 'Operation failed, please try again',
     });
   }, []);
 
@@ -103,7 +103,7 @@ const LoginPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">加载中...</p>
+          <p className="text-gray-600">Loading...</p>
         </div>
       </div>
     );
@@ -118,20 +118,20 @@ const LoginPage = () => {
             <h1 className="text-4xl font-bold text-gray-900">MoodTrack</h1>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            欢迎使用心情追踪器
+            Welcome to Mood Tracker
           </h2>
           <p className="text-gray-600 mb-8">
-            记录你的每日心情，与他人分享情感体验
+            Record your daily moods and share emotional experiences with others
           </p>
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-8">
           <div className="text-center mb-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              {isRegisterMode ? '创建账户' : '登录你的账户'}
+              {isRegisterMode ? 'Create Account' : 'Login to Your Account'}
             </h3>
             <p className="text-gray-600 text-sm">
-              {isRegisterMode ? '填写信息创建新账户' : '使用邮箱和密码登录'}
+              {isRegisterMode ? 'Fill in information to create a new account' : 'Login with email and password'}
             </p>
           </div>
 
@@ -142,7 +142,7 @@ const LoginPage = () => {
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  用户名
+                  Username
                 </label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -154,7 +154,7 @@ const LoginPage = () => {
                       setFormData({ ...formData, name: e.target.value })
                     }
                     className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="请输入用户名"
+                    placeholder="Enter username"
                     required={isRegisterMode}
                   />
                 </div>
@@ -169,7 +169,7 @@ const LoginPage = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                邮箱
+                Email
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -181,7 +181,7 @@ const LoginPage = () => {
                     setFormData({ ...formData, email: e.target.value })
                   }
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="请输入邮箱地址"
+                  placeholder="Enter email address"
                   required
                 />
               </div>
@@ -195,7 +195,7 @@ const LoginPage = () => {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                密码
+                Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -207,7 +207,7 @@ const LoginPage = () => {
                     setFormData({ ...formData, password: e.target.value })
                   }
                   className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="请输入密码"
+                  placeholder="Enter password"
                   required
                 />
                 <button
@@ -239,17 +239,17 @@ const LoginPage = () => {
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isSubmitting
-                ? '提交中...'
+                ? 'Submitting...'
                 : isRegisterMode
-                  ? '创建账户'
-                  : '登录'}
+                  ? 'Create Account'
+                  : 'Login'}
             </button>
           </form>
 
           <div className="mt-6 flex items-center justify-between">
             <div className="border-t border-gray-300 w-full mr-2"></div>
             <span className="text-sm text-gray-500 whitespace-nowrap">
-              或者
+              Or
             </span>
             <div className="border-t border-gray-300 w-full ml-2"></div>
           </div>
@@ -271,14 +271,13 @@ const LoginPage = () => {
               }}
               className="text-blue-600 hover:text-blue-800 text-sm font-medium"
             >
-              {isRegisterMode ? '已有账户？点击登录' : '没有账户？点击注册'}
+              {isRegisterMode ? 'Already have an account? Click to login' : 'Don\'t have an account? Click to register'}
             </button>
           </div>
 
           <div className="mt-4 text-center">
             <p className="text-xs text-gray-500">
-              {isRegisterMode ? '注册' : '登录'}
-              即表示你同意我们的服务条款和隐私政策
+              By {isRegisterMode ? 'registering' : 'logging in'}, you agree to our Terms of Service and Privacy Policy
             </p>
           </div>
         </div>
@@ -287,15 +286,15 @@ const LoginPage = () => {
           <div className="flex justify-center space-x-8 text-sm text-gray-600">
             <div className="flex items-center">
               <div className="w-2 h-2 bg-blue-600 rounded-full mr-2"></div>
-              心情记录
+              Mood Tracking
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-purple-600 rounded-full mr-2"></div>
-              社交分享
+              Social Sharing
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-green-600 rounded-full mr-2"></div>
-              数据分析
+              Data Analysis
             </div>
           </div>
         </div>

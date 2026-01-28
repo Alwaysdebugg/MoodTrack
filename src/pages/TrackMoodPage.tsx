@@ -10,10 +10,10 @@ const TrackMoodPage = () => {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
-  const [isPublic, setIsPublic] = useState(true); // 是否公开到社区
-  const [isAnonymous, setIsAnonymous] = useState(false); // 是否匿名
+  const [isPublic, setIsPublic] = useState(true); // Whether to share to community
+  const [isAnonymous, setIsAnonymous] = useState(false); // Whether to share anonymously
 
-  // 自动隐藏成功提示
+  // Auto-hide success message
   useEffect(() => {
     if (showSuccess) {
       const timer = setTimeout(() => {
@@ -26,35 +26,35 @@ const TrackMoodPage = () => {
   const moods = [
     {
       id: 1,
-      label: '很糟糕',
+      label: 'Very Bad',
       icon: Frown,
       color: 'text-red-500',
       bg: 'bg-red-50',
     },
     {
       id: 2,
-      label: '不好',
+      label: 'Bad',
       icon: Frown,
       color: 'text-orange-500',
       bg: 'bg-orange-50',
     },
     {
       id: 3,
-      label: '一般',
+      label: 'Neutral',
       icon: Meh,
       color: 'text-yellow-500',
       bg: 'bg-yellow-50',
     },
     {
       id: 4,
-      label: '不错',
+      label: 'Good',
       icon: Smile,
       color: 'text-green-500',
       bg: 'bg-green-50',
     },
     {
       id: 5,
-      label: '很棒',
+      label: 'Excellent',
       icon: Heart,
       color: 'text-pink-500',
       bg: 'bg-pink-50',
@@ -70,21 +70,21 @@ const TrackMoodPage = () => {
   };
 
   const triggerOptions = [
-    '工作压力',
-    '人际关系',
-    '健康问题',
-    '家庭事务',
-    '学习压力',
-    '经济状况',
-    '天气变化',
-    '睡眠质量',
-    '运动锻炼',
-    '娱乐休闲',
-    '社交活动',
-    '个人成长',
-    '情感关系',
-    '生活变化',
-    '其他',
+    'Work Stress',
+    'Relationships',
+    'Health Issues',
+    'Family Matters',
+    'Study Pressure',
+    'Financial Status',
+    'Weather Changes',
+    'Sleep Quality',
+    'Exercise',
+    'Entertainment',
+    'Social Activities',
+    'Personal Growth',
+    'Romantic Relationship',
+    'Life Changes',
+    'Other',
   ];
 
   const toggleTrigger = (trigger: string) => {
@@ -112,20 +112,20 @@ const TrackMoodPage = () => {
 
     try {
       setLoading(true);
-      // 调用API保存心情记录
+      // Call API to save mood entry
       await apiRequest('/api/moods', {
         method: 'POST',
         data: moodEntry,
       });
-      console.log('心情记录已保存！');
+      console.log('Mood entry saved!');
       setShowSuccess(true);
     } catch (error) {
-      console.error('保存心情记录失败:', error);
+      console.error('Failed to save mood entry:', error);
     } finally {
       setLoading(false);
     }
 
-    // 本地保存记录
+    // Save locally
     const existingEntries = JSON.parse(
       localStorage.getItem('moodEntries') || '[]'
     );
@@ -141,24 +141,24 @@ const TrackMoodPage = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      {/* 成功提示框 */}
+      {/* Success message */}
       {showSuccess && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
           <CheckCircle className="w-5 h-5" />
-          <span>记录成功</span>
+          <span>Recorded successfully</span>
         </div>
       )}
 
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">记录你的心情</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">Track Your Mood</h1>
         <p className="text-lg text-gray-600">
-          选择最符合当前感受的心情，并添加一些备注
+          Select the mood that best matches your current feelings and add some notes
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="card">
-          <h2 className="text-xl font-semibold mb-4">今天心情如何？</h2>
+          <h2 className="text-xl font-semibold mb-4">How are you feeling today?</h2>
           <div className="grid grid-cols-5 gap-4">
             {moods.map(({ id, label, icon: Icon, color, bg }) => (
               <button
@@ -199,7 +199,7 @@ const TrackMoodPage = () => {
           </div>
           {selectedTriggers.length > 0 && (
             <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-700 mb-2">已选择的影响因素：</p>
+              <p className="text-sm text-blue-700 mb-2">Selected triggers:</p>
               <div className="flex flex-wrap gap-2">
                 {selectedTriggers.map(trigger => (
                   <span
@@ -215,28 +215,28 @@ const TrackMoodPage = () => {
         </div>
 
         <div className="card">
-          <h2 className="text-xl font-semibold mb-4">添加备注</h2>
+          <h2 className="text-xl font-semibold mb-4">Add Notes</h2>
           <textarea
             value={note}
             onChange={e => setNote(e.target.value)}
-            placeholder="记录一下今天发生了什么，或者描述你的感受..."
+            placeholder="Record what happened today, or describe your feelings..."
             className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             rows={4}
           />
         </div>
 
-        {/* 公开到社区选项 */}
+        {/* Share to community options */}
         <div className="card">
-          <h2 className="text-xl font-semibold mb-4">分享设置</h2>
+          <h2 className="text-xl font-semibold mb-4">Share Settings</h2>
 
-          {/* 公开到社区开关 */}
+          {/* Share to community switch */}
           <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
             <div className="flex-1">
               <label htmlFor="public-switch" className="text-sm font-medium text-gray-700 cursor-pointer">
-                公开到社区
+                Share to Community
               </label>
               <p className="text-xs text-gray-500 mt-1">
-                开启后，你的心情记录将在社区中展示
+                When enabled, your mood entry will be displayed in the community
               </p>
             </div>
             <Switch
@@ -246,15 +246,15 @@ const TrackMoodPage = () => {
             />
           </div>
 
-          {/* 匿名分享开关 - 只在公开时显示 */}
+          {/* Anonymous share switch - only shown when public */}
           {isPublic && (
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <label htmlFor="anonymous-switch" className="text-sm font-medium text-gray-700 cursor-pointer">
-                  匿名分享
+                  Share Anonymously
                 </label>
                 <p className="text-xs text-gray-500 mt-1">
-                  开启后，你的用户名将不会显示
+                  When enabled, your username will not be displayed
                 </p>
               </div>
               <Switch
@@ -277,12 +277,12 @@ const TrackMoodPage = () => {
             {loading ? (
               <>
                 <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                "分享中..."
+                Sharing...
               </>
             ) : (
               <>
                 <Star className="w-5 h-5" />
-                分享心情
+                Share Mood
               </>
             )}
           </button>

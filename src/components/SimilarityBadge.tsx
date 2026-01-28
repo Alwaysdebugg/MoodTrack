@@ -18,31 +18,31 @@ const SimilarityBadge = ({
   const getSimilarityLevel = (value: number) => {
     if (value >= 90) {
       return {
-        level: '极高相似',
+        level: 'Very High',
         color: 'bg-emerald-100 text-emerald-700 border-emerald-200',
         icon: '🎯',
       };
     } else if (value >= 80) {
       return {
-        level: '高度相似',
+        level: 'High',
         color: 'bg-green-100 text-green-700 border-green-200',
         icon: '✨',
       };
     } else if (value >= 60) {
       return {
-        level: '相似',
+        level: 'Similar',
         color: 'bg-blue-100 text-blue-700 border-blue-200',
         icon: '🤝',
       };
     } else if (value >= 40) {
       return {
-        level: '部分相似',
+        level: 'Partial',
         color: 'bg-yellow-100 text-yellow-700 border-yellow-200',
         icon: '👍',
       };
     } else {
       return {
-        level: '低相似',
+        level: 'Low',
         color: 'bg-gray-100 text-gray-700 border-gray-200',
         icon: '🔍',
       };

@@ -19,7 +19,7 @@ const LoginCallback = () => {
 
       if (error) {
         setStatus('error');
-        setMessage(`登录失败: ${error}`);
+        setMessage(`Login failed: ${error}`);
         setTimeout(() => {
           navigate('/login');
         }, 3000);
@@ -28,7 +28,7 @@ const LoginCallback = () => {
 
       if (!token) {
         setStatus('error');
-        setMessage('未找到有效的登录凭证');
+        setMessage('No valid login credentials found');
         setTimeout(() => {
           navigate('/login');
         }, 3000);
@@ -40,13 +40,13 @@ const LoginCallback = () => {
 
         if (result.success) {
           setStatus('success');
-          setMessage('登录成功！正在跳转到首页...');
+          setMessage('Login successful! Redirecting to homepage...');
           setTimeout(() => {
             navigate('/home');
           }, 1500);
         } else {
           setStatus('error');
-          setMessage('登录验证失败，请重试');
+          setMessage('Login verification failed, please try again');
           setTimeout(() => {
             navigate('/login');
           }, 3000);
@@ -54,7 +54,7 @@ const LoginCallback = () => {
       } catch (error) {
         console.error('Login callback error:', error);
         setStatus('error');
-        setMessage('登录过程中发生错误，请重试');
+        setMessage('An error occurred during login, please try again');
         setTimeout(() => {
           navigate('/login');
         }, 3000);
@@ -71,9 +71,9 @@ const LoginCallback = () => {
           <>
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              正在处理登录...
+              Processing login...
             </h2>
-            <p className="text-gray-600">请稍候，我们正在验证您的登录信息</p>
+            <p className="text-gray-600">Please wait while we verify your login information</p>
           </>
         );
       case 'success':
@@ -81,7 +81,7 @@ const LoginCallback = () => {
           <>
             <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              登录成功！
+              Login Successful!
             </h2>
             <p className="text-gray-600">{message}</p>
           </>
@@ -91,14 +91,14 @@ const LoginCallback = () => {
           <>
             <AlertCircle className="h-12 w-12 text-red-600 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              登录失败
+              Login Failed
             </h2>
             <p className="text-gray-600">{message}</p>
             <button
               onClick={() => navigate('/login')}
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              返回登录页
+              Back to Login
             </button>
           </>
         );

@@ -1,23 +1,23 @@
 import { AnonymousUser, MoodMatch, InteractionType } from '../types/social';
 
-// 生成匿名用户身份
+// Generate anonymous user identity
 export const generateAnonymousUser = (): AnonymousUser => {
   const nicknames = [
-    '温暖的向日葵',
-    '勇敢的小树',
-    '坚强的云朵',
-    '平静的湖水',
-    '乐观的星星',
-    '智慧的月亮',
-    '温柔的微风',
-    '坚韧的竹子',
-    '纯真的雪花',
-    '希望的晨光',
-    '安静的山谷',
-    '活力的彩虹',
-    '宁静的森林',
-    '美好的花朵',
-    '自由的鸟儿',
+    'Warm Sunflower',
+    'Brave Little Tree',
+    'Strong Cloud',
+    'Calm Lake',
+    'Optimistic Star',
+    'Wise Moon',
+    'Gentle Breeze',
+    'Resilient Bamboo',
+    'Pure Snowflake',
+    'Hopeful Dawn',
+    'Quiet Valley',
+    'Vibrant Rainbow',
+    'Peaceful Forest',
+    'Beautiful Flower',
+    'Free Bird',
   ];
 
   const avatarColors = [
@@ -40,29 +40,29 @@ export const generateAnonymousUser = (): AnonymousUser => {
     nickname: randomNickname,
     avatar: randomAvatar,
     isOnline: Math.random() > 0.5,
-    lastActive: new Date(Date.now() - Math.random() * 1800000).toISOString(), // 0-30分钟前
+    lastActive: new Date(Date.now() - Math.random() * 1800000).toISOString(), // 0-30 minutes ago
   };
 };
 
-// 计算情绪相似度
+// Calculate mood similarity
 export const calculateMoodSimilarity = (
   mood1: number,
   mood2: number,
   tags1: string[],
   tags2: string[]
 ): number => {
-  // 情绪评分相似度 (40%权重)
+  // Mood score similarity (40% weight)
   const moodSimilarity = Math.max(0, 1 - Math.abs(mood1 - mood2) / 4) * 0.4;
 
-  // 标签匹配度 (35%权重)
+  // Tag match rate (35% weight)
   const commonTags = tags1.filter(tag => tags2.includes(tag));
   const tagSimilarity =
     (commonTags.length / Math.max(tags1.length, tags2.length, 1)) * 0.35;
 
-  // 时间接近度 (15%权重) - 这里简化处理
+  // Time proximity (15% weight) - simplified here
   const timeSimilarity = 0.15;
 
-  // 用户活跃度 (10%权重) - 这里简化处理
+  // User activity (10% weight) - simplified here
   const activitySimilarity = 0.1;
 
   return Math.round(
@@ -70,17 +70,17 @@ export const calculateMoodSimilarity = (
   );
 };
 
-// 生成模拟的情绪匹配数据
+// Generate mock mood match data
 export const generateMockMoodMatches = (
   currentMood: number,
   currentTags: string[]
 ): MoodMatch[] => {
   const matches: MoodMatch[] = [];
-  const matchCount = Math.floor(Math.random() * 6) + 3; // 3-8个匹配
+  const matchCount = Math.floor(Math.random() * 6) + 3; // 3-8 matches
 
   for (let i = 0; i < matchCount; i++) {
     const user = generateAnonymousUser();
-    const matchMood = currentMood + (Math.random() - 0.5) * 2; // ±1分范围
+    const matchMood = currentMood + (Math.random() - 0.5) * 2; // ±1 point range
     const similarity = calculateMoodSimilarity(
       currentMood,
       matchMood,
@@ -92,14 +92,14 @@ export const generateMockMoodMatches = (
       user,
       mood: Math.max(1, Math.min(5, Math.round(matchMood))),
       moodLabel: getMoodLabel(Math.round(matchMood)),
-      timestamp: new Date(Date.now() - Math.random() * 7200000).toISOString(), // 0-2小时前
+      timestamp: new Date(Date.now() - Math.random() * 7200000).toISOString(), // 0-2 hours ago
       similarity,
       sharedTags: currentTags.slice(
         0,
         Math.floor(Math.random() * currentTags.length) + 1
       ),
       emotionPreview: generateEmotionPreview(),
-      city: Math.random() > 0.5 ? '同城' : undefined,
+      city: Math.random() > 0.5 ? 'Same City' : undefined,
       timeAgo: formatTimeAgo(new Date(Date.now() - Math.random() * 7200000)),
     });
   }
@@ -107,102 +107,102 @@ export const generateMockMoodMatches = (
   return matches.sort((a, b) => b.similarity - a.similarity);
 };
 
-// 获取心情标签
+// Get mood label
 export const getMoodLabel = (mood: number): string => {
-  const labels = ['', '很糟糕', '不好', '一般', '不错', '很棒'];
+  const labels = ['', 'Very Bad', 'Bad', 'Neutral', 'Good', 'Excellent'];
   return labels[Math.max(1, Math.min(5, mood))];
 };
 
-// 生成情绪预览文本
+// Generate emotion preview text
 export const generateEmotionPreview = (): string => {
   const previews = [
-    '今天工作中遇到了一些挫折，感觉有些沮丧...',
-    '最近压力比较大，需要找个人聊聊...',
-    '心情不错，想分享一些开心的事情...',
-    '对未来感到一些不确定，希望能得到支持...',
-    '今天发生了一件让我很感动的事...',
-    '最近在思考人生的意义，有些迷茫...',
-    '工作上有了新的突破，很兴奋...',
-    '和朋友发生了一些小矛盾，心情复杂...',
+    'Encountered some setbacks at work today, feeling a bit down...',
+    'Been under a lot of pressure lately, need someone to talk to...',
+    'Feeling good, want to share some happy things...',
+    'Feeling uncertain about the future, hoping for support...',
+    'Something touching happened today...',
+    'Been thinking about the meaning of life lately, feeling confused...',
+    'Made a breakthrough at work, very excited...',
+    'Had a small conflict with a friend, feeling complicated...',
   ];
   return previews[Math.floor(Math.random() * previews.length)];
 };
 
-// 格式化时间差
+// Format time difference
 export const formatTimeAgo = (date: Date): string => {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffMins = Math.floor(diffMs / 60000);
   const diffHours = Math.floor(diffMs / 3600000);
 
-  if (diffMins < 1) return '刚刚';
-  if (diffMins < 60) return `${diffMins}分钟前`;
-  if (diffHours < 24) return `${diffHours}小时前`;
-  return `${Math.floor(diffHours / 24)}天前`;
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins} minutes ago`;
+  if (diffHours < 24) return `${diffHours} hours ago`;
+  return `${Math.floor(diffHours / 24)} days ago`;
 };
 
-// 互动类型定义
+// Interaction type definitions
 export const interactionTypes: InteractionType[] = [
   {
     id: 'like',
-    label: '点赞',
+    label: 'Like',
     emoji: '👍',
-    description: '点赞',
+    description: 'Like',
   },
   {
     id: 'unlike',
-    label: '不喜欢',
+    label: 'Dislike',
     emoji: '☹️',
-    description: '不喜欢',
+    description: 'Dislike',
   },
 ];
 
-// 生成AI回复建议
+// Generate AI reply suggestions
 export const generateAIReplySuggestions = (mood: number): string[] => {
   const suggestions: { [key: number]: string[] } = {
     1: [
-      '虽然现在很困难，但你并不孤单，我们都在这里支持你',
-      '每个人都会有低谷期，相信明天会更好',
-      '你愿意分享这些感受已经很勇敢了',
+      'Even though things are difficult right now, you are not alone. We are all here to support you',
+      'Everyone goes through low periods. Believe that tomorrow will be better',
+      'It is already brave of you to share these feelings',
     ],
     2: [
-      '理解你现在的感受，有时候生活确实不容易',
-      '你的感受是完全正常的，给自己一些时间',
-      '希望你能找到让自己舒服一些的方法',
+      'I understand how you feel. Sometimes life is indeed not easy',
+      'Your feelings are completely normal. Give yourself some time',
+      'Hope you can find ways to make yourself feel more comfortable',
     ],
     3: [
-      '平静的心情也是很珍贵的',
-      '有时候平稳就是一种幸福',
-      '希望你能保持这种内心的平和',
+      'A calm mood is also precious',
+      'Sometimes stability is a form of happiness',
+      'Hope you can maintain this inner peace',
     ],
     4: [
-      '很高兴听到你心情不错！',
-      '你的积极能量很感染人',
-      '希望这份好心情能继续保持下去',
+      'Glad to hear you are feeling good!',
+      'Your positive energy is very infectious',
+      'Hope this good mood can continue',
     ],
     5: [
-      '你的快乐很有感染力！',
-      '太棒了！你的好心情让我也感到开心',
-      '希望你能继续享受这美好的时光',
+      'Your happiness is very infectious!',
+      'Great! Your good mood makes me happy too',
+      'Hope you can continue to enjoy these beautiful moments',
     ],
   };
 
   return suggestions[Math.max(1, Math.min(5, mood))] || suggestions[3];
 };
 
-// 处理敏感内容
+// Process sensitive content
 export const processContent = (content: string): string => {
-  // 简化的内容处理逻辑
+  // Simplified content processing logic
   let processed = content;
 
-  // 移除可能的个人信息
-  processed = processed.replace(/我叫\S+|我是\S+/g, '我');
-  processed = processed.replace(/\d{11}|\d{3}-\d{4}-\d{4}/g, '[联系方式]');
-  processed = processed.replace(/\S+公司|\S+学校/g, '[工作/学习场所]');
+  // Remove possible personal information
+  processed = processed.replace(/我叫\S+|我是\S+/g, 'I');
+  processed = processed.replace(/\d{11}|\d{3}-\d{4}-\d{4}/g, '[Contact]');
+  processed = processed.replace(/\S+公司|\S+学校/g, '[Work/School]');
 
-  // 软化负面表达
-  processed = processed.replace(/想死|不想活/g, '很难过');
-  processed = processed.replace(/恨|讨厌/g, '不喜欢');
+  // Soften negative expressions
+  processed = processed.replace(/想死|不想活/g, 'very sad');
+  processed = processed.replace(/恨|讨厌/g, 'dislike');
 
   return processed;
 };

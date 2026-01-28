@@ -1,6 +1,9 @@
 # MoodTrack
 
-一个现代化的心情追踪和社交分享应用，帮助用户记录、分析和分享情绪状态，基于React和TypeScript构建的全栈应用。
+A React-based mood tracking and social sharing application that helps users record, analyze, and share emotional states. 
+
+**Try it out** 
+[MoodTrack](https://mood-track-git-feature-preview-alwaysdebuggs-projects.vercel.app/home)
 
 ## ✨ 功能特点
 
@@ -333,4 +336,4 @@ Body: { content: string }
 
 ---
 
-**MoodTrack** - 让每一天的心情都有意义 ❤️
+For questions or suggestions, please contact us through GitHub Issues.

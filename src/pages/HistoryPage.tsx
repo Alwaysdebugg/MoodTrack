@@ -24,16 +24,16 @@ const HistoryPage = () => {
   const [entries, setEntries] = useState<MoodEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 获取后端心情记录
+  // Fetch mood entries from backend
   const fetchMoodEntries = async () => {
     try {
       setLoading(true);
-      // 调用API获取心情记录
+      // Call API to get mood entries
       const res = await moodAPI.getMoods();
-      console.log('获取心情记录成功:', res);
+      console.log('Mood entries fetched successfully:', res);
       setEntries(res || []);
     } catch (error) {
-      console.error('获取心情记录失败:', error);
+      console.error('Failed to fetch mood entries:', error);
     } finally {
       setLoading(false);
     }
@@ -47,26 +47,26 @@ const HistoryPage = () => {
     switch (moodTypeMapping[mood]) {
       case 1:
       case 2:
-        return <Frown className="w-6 h-6 text-red-500" />;
+        return <Frown className="w-7 h-7 text-white" strokeWidth={2.5} />;
       case 3:
-        return <Meh className="w-6 h-6 text-yellow-500" />;
+        return <Meh className="w-7 h-7 text-white" strokeWidth={2.5} />;
       case 4:
-        return <Smile className="w-6 h-6 text-green-500" />;
+        return <Smile className="w-7 h-7 text-white" strokeWidth={2.5} />;
       case 5:
-        return <Heart className="w-6 h-6 text-pink-500" />;
+        return <Heart className="w-7 h-7 text-white" strokeWidth={2.5} />;
       default:
         return null;
     }
   };
 
   const getMoodLabel = (mood: string) => {
-    const labels = ['', '很糟糕', '不好', '一般', '不错', '很棒'];
-    return labels[moodTypeMapping[mood]] || '未知';
+    const labels = ['', 'Very Bad', 'Bad', 'Neutral', 'Good', 'Excellent'];
+    return labels[moodTypeMapping[mood]] || 'Unknown';
   };
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleDateString('zh-CN', {
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -76,55 +76,59 @@ const HistoryPage = () => {
   };
 
   if (entries.length === 0 && !loading) {
-    // 如果没有心情记录，显示提示
+    // If no mood entries, show message
     return (
-      <div className="text-center py-12">
-        <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-        <h2 className="text-2xl font-semibold text-gray-600 mb-2">
-          暂无心情记录
+      <div className="text-center py-20">
+        <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-3xl mx-auto mb-8 flex items-center justify-center shadow-apple-lg">
+          <Calendar className="w-12 h-12 text-white" strokeWidth={2.5} />
+        </div>
+        <h2 className="text-3xl font-semibold text-apple-text mb-4">
+          No Mood Records Yet
         </h2>
-        <p className="text-gray-500">开始记录你的第一个心情吧！</p>
+        <p className="text-xl text-apple-secondary">Start tracking your first mood!</p>
       </div>
     );
   }
 
   return (
     <div>
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">心情历史</h1>
-        <p className="text-lg text-gray-600">查看你的心情变化记录</p>
+      <div className="text-center mb-12 max-w-2xl mx-auto">
+        <h1 className="text-5xl font-bold text-apple-text mb-6 tracking-tight">Mood History</h1>
+        <p className="text-xl text-apple-secondary leading-relaxed">View your mood change records</p>
       </div>
 
-      {/* 心情记录列表 */}
+      {/* Mood entries list */}
       {entries.length > 0 && !loading && (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {entries.map((entry, index) => (
-            <div key={index} className="card">
-              <div className="flex items-start space-x-4">
+            <div key={index} className="card hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-start space-x-6">
                 <div className="flex-shrink-0">
-                  {getMoodIcon(entry.mood_type)}
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-lg">
+                    {getMoodIcon(entry.mood_type)}
+                  </div>
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-semibold">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-xl font-semibold text-apple-text">
                       {getMoodLabel(entry.mood_type)}
                     </h3>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-apple-secondary font-medium">
                       {formatDate(entry.created_at)}
                     </span>
                   </div>
                   {entry.note && (
-                    <p className="text-gray-700 mb-3">{entry.note}</p>
+                    <p className="text-apple-text mb-4 leading-relaxed">{entry.note}</p>
                   )}
-                  {/* Triggers 显示 */}
+                  {/* Triggers display */}
                   {entry.triggers && entry.triggers.length > 0 && (
-                    <div className="flex items-center space-x-2">
-                      <Tag className="w-4 h-4 text-gray-500" />
-                      <div className="flex flex-wrap gap-2">
+                    <div className="flex items-center space-x-3">
+                      <Tag className="w-5 h-5 text-apple-secondary" strokeWidth={2.5} />
+                      <div className="flex flex-wrap gap-2.5">
                         {entry.triggers.map((trigger, triggerIndex) => (
                           <span
                             key={triggerIndex}
-                            className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full"
+                            className="inline-block bg-apple-gray text-apple-text text-sm font-medium px-4 py-1.5 rounded-xl"
                           >
                             {trigger}
                           </span>
@@ -139,11 +143,11 @@ const HistoryPage = () => {
         </div>
       )}
 
-      {/* 加载状态 */}
+      {/* Loading state */}
       {loading && (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="animate-spin w-8 h-8 text-blue-500" />
-          <span className="ml-2 text-gray-600">加载中...</span>
+        <div className="flex flex-col items-center justify-center py-20">
+          <Loader2 className="animate-spin w-12 h-12 text-apple-blue mb-4" strokeWidth={2.5} />
+          <span className="text-lg text-apple-secondary font-medium">Loading...</span>
         </div>
       )}
     </div>

@@ -47,21 +47,21 @@ const CommunityPage = () => {
     // fetchCommunityPosts();
   }, []);
 
-  // 获取社区话题
+  // Fetch community topics
   const fetchCommunityTopics = async () => {
     const res = await communityAPI.getCommunityTopics();
     if (res.success && res.data) {
       setTopics(res.data || []);
     }
   };
-  // 获取community posts
+  // Fetch community posts
   const fetchCommunityPosts = async () => {
     setLoading(true);
     const res = await communityAPI.getCommunityPosts();
     if (res.success && res.data) {
       setPosts(res.data || []);
     } else {
-      console.error('获取社区心情列表失败:', res.message);
+      console.error('Failed to fetch community mood list:', res.message);
     }
     setLoading(false);
   };
@@ -110,7 +110,7 @@ const CommunityPage = () => {
 
   const handleInteraction = async (postId: string, interactionType: string) => {
     if (!user) {
-      alert('请先登录');
+      alert('Please login first');
       return;
     }
 
@@ -179,10 +179,10 @@ const CommunityPage = () => {
         })
       );
 
-      // 调用后端API
+      // Call backend API
       const res = await communityAPI.addInteraction(postId, interactionType);
       if (res.success && res.data) {
-        // 使用后端返回的准确数据更新
+        // Update with accurate data from backend
         setPosts(prev =>
           prev.map(post => {
             if (post.id === postId) {
@@ -199,7 +199,7 @@ const CommunityPage = () => {
           })
         );
       } else {
-        // 如果失败，回滚到原始状态
+        // If failed, rollback to original state
         setPosts(prev =>
           prev.map(post => {
             if (post.id === postId) {
@@ -208,11 +208,11 @@ const CommunityPage = () => {
             return post;
           })
         );
-        alert(res.message || '互动失败');
+        alert(res.message || 'Interaction failed');
       }
     } catch (error: any) {
-      console.error('互动失败:', error);
-      // 回滚到原始状态
+      console.error('Interaction failed:', error);
+      // Rollback to original state
       setPosts(prev =>
         prev.map(post => {
           if (post.id === postId) {
@@ -221,7 +221,7 @@ const CommunityPage = () => {
           return post;
         })
       );
-      alert(error instanceof Error ? error.message : '互动失败');
+      alert(error instanceof Error ? error.message : 'Interaction failed');
     }
   };
 
@@ -240,7 +240,7 @@ const CommunityPage = () => {
     if (!replyContent.trim()) return;
 
     if (!user) {
-      alert('请先登录');
+      alert('Please login first');
       return;
     }
 
@@ -256,11 +256,11 @@ const CommunityPage = () => {
         setReplyingTo(null);
         setReplyContent('');
       } else {
-        alert(res.message || '回复失败');
+        alert(res.message || 'Reply failed');
       }
     } catch (error) {
-      console.error('回复社区心情失败:', error);
-      alert(error instanceof Error ? error.message : '回复失败');
+      console.error('Failed to reply to community mood:', error);
+      alert(error instanceof Error ? error.message : 'Reply failed');
     } finally {
       setSubmittingReply(false);
     }
@@ -268,7 +268,7 @@ const CommunityPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* 顶部导航 */}
+      {/* Top navigation */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           {showingPosts ? (
@@ -277,7 +277,7 @@ const CommunityPage = () => {
               className="flex items-center text-gray-600 hover:text-gray-800"
             >
               <ArrowLeft className="w-5 h-5 mr-1" />
-              返回话题列表
+              Back to Topics
             </button>
           ) : (
             <Link
@@ -285,49 +285,49 @@ const CommunityPage = () => {
               className="flex items-center text-gray-600 hover:text-gray-800"
             >
               <ArrowLeft className="w-5 h-5 mr-1" />
-              返回社交首页
+              Back to Social
             </Link>
           )}
           <h1 className="text-2xl font-bold text-gray-900">
             {showingPosts
               ? topics.find(t => t.id === selectedTopic)?.name
-              : '情绪社区'}
+              : 'Emotion Community'}
           </h1>
         </div>
       </div>
 
       {!showingPosts ? (
-        /* 话题列表视图 */
+        /* Topic list view */
         <div className="space-y-6">
-          {/* 社区统计 */}
+          {/* Community statistics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="card text-center bg-purple-50">
               <Hash className="w-6 h-6 text-purple-600 mx-auto mb-2" />
               <p className="text-lg font-bold text-purple-700">
                 {topics.length}
               </p>
-              <p className="text-sm text-purple-600">活跃话题</p>
+              <p className="text-sm text-purple-600">Active Topics</p>
             </div>
             <div className="card text-center bg-teal-50">
               <Users className="w-6 h-6 text-teal-600 mx-auto mb-2" />
               <p className="text-lg font-bold text-teal-700">
                 {topics.reduce((sum, topic) => sum + topic.participantCount, 0)}
               </p>
-              <p className="text-sm text-teal-600">参与用户</p>
+              <p className="text-sm text-teal-600">Participants</p>
             </div>
             <div className="card text-center bg-orange-50">
               <MessageCircle className="w-6 h-6 text-orange-600 mx-auto mb-2" />
               <p className="text-lg font-bold text-orange-700">
                 {topics.reduce((sum, topic) => sum + topic.recentPosts, 0)}
               </p>
-              <p className="text-sm text-orange-600">今日分享</p>
+              <p className="text-sm text-orange-600">Today's Shares</p>
             </div>
             <div className="card text-center bg-green-50">
               <TrendingUp className="w-6 h-6 text-green-600 mx-auto mb-2" />
               <p className="text-lg font-bold text-green-700">
                 {topics.filter(t => t.trending).length}
               </p>
-              <p className="text-sm text-green-600">热门话题</p>
+              <p className="text-sm text-green-600">Trending Topics</p>
             </div>
           </div>
 
@@ -390,10 +390,10 @@ const CommunityPage = () => {
             </div>
           </div> */}
 
-          {/* 所有话题 */}
+          {/* All topics */}
           <div>
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
-              所有话题
+              All Topics
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
               {topics
@@ -433,9 +433,9 @@ const CommunityPage = () => {
           </div>
         </div>
       ) : (
-        /* 话题内容视图 */
+        /* Topic content view */
         <div className="space-y-6">
-          {/* 话题信息 */}
+          {/* Topic info */}
           {selectedTopic && (
             <div className="card bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
               <div className="flex items-center space-x-4">
@@ -455,11 +455,11 @@ const CommunityPage = () => {
                         topics.find(t => t.id === selectedTopic)
                           ?.participantCount
                       }{' '}
-                      人参与
+                      participants
                     </span>
                     <span>
                       {topics.find(t => t.id === selectedTopic)?.recentPosts}{' '}
-                      条讨论
+                      discussions
                     </span>
                   </div>
                 </div>
@@ -467,7 +467,7 @@ const CommunityPage = () => {
             </div>
           )}
 
-          {/* 帖子列表 - Reddit 风格 */}
+          {/* Post list - Reddit style */}
           <div className="space-y-2">
             {posts.map(post => {
               const totalScore =
@@ -481,7 +481,7 @@ const CommunityPage = () => {
                   className="bg-white rounded-md border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden"
                 >
                   <div className="flex">
-                    {/* 左侧投票区域 - Reddit 风格 */}
+                    {/* Left voting area - Reddit style */}
                     <div className="flex flex-col items-center bg-gray-50 px-2 py-2 min-w-[40px]">
                       <button
                         onClick={() => handleInteraction(post.id, 'like')}
@@ -489,7 +489,7 @@ const CommunityPage = () => {
                           ? 'text-orange-500'
                           : 'text-gray-400 hover:text-orange-500'
                           }`}
-                        title="点赞"
+                        title="Like"
                       >
                         <ChevronUp className="w-5 h-5" />
                       </button>
@@ -510,15 +510,15 @@ const CommunityPage = () => {
                           ? 'text-blue-500'
                           : 'text-gray-400 hover:text-blue-500'
                           }`}
-                        title="不喜欢"
+                        title="Dislike"
                       >
                         <ChevronDown className="w-5 h-5" />
                       </button>
                     </div>
 
-                    {/* 帖子内容区域 */}
+                    {/* Post content area */}
                     <div className="flex-1 p-3">
-                      {/* 元信息 - 更紧凑 */}
+                      {/* Metadata - more compact */}
                       <div className="flex items-center gap-2 mb-2 text-xs text-gray-500">
                         <span className="font-medium text-gray-900 hover:underline cursor-pointer">
                           {post.user.name}
@@ -536,14 +536,14 @@ const CommunityPage = () => {
                         </span>
                       </div>
 
-                      {/* 帖子内容 */}
+                      {/* Post content */}
                       <div className="mb-3">
                         <p className="text-gray-900 text-sm leading-relaxed whitespace-pre-wrap">
                           {post.content}
                         </p>
                       </div>
 
-                      {/* 标签 */}
+                      {/* Tags */}
                       {post.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mb-3">
                           {post.tags.map((tag, index) => (
@@ -557,7 +557,7 @@ const CommunityPage = () => {
                         </div>
                       )}
 
-                      {/* 回复列表 - 更清晰的嵌套 */}
+                      {/* Reply list - clearer nesting */}
                       {post.replies && post.replies.length > 0 && (
                         <div className="mt-3 space-y-2">
                           {post.replies.slice(0, 3).map(reply => (
@@ -581,19 +581,19 @@ const CommunityPage = () => {
                           ))}
                           {post.replies.length > 3 && (
                             <button className="text-xs text-blue-600 hover:text-blue-700 font-medium ml-3">
-                              查看全部 {post.replies.length} 条回复
+                              View all {post.replies.length} replies
                             </button>
                           )}
                         </div>
                       )}
 
-                      {/* 回复输入框 */}
+                      {/* Reply input */}
                       {replyingTo === post.id && (
                         <div className="mt-3 p-3 bg-gray-50 rounded border border-gray-200">
                           <textarea
                             value={replyContent}
                             onChange={e => setReplyContent(e.target.value)}
-                            placeholder="写下你的回复..."
+                            placeholder="Write your reply..."
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm"
                             rows={3}
                           />
@@ -605,7 +605,7 @@ const CommunityPage = () => {
                               }}
                               className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded transition-colors"
                             >
-                              取消
+                              Cancel
                             </button>
                             <button
                               onClick={() => handleReplySubmit(post.id)}
@@ -615,12 +615,12 @@ const CommunityPage = () => {
                               {submittingReply ? (
                                 <>
                                   <Loader2 className="w-3 h-3 animate-spin" />
-                                  <span>发送中...</span>
+                                  <span>Sending...</span>
                                 </>
                               ) : (
                                 <>
                                   <Send className="w-3 h-3" />
-                                  <span>发送</span>
+                                  <span>Send</span>
                                 </>
                               )}
                             </button>
@@ -628,12 +628,12 @@ const CommunityPage = () => {
                         </div>
                       )}
 
-                      {/* 底部操作栏 - Reddit 风格 */}
+                      {/* Bottom action bar - Reddit style */}
                       <div className="flex items-center gap-1 mt-2 pt-2 border-t border-gray-100">
                         <button
                           onClick={() => {
                             if (!user) {
-                              alert('请先登录');
+                              alert('Please login first');
                               return;
                             }
                             setReplyingTo(
@@ -644,11 +644,11 @@ const CommunityPage = () => {
                         >
                           <MessageCircle className="w-4 h-4" />
                           <span>{post.replies?.length || 0}</span>
-                          <span className="hidden sm:inline">评论</span>
+                          <span className="hidden sm:inline">Comments</span>
                         </button>
                         <button className="flex items-center gap-1 px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 rounded transition-colors">
                           <Bookmark className="w-4 h-4" />
-                          <span className="hidden sm:inline">收藏</span>
+                          <span className="hidden sm:inline">Save</span>
                         </button>
                       </div>
                     </div>
@@ -658,11 +658,11 @@ const CommunityPage = () => {
             })}
           </div>
 
-          {/* 加载状态 */}
+          {/* Loading state */}
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="animate-spin w-8 h-8 text-blue-500" />
-              <span className="ml-2 text-gray-600">加载中...</span>
+              <span className="ml-2 text-gray-600">Loading...</span>
             </div>
           ) : null}
         </div>

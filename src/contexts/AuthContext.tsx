@@ -28,12 +28,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // 处理来自OAuth回调的token
+  // Handle token from OAuth callback
   const handleCallbackToken = async (token: string) => {
     try {
       setIsLoading(true);
 
-      // 发送token到后端进行验证
+      // Send token to backend for verification
       const { user, accessToken } = await authAPI.verifyCallbackToken(token);
 
       setUser(user);
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const login = (token: string) => {
-    // 解析token获取用户信息
+    // Parse token to get user info
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       console.error('Parsed payload:', payload);
@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = async () => {
     try {
-      // 通知后端登出
+      // Notify backend logout
       const token = localStorage.getItem('token');
       if (token) {
         await fetch('/api/auth/logout', {
@@ -85,11 +85,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } catch (error) {
       console.error('Logout API failed:', error);
     } finally {
-      // 清除本地状态
+      // Clear local state
       setUser(null);
       localStorage.removeItem('user');
       localStorage.removeItem('token');
-      navigate('/login'); // 重定向到登录页
+      navigate('/home'); // Redirect to home page
     }
   };
 
@@ -116,10 +116,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setIsLoading(false);
   }, []);
 
-  // 监听401错误
+  // Listen for 401 errors
   useEffect(() => {
     const handleAuthError = () => {
-      // 清除本地状态
+      // Clear local state
       setUser(null);
       localStorage.removeItem('user');
       localStorage.removeItem('token');
@@ -127,14 +127,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       localStorage.removeItem('google_user_info');
       localStorage.removeItem('user_info');
 
-      // 跳转到登录页
-      navigate('/login', { replace: true });
+      // Redirect to home page
+      navigate('/home', { replace: true });
     };
 
     window.addEventListener(AUTH_ERROR_EVENT, handleAuthError);
 
     return () => {
-      window.addEventListener(AUTH_ERROR_EVENT, handleAuthError);
+      window.removeEventListener(AUTH_ERROR_EVENT, handleAuthError);
     };
   }, [navigate]);
 

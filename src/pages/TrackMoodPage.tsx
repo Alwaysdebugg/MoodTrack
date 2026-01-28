@@ -10,10 +10,10 @@ const TrackMoodPage = () => {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
-  const [isPublic, setIsPublic] = useState(true); // 是否公开到社区
-  const [isAnonymous, setIsAnonymous] = useState(false); // 是否匿名
+  const [isPublic, setIsPublic] = useState(true); // Whether to share to community
+  const [isAnonymous, setIsAnonymous] = useState(false); // Whether to be anonymous
 
-  // 自动隐藏成功提示
+  // Auto-hide success message
   useEffect(() => {
     if (showSuccess) {
       const timer = setTimeout(() => {
@@ -26,35 +26,35 @@ const TrackMoodPage = () => {
   const moods = [
     {
       id: 1,
-      label: '很糟糕',
+      label: 'Very Bad',
       icon: Frown,
       color: 'text-red-500',
       bg: 'bg-red-50',
     },
     {
       id: 2,
-      label: '不好',
+      label: 'Bad',
       icon: Frown,
       color: 'text-orange-500',
       bg: 'bg-orange-50',
     },
     {
       id: 3,
-      label: '一般',
+      label: 'Neutral',
       icon: Meh,
       color: 'text-yellow-500',
       bg: 'bg-yellow-50',
     },
     {
       id: 4,
-      label: '不错',
+      label: 'Good',
       icon: Smile,
       color: 'text-green-500',
       bg: 'bg-green-50',
     },
     {
       id: 5,
-      label: '很棒',
+      label: 'Excellent',
       icon: Heart,
       color: 'text-pink-500',
       bg: 'bg-pink-50',
@@ -70,21 +70,21 @@ const TrackMoodPage = () => {
   };
 
   const triggerOptions = [
-    '工作压力',
-    '人际关系',
-    '健康问题',
-    '家庭事务',
-    '学习压力',
-    '经济状况',
-    '天气变化',
-    '睡眠质量',
-    '运动锻炼',
-    '娱乐休闲',
-    '社交活动',
-    '个人成长',
-    '情感关系',
-    '生活变化',
-    '其他',
+    'Work Stress',
+    'Relationships',
+    'Health Issues',
+    'Family Matters',
+    'Study Pressure',
+    'Financial Situation',
+    'Weather Changes',
+    'Sleep Quality',
+    'Exercise',
+    'Entertainment',
+    'Social Activities',
+    'Personal Growth',
+    'Romantic Relationship',
+    'Life Changes',
+    'Other',
   ];
 
   const toggleTrigger = (trigger: string) => {
@@ -112,20 +112,20 @@ const TrackMoodPage = () => {
 
     try {
       setLoading(true);
-      // 调用API保存心情记录
+      // Call API to save mood entry
       await apiRequest('/api/moods', {
         method: 'POST',
         data: moodEntry,
       });
-      console.log('心情记录已保存！');
+      console.log('Mood entry saved!');
       setShowSuccess(true);
     } catch (error) {
-      console.error('保存心情记录失败:', error);
+      console.error('Failed to save mood entry:', error);
     } finally {
       setLoading(false);
     }
 
-    // 本地保存记录
+    // Save to local storage
     const existingEntries = JSON.parse(
       localStorage.getItem('moodEntries') || '[]'
     );
@@ -141,56 +141,56 @@ const TrackMoodPage = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      {/* 成功提示框 */}
+      {/* Success message */}
       {showSuccess && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
-          <CheckCircle className="w-5 h-5" />
-          <span>记录成功</span>
+        <div className="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-2xl shadow-apple-xl backdrop-blur-xl flex items-center space-x-3 animate-bounce-in">
+          <CheckCircle className="w-6 h-6" strokeWidth={2.5} />
+          <span className="font-semibold text-lg">Recorded Successfully</span>
         </div>
       )}
 
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">记录你的心情</h1>
-        <p className="text-lg text-gray-600">
-          选择最符合当前感受的心情，并添加一些备注
+      <div className="text-center mb-12 max-w-2xl mx-auto">
+        <h1 className="text-5xl font-bold text-apple-text mb-6 tracking-tight">Track Your Mood</h1>
+        <p className="text-xl text-apple-secondary leading-relaxed">
+          Select the mood that best matches your current feelings and add some notes
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="card">
-          <h2 className="text-xl font-semibold mb-4">今天心情如何？</h2>
-          <div className="grid grid-cols-5 gap-4">
+          <h2 className="text-2xl font-semibold mb-8 text-apple-text">How are you feeling today?</h2>
+          <div className="grid grid-cols-5 gap-5">
             {moods.map(({ id, label, icon: Icon, color, bg }) => (
               <button
                 key={id}
                 type="button"
                 onClick={() => setSelectedMood(id)}
-                className={`p-4 rounded-lg border-2 transition-all ${selectedMood === id
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
-                  } ${bg}`}
+                className={`p-6 rounded-2xl border-2 transition-all duration-300 ${selectedMood === id
+                  ? 'border-apple-blue bg-apple-blue/5 shadow-apple scale-105'
+                  : 'border-gray-200/50 hover:border-gray-300 hover:shadow-apple'
+                  } ${bg} backdrop-blur-sm`}
               >
-                <Icon className={`w-8 h-8 mx-auto mb-2 ${color}`} />
-                <span className="text-sm font-medium">{label}</span>
+                <Icon className={`w-10 h-10 mx-auto mb-3 ${color}`} strokeWidth={2.5} />
+                <span className="text-sm font-semibold text-apple-text">{label}</span>
               </button>
             ))}
           </div>
         </div>
 
         <div className="card">
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <Tag className="w-5 h-5 mr-2" />
+          <h2 className="text-2xl font-semibold mb-8 flex items-center text-apple-text">
+            <Tag className="w-6 h-6 mr-3" strokeWidth={2.5} />
             Trigger
           </h2>
-          <div className="grid grid-cols-3 gap-3 mb-2">
+          <div className="grid grid-cols-3 gap-4 mb-2">
             {triggerOptions.map(trigger => (
               <button
                 key={trigger}
                 type="button"
                 onClick={() => toggleTrigger(trigger)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${selectedTriggers.includes(trigger)
-                  ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
-                  : 'bg-gray-100 text-gray-700 border-2 border-transparent hover:bg-gray-200'
+                className={`px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${selectedTriggers.includes(trigger)
+                  ? 'bg-apple-blue/10 text-apple-blue border-2 border-apple-blue/30 shadow-apple'
+                  : 'bg-gray-100/80 text-apple-text border-2 border-transparent hover:bg-gray-200/80 hover:shadow-sm'
                   }`}
               >
                 {trigger}
@@ -198,13 +198,13 @@ const TrackMoodPage = () => {
             ))}
           </div>
           {selectedTriggers.length > 0 && (
-            <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-700 mb-2">已选择的影响因素：</p>
-              <div className="flex flex-wrap gap-2">
+            <div className="mt-6 p-5 bg-apple-blue/5 rounded-2xl border border-apple-blue/20">
+              <p className="text-sm font-semibold text-apple-blue mb-3">Selected triggers:</p>
+              <div className="flex flex-wrap gap-2.5">
                 {selectedTriggers.map(trigger => (
                   <span
                     key={trigger}
-                    className="inline-block bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full"
+                    className="inline-block bg-apple-blue/20 text-apple-blue text-sm font-medium px-4 py-2 rounded-xl"
                   >
                     {trigger}
                   </span>
@@ -215,28 +215,28 @@ const TrackMoodPage = () => {
         </div>
 
         <div className="card">
-          <h2 className="text-xl font-semibold mb-4">添加备注</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-apple-text">Add Notes</h2>
           <textarea
             value={note}
             onChange={e => setNote(e.target.value)}
-            placeholder="记录一下今天发生了什么，或者描述你的感受..."
-            className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            rows={4}
+            placeholder="Record what happened today or describe your feelings..."
+            className="w-full p-5 border-2 border-gray-200/50 rounded-2xl resize-none focus:ring-2 focus:ring-apple-blue/50 focus:border-apple-blue/50 transition-all duration-300 text-apple-text placeholder:text-apple-secondary bg-white/50 backdrop-blur-sm"
+            rows={5}
           />
         </div>
 
-        {/* 公开到社区选项 */}
+        {/* Share to community options */}
         <div className="card">
-          <h2 className="text-xl font-semibold mb-4">分享设置</h2>
+          <h2 className="text-2xl font-semibold mb-8 text-apple-text">Share Settings</h2>
 
-          {/* 公开到社区开关 */}
-          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
+          {/* Share to community switch */}
+          <div className="flex items-center justify-between mb-6 pb-6 border-b border-gray-200/50">
             <div className="flex-1">
-              <label htmlFor="public-switch" className="text-sm font-medium text-gray-700 cursor-pointer">
-                公开到社区
+              <label htmlFor="public-switch" className="text-base font-semibold text-apple-text cursor-pointer">
+                Share to Community
               </label>
-              <p className="text-xs text-gray-500 mt-1">
-                开启后，你的心情记录将在社区中展示
+              <p className="text-sm text-apple-secondary mt-2 leading-relaxed">
+                When enabled, your mood entry will be displayed in the community
               </p>
             </div>
             <Switch
@@ -246,15 +246,15 @@ const TrackMoodPage = () => {
             />
           </div>
 
-          {/* 匿名分享开关 - 只在公开时显示 */}
+          {/* Anonymous share switch - only shown when public */}
           {isPublic && (
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <label htmlFor="anonymous-switch" className="text-sm font-medium text-gray-700 cursor-pointer">
-                  匿名分享
+                <label htmlFor="anonymous-switch" className="text-base font-semibold text-apple-text cursor-pointer">
+                  Share Anonymously
                 </label>
-                <p className="text-xs text-gray-500 mt-1">
-                  开启后，你的用户名将不会显示
+                <p className="text-sm text-apple-secondary mt-2 leading-relaxed">
+                  When enabled, your username will not be displayed
                 </p>
               </div>
               <Switch
@@ -265,24 +265,24 @@ const TrackMoodPage = () => {
             </div>
           )}
         </div>
-        <div className="text-center">
+        <div className="text-center pt-4">
           <button
             type="submit"
             disabled={selectedMood === null || loading}
-            className={`btn text-lg px-8 py-3 ${selectedMood === null
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'btn-primary'
+            className={`btn text-lg px-12 py-4 ${selectedMood === null
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-50'
+              : 'btn-primary shadow-apple-lg hover:shadow-apple-xl'
               }`}
           >
             {loading ? (
               <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                "分享中..."
+                <Loader2 className="w-6 h-6 mr-2 animate-spin" strokeWidth={2.5} />
+                Sharing...
               </>
             ) : (
               <>
-                <Star className="w-5 h-5" />
-                分享心情
+                <Star className="w-6 h-6 mr-2" strokeWidth={2.5} />
+                Share Mood
               </>
             )}
           </button>

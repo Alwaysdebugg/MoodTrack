@@ -1,65 +1,99 @@
 @import 'tailwindcss';
 
+/* Apple-inspired design system */
+:root {
+  --apple-blue: #007AFF;
+  --apple-gray: #F2F2F7;
+  --apple-text: #1D1D1F;
+  --apple-secondary: #86868B;
+  --apple-border: rgba(0, 0, 0, 0.04);
+  --apple-shadow: rgba(0, 0, 0, 0.08);
+}
+
 @layer components {
+  /* Apple-style buttons */
   .btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.875rem;
     font-weight: 500;
+    font-size: 1rem;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     border: none;
+    letter-spacing: -0.01em;
+    backdrop-filter: blur(20px);
   }
 
   .btn-primary {
-    background-color: #3b82f6;
+    background: linear-gradient(180deg, #007AFF 0%, #0051D5 100%);
     color: white;
+    box-shadow: 0 4px 16px rgba(0, 122, 255, 0.25);
   }
 
   .btn-primary:hover {
-    background-color: #2563eb;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    background: linear-gradient(180deg, #0051D5 0%, #003D9F 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 122, 255, 0.35);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
   }
 
   .btn-secondary {
-    background-color: #e5e7eb;
-    color: #374151;
+    background: rgba(242, 242, 247, 0.8);
+    color: var(--apple-text);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
   }
 
   .btn-secondary:hover {
-    background-color: #d1d5db;
-    transform: translateY(-1px);
+    background: rgba(229, 229, 234, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
 
+  .btn-secondary:active {
+    transform: translateY(0);
+  }
+
+  /* Apple-style cards */
   .card {
-    background: white;
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease-in-out;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 1.25rem;
+    padding: 2rem;
+    border: 1px solid var(--apple-border);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(20px);
   }
 
   .card:hover {
-    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+    border-color: rgba(0, 0, 0, 0.08);
   }
 
-  /* 社交功能专用样式 */
+  /* Apple-style social cards */
   .social-card {
-    background: white;
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    border: 1px solid #f3f4f6;
-    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 1.25rem;
+    padding: 1.75rem;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(20px);
   }
 
   .social-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px 0 rgba(0, 0, 0, 0.1);
-    border-color: #e5e7eb;
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    border-color: rgba(0, 122, 255, 0.2);
   }
 
   /* 匿名用户头像渐变 */
@@ -267,7 +301,7 @@
   }
 }
 
-/* 自定义动画 */
+/* Apple-inspired animations */
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);
@@ -292,25 +326,25 @@
 @keyframes bounce-in {
   0% {
     opacity: 0;
-    transform: scale(0.3);
+    transform: scale(0.8) translateY(-20px);
   }
   50% {
     opacity: 1;
-    transform: scale(1.05);
+    transform: scale(1.05) translateY(-5px);
   }
   70% {
-    transform: scale(0.9);
+    transform: scale(0.95) translateY(0);
   }
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
 }
 
 @keyframes slide-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -318,18 +352,69 @@
   }
 }
 
-/* 响应式设计增强 */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-in-out;
+}
+
+/* Global Apple-style enhancements */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background-color: rgba(0, 122, 255, 0.2);
+  color: var(--apple-text);
+}
+
+/* Responsive design enhancements */
 @media (max-width: 640px) {
   .card {
-    padding: 1rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
   }
 
   .social-card {
-    padding: 1rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
   }
 
   .topic-card {
-    padding: 1rem;
+    padding: 1.25rem;
+    border-radius: 1rem;
+  }
+  
+  h1 {
+    font-size: 2.5rem !important;
+  }
+  
+  h2 {
+    font-size: 1.75rem !important;
   }
 }
 

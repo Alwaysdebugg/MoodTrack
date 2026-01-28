@@ -20,7 +20,7 @@ const SocialInsightsPage = () => {
   >('month');
 
   useEffect(() => {
-    // 生成模拟洞察数据
+    // Generate mock insight data
     const mockInsights: SocialInsight = {
       period: selectedPeriod,
       totalInteractions: 127,
@@ -37,37 +37,37 @@ const SocialInsightsPage = () => {
   const recentInteractions = [
     {
       type: 'received',
-      user: '温暖的云朵',
-      action: '给了你一个拥抱',
-      time: '2小时前',
+      user: 'Warm Cloud',
+      action: 'gave you a hug',
+      time: '2 hours ago',
       emoji: '🤗',
     },
     {
       type: 'given',
-      user: '勇敢的小树',
-      action: '你表示了同感',
-      time: '5小时前',
+      user: 'Brave Tree',
+      action: 'you showed empathy',
+      time: '5 hours ago',
       emoji: '🤝',
     },
     {
       type: 'received',
-      user: '平静的湖水',
-      action: '感谢你的分享',
-      time: '1天前',
+      user: 'Calm Lake',
+      action: 'thanked you for sharing',
+      time: '1 day ago',
       emoji: '🙏',
     },
     {
       type: 'given',
-      user: '智慧的月亮',
-      action: '你给予了鼓励',
-      time: '2天前',
+      user: 'Wise Moon',
+      action: 'you gave encouragement',
+      time: '2 days ago',
       emoji: '💪',
     },
     {
       type: 'received',
-      user: '希望的晨光',
-      action: '觉得你的分享很有帮助',
-      time: '3天前',
+      user: 'Hopeful Dawn',
+      action: 'found your share helpful',
+      time: '3 days ago',
       emoji: '💡',
     },
   ];
@@ -75,58 +75,58 @@ const SocialInsightsPage = () => {
   const achievementBadges = [
     {
       id: 'warm-supporter',
-      name: '温暖支持者',
-      description: '给予他人50次支持',
+      name: 'Warm Supporter',
+      description: 'Gave 50 supports to others',
       icon: '🤗',
       earned: true,
     },
     {
       id: 'empathy-master',
-      name: '共鸣达人',
-      description: '获得100次同感反应',
+      name: 'Empathy Master',
+      description: 'Received 100 empathy reactions',
       icon: '🤝',
       earned: true,
     },
     {
       id: 'community-star',
-      name: '社区之星',
-      description: '连续7天活跃参与',
+      name: 'Community Star',
+      description: 'Active participation for 7 consecutive days',
       icon: '⭐',
       earned: true,
     },
     {
       id: 'wisdom-sharer',
-      name: '智慧分享者',
-      description: '分享内容被标记为有帮助20次',
+      name: 'Wisdom Sharer',
+      description: 'Shared content marked helpful 20 times',
       icon: '💡',
       earned: false,
     },
     {
       id: 'mood-matcher',
-      name: '情绪知音',
-      description: '成功匹配相似情绪100次',
+      name: 'Mood Matcher',
+      description: 'Successfully matched similar moods 100 times',
       icon: '💝',
       earned: false,
     },
     {
       id: 'positive-energy',
-      name: '正能量传播者',
-      description: '发布的内容获得500次积极反应',
+      name: 'Positive Energy Spreader',
+      description: 'Published content received 500 positive reactions',
       icon: '☀️',
       earned: false,
     },
   ];
 
   const moodMatchHistory = [
-    { mood: 3, count: 45, label: '一般' },
-    { mood: 2, count: 32, label: '不好' },
-    { mood: 4, count: 28, label: '不错' },
-    { mood: 1, count: 15, label: '很糟糕' },
-    { mood: 5, count: 7, label: '很棒' },
+    { mood: 3, count: 45, label: 'Neutral' },
+    { mood: 2, count: 32, label: 'Bad' },
+    { mood: 4, count: 28, label: 'Good' },
+    { mood: 1, count: 15, label: 'Very Bad' },
+    { mood: 5, count: 7, label: 'Excellent' },
   ];
 
   const getPeriodLabel = (period: string) => {
-    const labels = { week: '本周', month: '本月', year: '本年' };
+    const labels = { week: 'This Week', month: 'This Month', year: 'This Year' };
     return labels[period as keyof typeof labels];
   };
 
@@ -183,46 +183,46 @@ const SocialInsightsPage = () => {
         </div>
       </div>
 
-      {/* 核心指标卡片 */}
+      {/* Core metrics cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="card text-center bg-purple-50 border-purple-200">
           <Heart className="w-8 h-8 text-purple-600 mx-auto mb-2" />
           <p className="text-2xl font-bold text-purple-700">
             {insights.totalInteractions}
           </p>
-          <p className="text-sm text-purple-600">总互动次数</p>
+          <p className="text-sm text-purple-600">Total Interactions</p>
         </div>
         <div className="card text-center bg-teal-50 border-teal-200">
           <Users className="w-8 h-8 text-teal-600 mx-auto mb-2" />
           <p className="text-2xl font-bold text-teal-700">
             {insights.interactionsReceived}
           </p>
-          <p className="text-sm text-teal-600">收到支持</p>
+          <p className="text-sm text-teal-600">Support Received</p>
         </div>
         <div className="card text-center bg-orange-50 border-orange-200">
           <MessageCircle className="w-8 h-8 text-orange-600 mx-auto mb-2" />
           <p className="text-2xl font-bold text-orange-700">
             {insights.interactionsGiven}
           </p>
-          <p className="text-sm text-orange-600">给予支持</p>
+          <p className="text-sm text-orange-600">Support Given</p>
         </div>
         <div className="card text-center bg-green-50 border-green-200">
           <TrendingUp className="w-8 h-8 text-green-600 mx-auto mb-2" />
           <p className="text-2xl font-bold text-green-700">
             {insights.positiveInfluence}%
           </p>
-          <p className="text-sm text-green-600">积极影响力</p>
+          <p className="text-sm text-green-600">Positive Influence</p>
         </div>
       </div>
 
-      {/* 社交影响力评分 */}
+      {/* Social influence score */}
       <div className="card">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">
-          社交影响力评分
+          Social Influence Score
         </h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-gray-700">支持他人的能力</span>
+            <span className="text-gray-700">Ability to Support Others</span>
             <div className="flex items-center space-x-2">
               <div className="w-32 bg-gray-200 rounded-full h-2">
                 <div
@@ -239,7 +239,7 @@ const SocialInsightsPage = () => {
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-gray-700">社区参与度</span>
+            <span className="text-gray-700">Community Engagement</span>
             <div className="flex items-center space-x-2">
               <div className="w-32 bg-gray-200 rounded-full h-2">
                 <div
@@ -256,7 +256,7 @@ const SocialInsightsPage = () => {
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-gray-700">积极影响力</span>
+            <span className="text-gray-700">Positive Influence</span>
             <div className="flex items-center space-x-2">
               <div className="w-32 bg-gray-200 rounded-full h-2">
                 <div
@@ -274,12 +274,12 @@ const SocialInsightsPage = () => {
         </div>
       </div>
 
-      {/* 情绪匹配分析 */}
+      {/* Mood match analysis */}
       <div className="grid md:grid-cols-2 gap-6">
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">
             <BarChart3 className="w-5 h-5 inline mr-2" />
-            情绪匹配分布
+            Mood Match Distribution
           </h3>
           <div className="space-y-3">
             {moodMatchHistory.map(item => (
@@ -294,7 +294,7 @@ const SocialInsightsPage = () => {
                     {item.label}
                   </span>
                   <span className="text-gray-600 text-sm">
-                    {item.count} 次匹配
+                    {item.count} matches
                   </span>
                 </div>
                 <div className="w-20 bg-gray-200 rounded-full h-2">
@@ -307,15 +307,15 @@ const SocialInsightsPage = () => {
             ))}
           </div>
           <p className="text-sm text-gray-500 mt-4">
-            你最常与处于"一般"情绪状态的用户产生共鸣
+            You most often resonate with users in "Neutral" mood state
           </p>
         </div>
 
-        {/* 成就徽章 */}
+        {/* Achievement badges */}
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">
             <Award className="w-5 h-5 inline mr-2" />
-            成就徽章
+            Achievement Badges
           </h3>
           <div className="grid grid-cols-2 gap-3">
             {achievementBadges.map(badge => (
@@ -336,7 +336,7 @@ const SocialInsightsPage = () => {
                 </p>
                 {badge.earned && (
                   <span className="inline-block mt-2 px-2 py-1 bg-yellow-200 text-yellow-800 text-xs rounded-full">
-                    已获得
+                    Earned
                   </span>
                 )}
               </div>
@@ -345,11 +345,11 @@ const SocialInsightsPage = () => {
         </div>
       </div>
 
-      {/* 最近互动记录 */}
+      {/* Recent interaction records */}
       <div className="card">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">
           <Calendar className="w-5 h-5 inline mr-2" />
-          最近互动记录
+          Recent Interactions
         </h3>
         <div className="space-y-3">
           {recentInteractions.map((interaction, index) => (
@@ -381,32 +381,32 @@ const SocialInsightsPage = () => {
                     : 'bg-blue-100 text-blue-700'
                 }`}
               >
-                {interaction.type === 'received' ? '收到' : '给出'}
+                {interaction.type === 'received' ? 'Received' : 'Given'}
               </span>
             </div>
           ))}
         </div>
         <div className="mt-4 text-center">
           <button className="text-blue-600 hover:text-blue-700 text-sm">
-            查看更多互动记录 →
+            View More Interactions →
           </button>
         </div>
       </div>
 
-      {/* 个人成长建议 */}
+      {/* Personal growth suggestions */}
       <div className="card bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
         <h3 className="text-lg font-semibold text-gray-800 mb-3">
-          个人成长建议
+          Personal Growth Suggestions
         </h3>
         <div className="space-y-2">
           <p className="text-sm text-gray-700">
-            🌟 你在情绪支持方面表现出色，继续保持这种温暖的互动方式
+            🌟 You excel in emotional support, keep up this warm interaction style
           </p>
           <p className="text-sm text-gray-700">
-            💡 可以尝试更多参与社区话题讨论，提升社区参与度
+            💡 Try participating more in community topic discussions to improve community engagement
           </p>
           <p className="text-sm text-gray-700">
-            🎯 距离"智慧分享者"徽章还差5次有帮助标记，加油！
+            🎯 Only 5 more helpful marks away from the "Wisdom Sharer" badge, keep going!
           </p>
         </div>
       </div>

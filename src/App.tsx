@@ -11,10 +11,7 @@ import SocialPage from './pages/SocialPage';
 import MoodMatchPage from './pages/MoodMatchPage';
 import CommunityPage from './pages/CommunityPage';
 import SocialInsightsPage from './pages/SocialInsightsPage';
-import LoginPage from './pages/Login';
-import LoginCallback from './components/LoginCallback';
 import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
@@ -22,77 +19,61 @@ function App() {
     <Router>
       <AuthProvider>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/login-callback" element={<LoginCallback />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route
             path="/home"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <HomePage />
-                </Layout>
-              </ProtectedRoute>
+              <Layout>
+                <HomePage />
+              </Layout>
             }
           />
           <Route
             path="/track"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <TrackMoodPage />
-                </Layout>
-              </ProtectedRoute>
+              <Layout>
+                <TrackMoodPage />
+              </Layout>
             }
           />
           <Route
             path="/history"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <HistoryPage />
-                </Layout>
-              </ProtectedRoute>
+              <Layout>
+                <HistoryPage />
+              </Layout>
             }
           />
           <Route
             path="/social"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <SocialPage />
-                </Layout>
-              </ProtectedRoute>
+              <Layout>
+                <SocialPage />
+              </Layout>
             }
           />
           <Route
             path="/social/match"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <MoodMatchPage />
-                </Layout>
-              </ProtectedRoute>
+              <Layout>
+                <MoodMatchPage />
+              </Layout>
             }
           />
           <Route
             path="/social/community"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <CommunityPage />
-                </Layout>
-              </ProtectedRoute>
+              <Layout>
+                <CommunityPage />
+              </Layout>
             }
           />
           <Route
             path="/social/insights"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <SocialInsightsPage />
-                </Layout>
-              </ProtectedRoute>
+              <Layout>
+                <SocialInsightsPage />
+              </Layout>
             }
           />
         </Routes>

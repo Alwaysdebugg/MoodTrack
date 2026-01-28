@@ -3,7 +3,7 @@
 A React-based mood tracking and social sharing application that helps users record, analyze, and share emotional states. 
 
 **Try it out** 
-[MoodTrack](https://mood-track-eight.vercel.app/)
+[MoodTrack](https://mood-track-git-feature-preview-alwaysdebuggs-projects.vercel.app/home)
 
 ## 📱 Features
 

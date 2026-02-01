@@ -1,20 +1,20 @@
-import { useState } from 'react'
-import { MessageCircle } from 'lucide-react'
-import { interactionTypes } from '../utils/socialUtils'
+import { useState } from 'react';
+import { MessageCircle } from 'lucide-react';
+import { interactionTypes } from '../utils/socialUtils';
 
 interface InteractionButtonsProps {
-  targetId: string
-  interactions?: { [key: string]: number }
-  onInteraction: (targetId: string, interactionType: string) => void
-  onReply?: (targetId: string) => void
-  showReplyButton?: boolean
-  size?: 'sm' | 'md' | 'lg'
-  layout?: 'horizontal' | 'vertical'
-  maxVisible?: number
-  className?: string
+  targetId: string;
+  interactions?: { [key: string]: number };
+  onInteraction: (targetId: string, interactionType: string) => void;
+  onReply?: (targetId: string) => void;
+  showReplyButton?: boolean;
+  size?: 'sm' | 'md' | 'lg';
+  layout?: 'horizontal' | 'vertical';
+  maxVisible?: number;
+  className?: string;
 }
 
-const InteractionButtons = ({ 
+const InteractionButtons = ({
   targetId,
   interactions = {},
   onInteraction,
@@ -23,58 +23,60 @@ const InteractionButtons = ({
   size = 'md',
   layout = 'horizontal',
   maxVisible = 3,
-  className = ''
+  className = '',
 }: InteractionButtonsProps) => {
-  const [selectedInteraction, setSelectedInteraction] = useState<string | null>(null)
-  const [isAnimating, setIsAnimating] = useState<string | null>(null)
+  const [selectedInteraction, setSelectedInteraction] = useState<string | null>(
+    null
+  );
+  const [isAnimating, setIsAnimating] = useState<string | null>(null);
 
   const handleInteraction = (interactionType: string) => {
     if (selectedInteraction === interactionType) {
-      // 取消选择
-      setSelectedInteraction(null)
+      // Deselect
+      setSelectedInteraction(null);
     } else {
-      setSelectedInteraction(interactionType)
-      setIsAnimating(interactionType)
-      
-      // 触发动画
-      setTimeout(() => setIsAnimating(null), 300)
-      
-      // 调用回调
-      onInteraction(targetId, interactionType)
+      setSelectedInteraction(interactionType);
+      setIsAnimating(interactionType);
+
+      // Trigger animation
+      setTimeout(() => setIsAnimating(null), 300);
+
+      // Call callback
+      onInteraction(targetId, interactionType);
     }
-  }
+  };
 
   const getSizeClasses = () => {
     switch (size) {
       case 'sm':
-        return 'px-2 py-1 text-xs'
+        return 'px-2 py-1 text-xs';
       case 'md':
-        return 'px-3 py-1 text-sm'
+        return 'px-3 py-1 text-sm';
       case 'lg':
-        return 'px-4 py-2 text-base'
+        return 'px-4 py-2 text-base';
       default:
-        return 'px-3 py-1 text-sm'
+        return 'px-3 py-1 text-sm';
     }
-  }
+  };
 
   const getLayoutClasses = () => {
     switch (layout) {
       case 'vertical':
-        return 'flex flex-col space-y-2'
+        return 'flex flex-col space-y-2';
       case 'horizontal':
       default:
-        return 'flex flex-wrap gap-2'
+        return 'flex flex-wrap gap-2';
     }
-  }
+  };
 
-  const visibleInteractionTypes = interactionTypes.slice(0, maxVisible)
+  const visibleInteractionTypes = interactionTypes.slice(0, maxVisible);
 
   return (
     <div className={`${getLayoutClasses()} ${className}`}>
-      {visibleInteractionTypes.map((type) => {
-        const count = interactions[type.id] || 0
-        const isSelected = selectedInteraction === type.id
-        const isCurrentlyAnimating = isAnimating === type.id
+      {visibleInteractionTypes.map(type => {
+        const count = interactions[type.id] || 0;
+        const isSelected = selectedInteraction === type.id;
+        const isCurrentlyAnimating = isAnimating === type.id;
 
         return (
           <button
@@ -83,36 +85,42 @@ const InteractionButtons = ({
             className={`
               flex items-center space-x-1 rounded-full transition-all duration-200 border
               ${getSizeClasses()}
-              ${isSelected 
-                ? 'bg-blue-100 border-blue-300 text-blue-700 shadow-sm' 
-                : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300'
+              ${
+                isSelected
+                  ? 'bg-blue-100 border-blue-300 text-blue-700 shadow-sm'
+                  : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300'
               }
               ${isCurrentlyAnimating ? 'scale-110' : 'scale-100'}
             `}
             title={type.description}
           >
-            <span className={`transition-transform duration-200 ${
-              isCurrentlyAnimating ? 'animate-bounce' : ''
-            }`}>
+            <span
+              className={`transition-transform duration-200 ${
+                isCurrentlyAnimating ? 'animate-bounce' : ''
+              }`}
+            >
               {type.emoji}
             </span>
             <span className="font-medium">{type.label}</span>
             {count > 0 && (
-              <span className={`
+              <span
+                className={`
                 px-1.5 py-0.5 rounded-full text-xs font-bold
-                ${isSelected 
-                  ? 'bg-blue-200 text-blue-800' 
-                  : 'bg-gray-200 text-gray-700'
+                ${
+                  isSelected
+                    ? 'bg-blue-200 text-blue-800'
+                    : 'bg-gray-200 text-gray-700'
                 }
-              `}>
+              `}
+              >
                 {count}
               </span>
             )}
           </button>
-        )
+        );
       })}
 
-      {/* 回复按钮 */}
+      {/* Reply button */}
       {showReplyButton && onReply && (
         <button
           onClick={() => onReply(targetId)}
@@ -122,12 +130,16 @@ const InteractionButtons = ({
             ${getSizeClasses()}
           `}
         >
-          <MessageCircle className={size === 'sm' ? 'w-3 h-3' : size === 'lg' ? 'w-5 h-5' : 'w-4 h-4'} />
-          <span className="font-medium">回复</span>
+          <MessageCircle
+            className={
+              size === 'sm' ? 'w-3 h-3' : size === 'lg' ? 'w-5 h-5' : 'w-4 h-4'
+            }
+          />
+          <span className="font-medium">Reply</span>
         </button>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default InteractionButtons
+export default InteractionButtons;

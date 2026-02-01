@@ -1,73 +1,71 @@
-import { useEffect, useRef } from 'react'
-import { GoogleButtonConfig } from '../types'
+import { useEffect, useRef } from 'react';
+import { authAPI } from '../utils/api';
 
 interface GoogleLoginButtonProps {
-  onSuccess?: () => void
-  onError?: (error: any) => void
-  theme?: GoogleButtonConfig['theme']
-  size?: GoogleButtonConfig['size']
-  text?: GoogleButtonConfig['text']
-  shape?: GoogleButtonConfig['shape']
-  width?: GoogleButtonConfig['width']
-  className?: string
+  onSuccess?: (res: any) => void;
+  onError?: (error: any) => void;
+  className?: string;
+  disabled?: boolean;
 }
 
 const GoogleLoginButton = ({
   onSuccess,
   onError,
-  theme = 'outline',
-  size = 'large',
-  text = 'signin_with',
-  shape = 'rectangular',
-  width = 300,
-  className = ''
+  className = '',
+  disabled = false,
 }: GoogleLoginButtonProps) => {
-  const buttonRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLDivElement>(null);
+  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-  useEffect(() => {
-    const renderButton = () => {
-      if (window.google && buttonRef.current) {
-        try {
-          window.google.accounts.id.renderButton(buttonRef.current, {
-            theme,
-            size,
-            text,
-            shape,
-            width,
-            locale: 'zh_CN'
-          })
-          
-          if (onSuccess) {
-            onSuccess()
-          }
-        } catch (error) {
-          console.error('Error rendering Google button:', error)
-          if (onError) {
-            onError(error)
-          }
-        }
+  const handleCallbackResponse = async (response: any) => {
+    try {
+      // Verify Google Credential with backend
+      const res = await authAPI.verifyGoogleCredential(response.credential);
+      if (res) {
+        if (onSuccess) onSuccess(res);
+      } else {
+        console.error('Google login error:', res);
+        if (onError) onError(res);
+      }
+    } catch (error) {
+      console.error('Error initiating Google login:', error);
+      if (onError) {
+        onError(error);
       }
     }
+  };
 
-    if (window.google) {
-      renderButton()
-    } else {
-      const checkGoogle = setInterval(() => {
-        if (window.google) {
-          renderButton()
-          clearInterval(checkGoogle)
-        }
-      }, 100)
+  useEffect(() => {
+    if (!window.google || !GOOGLE_CLIENT_ID) return;
 
-      return () => clearInterval(checkGoogle)
-    }
-  }, [theme, size, text, shape, width, onSuccess, onError])
+    window.google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleCallbackResponse,
+    });
+
+    window.google.accounts.id.renderButton(buttonRef.current!, {
+      theme: 'outline',
+      size: 'large',
+      type: 'standard',
+    });
+  }, [GOOGLE_CLIENT_ID, onSuccess, onError]);
+
+  if (!GOOGLE_CLIENT_ID) {
+    return (
+      <button disabled className={className}>
+        Google login not configured
+      </button>
+    );
+  }
 
   return (
-    <div className={`google-login-button ${className}`}>
-      <div ref={buttonRef}></div>
+    <div className={className}>
+      <div
+        ref={buttonRef}
+        className={disabled ? 'opacity-50 pointer-events-none' : ''}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default GoogleLoginButton
+export default GoogleLoginButton;

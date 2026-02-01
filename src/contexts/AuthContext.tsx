@@ -1,116 +1,151 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { User, AuthContextType, GoogleCredentialResponse, GoogleJwtPayload } from '../types'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from 'react';
+import { User, AuthContextType } from '../types';
+import { authAPI, AUTH_ERROR_EVENT } from '../utils/api';
+import { useNavigate } from 'react-router-dom';
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error('useAuth must be used within an AuthProvider');
   }
-  return context
-}
+  return context;
+};
 
 interface AuthProviderProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
-
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
-  const decodeJwtResponse = (token: string): GoogleJwtPayload => {
-    const base64Url = token.split('.')[1]
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
-    )
-    return JSON.parse(jsonPayload)
-  }
-
-  const handleCredentialResponse = (response: GoogleCredentialResponse) => {
+  // Handle token from OAuth callback
+  const handleCallbackToken = async (token: string) => {
     try {
-      const userObject = decodeJwtResponse(response.credential)
-      const userData: User = {
-        id: userObject.sub,
-        email: userObject.email,
-        name: userObject.name,
-        picture: userObject.picture
-      }
-      
-      setUser(userData)
-      localStorage.setItem('user', JSON.stringify(userData))
-      setIsLoading(false)
+      setIsLoading(true);
+
+      // Send token to backend for verification
+      const { user, accessToken } = await authAPI.verifyCallbackToken(token);
+
+      setUser(user);
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('accessToken', accessToken);
+      setIsLoading(false);
+
+      return { success: true, user };
     } catch (error) {
-      console.error('Failed to decode JWT:', error)
-      setIsLoading(false)
+      console.error('Authentication failed:', error);
+      setIsLoading(false);
+      return { success: false, error };
     }
-  }
+  };
 
-  const login = () => {
-    if (window.google) {
-      window.google.accounts.id.prompt()
+  const login = (token: string) => {
+    // Parse token to get user information
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      console.error('Parsed payload:', payload);
+      const user: User = {
+        id: payload.sub || payload.id,
+        email: payload.email,
+        name: payload.name || payload.username,
+        picture: payload.picture,
+      };
+
+      setUser(user);
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('token', token);
+    } catch (error) {
+      console.error('Failed to parse token:', error);
     }
-  }
+  };
 
-  const logout = () => {
-    setUser(null)
-    localStorage.removeItem('user')
-    if (window.google) {
-      window.google.accounts.id.disableAutoSelect()
+  const logout = async () => {
+    try {
+      // Notify backend of logout
+      const token = localStorage.getItem('token');
+      if (token) {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Logout API failed:', error);
+    } finally {
+      // Clear local state
+      setUser(null);
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      navigate('/login'); // Redirect to login page
     }
-  }
+  };
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
+  const refreshUserFromStorage = () => {
+    const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem('token');
+
+    if (storedUser && storedToken) {
       try {
-        setUser(JSON.parse(storedUser))
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        return parsedUser;
       } catch (error) {
-        console.error('Failed to parse stored user:', error)
-        localStorage.removeItem('user')
+        console.error('Failed to parse stored user:', error);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
       }
     }
-    setIsLoading(false)
-  }, [])
+    return null;
+  };
 
   useEffect(() => {
-    const initializeGoogleSignIn = () => {
-      if (window.google && GOOGLE_CLIENT_ID) {
-        window.google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: handleCredentialResponse,
-          auto_select: false,
-          cancel_on_tap_outside: true
-        })
-      }
-    }
+    refreshUserFromStorage();
+    setIsLoading(false);
+  }, []);
 
-    if (window.google) {
-      initializeGoogleSignIn()
-    } else {
-      const checkGoogle = setInterval(() => {
-        if (window.google) {
-          initializeGoogleSignIn()
-          clearInterval(checkGoogle)
-        }
-      }, 100)
+  // Listen for 401 errors
+  useEffect(() => {
+    const handleAuthError = () => {
+      // Clear local state
+      setUser(null);
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('google_token');
+      localStorage.removeItem('google_user_info');
+      localStorage.removeItem('user_info');
 
-      return () => clearInterval(checkGoogle)
-    }
-  }, [])
+      // Navigate to login page
+      navigate('/login', { replace: true });
+    };
+
+    window.addEventListener(AUTH_ERROR_EVENT, handleAuthError);
+
+    return () => {
+      window.addEventListener(AUTH_ERROR_EVENT, handleAuthError);
+    };
+  }, [navigate]);
 
   const value: AuthContextType = {
     user,
     isLoading,
     login,
-    logout
-  }
+    logout,
+    handleCallbackToken,
+    refreshUserFromStorage,
+  };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-}
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};

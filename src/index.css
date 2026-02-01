@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @layer components {
   .btn {
@@ -64,7 +64,11 @@
 
   /* 匿名用户头像渐变 */
   .avatar-gradient {
-    background: linear-gradient(135deg, var(--gradient-from), var(--gradient-to));
+    background: linear-gradient(
+      135deg,
+      var(--gradient-from),
+      var(--gradient-to)
+    );
     position: relative;
     overflow: hidden;
   }
@@ -76,7 +80,12 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(
+      45deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
     transition: transform 0.6s;
     transform: translateX(-100%);
   }
@@ -169,7 +178,14 @@
 
   /* 相似度进度条 */
   .similarity-progress {
-    background: linear-gradient(90deg, #ef4444 0%, #f97316 25%, #eab308 50%, #22c55e 75%, #3b82f6 100%);
+    background: linear-gradient(
+      90deg,
+      #ef4444 0%,
+      #f97316 25%,
+      #eab308 50%,
+      #22c55e 75%,
+      #3b82f6 100%
+    );
     height: 4px;
     border-radius: 2px;
     position: relative;
@@ -182,7 +198,12 @@
     top: 0;
     left: 0;
     height: 100%;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%
+    );
     animation: shimmer 2s infinite;
   }
 
@@ -199,7 +220,12 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
     transition: left 0.5s;
   }
 
@@ -243,34 +269,39 @@
 
 /* 自定义动画 */
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { 
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
-  50% { 
+  50% {
     opacity: 0.5;
     transform: scale(1.1);
   }
 }
 
 @keyframes bounce-in {
-  0% { 
+  0% {
     opacity: 0;
     transform: scale(0.3);
   }
-  50% { 
+  50% {
     opacity: 1;
     transform: scale(1.05);
   }
-  70% { 
+  70% {
     transform: scale(0.9);
   }
-  100% { 
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -292,11 +323,11 @@
   .card {
     padding: 1rem;
   }
-  
+
   .social-card {
     padding: 1rem;
   }
-  
+
   .topic-card {
     padding: 1rem;
   }
@@ -317,11 +348,11 @@
   .card {
     border: 2px solid #000;
   }
-  
+
   .btn-primary {
     border: 2px solid #000;
   }
-  
+
   .btn-secondary {
     border: 2px solid #000;
   }

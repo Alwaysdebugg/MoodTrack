@@ -60,3 +60,7 @@ Thumbs.db
 .cache/
 .parcel-cache/
 .vite/
+
+# project documentation
+project_doc/
+img/

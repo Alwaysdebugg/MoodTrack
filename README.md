@@ -1,6 +1,9 @@
 # MoodTrack
 
-A modern mood tracking and social sharing application that helps users record, analyze, and share their emotional state. Built as a full-stack app with React and TypeScript.
+A React-based mood tracking and social sharing application that helps users record, analyze, and share emotional states.
+
+**Try it out**
+[MoodTrack](https://mood-track-git-feature-preview-alwaysdebuggs-projects.vercel.app/home)
 
 ## ✨ Features
 

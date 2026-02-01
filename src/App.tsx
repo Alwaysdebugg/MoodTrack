@@ -11,92 +11,81 @@ import SocialPage from './pages/SocialPage';
 import MoodMatchPage from './pages/MoodMatchPage';
 import CommunityPage from './pages/CommunityPage';
 import SocialInsightsPage from './pages/SocialInsightsPage';
-import LoginPage from './pages/Login';
-import LoginCallback from './components/LoginCallback';
+import TrendAnalysisPage from './pages/TrendAnalysisPage';
 import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
-import { AuthProvider } from './contexts/AuthContext';
+import { Toaster } from '@/components/ui/sonner';
 
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/login-callback" element={<LoginCallback />} />
-          <Route path="/" element={<Navigate to="/home" replace />} />
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <HomePage />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/track"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <TrackMoodPage />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/history"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <HistoryPage />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/social"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <SocialPage />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/social/match"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <MoodMatchPage />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/social/community"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <CommunityPage />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/social/insights"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <SocialInsightsPage />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </AuthProvider>
+      <Routes>
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route
+          path="/home"
+          element={
+            <Layout>
+              <HomePage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/track"
+          element={
+            <Layout>
+              <TrackMoodPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/history"
+          element={
+            <Layout>
+              <HistoryPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/analysis"
+          element={
+            <Layout>
+              <TrendAnalysisPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/social"
+          element={
+            <Layout>
+              <SocialPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/social/match"
+          element={
+            <Layout>
+              <MoodMatchPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/social/community"
+          element={
+            <Layout>
+              <CommunityPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/social/insights"
+          element={
+            <Layout>
+              <SocialInsightsPage />
+            </Layout>
+          }
+        />
+      </Routes>
+      <Toaster />
     </Router>
   );
 }

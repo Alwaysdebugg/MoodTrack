@@ -1,27 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Smile, Frown, Meh, Heart, Star, CheckCircle, Tag } from 'lucide-react';
-import { apiRequest } from '../utils/api';
-import { Loader2 } from 'lucide-react';
-import Switch from '../components/Switch';
+import { useState } from 'react';
+import { Smile, Frown, Meh, Heart, Star, Tag, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { saveMoodEntry } from '@/utils/moodStorage';
+import { toast } from 'sonner';
 
 const TrackMoodPage = () => {
   const [selectedMood, setSelectedMood] = useState<number | null>(null);
   const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
-  const [isPublic, setIsPublic] = useState(true); // Whether to share to community
-  const [isAnonymous, setIsAnonymous] = useState(false); // Whether to share anonymously
-
-  // Auto-hide success message
-  useEffect(() => {
-    if (showSuccess) {
-      const timer = setTimeout(() => {
-        setShowSuccess(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [showSuccess]);
+  const [isPublic, setIsPublic] = useState(true);
+  const [isAnonymous, setIsAnonymous] = useState(false);
 
   const moods = [
     {
@@ -95,197 +87,170 @@ const TrackMoodPage = () => {
     );
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedMood === null) return;
 
     const moodEntry = {
       triggers: selectedTriggers,
       mood_type: moodTypeMapping[selectedMood],
-      note: note,
+      note: note.trim(),
       is_public: isPublic,
       is_anonymous: isAnonymous,
       created_at: new Date().toISOString(),
     };
 
-    console.log('Mood Entry:', moodEntry);
-
+    setLoading(true);
     try {
-      setLoading(true);
-      // Call API to save mood entry
-      await apiRequest('/api/moods', {
-        method: 'POST',
-        data: moodEntry,
-      });
-      console.log('Mood entry saved!');
-      setShowSuccess(true);
-    } catch (error) {
-      console.error('Failed to save mood entry:', error);
+      saveMoodEntry(moodEntry);
+      toast.success('Mood recorded successfully');
+      setSelectedMood(null);
+      setNote('');
+      setSelectedTriggers([]);
+      setIsPublic(true);
+      setIsAnonymous(false);
     } finally {
       setLoading(false);
     }
-
-    // Save locally
-    const existingEntries = JSON.parse(
-      localStorage.getItem('moodEntries') || '[]'
-    );
-    existingEntries.push(moodEntry);
-    localStorage.setItem('moodEntries', JSON.stringify(existingEntries));
-
-    setSelectedMood(null);
-    setNote('');
-    setSelectedTriggers([]);
-    setIsPublic(true);
-    setIsAnonymous(false);
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      {/* Success message */}
-      {showSuccess && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
-          <CheckCircle className="w-5 h-5" />
-          <span>Recorded successfully</span>
-        </div>
-      )}
-
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Track Your Mood</h1>
-        <p className="text-lg text-gray-600">
-          Select the mood that best matches your current feelings and add some notes
+    <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6 px-0 sm:px-0">
+      <div className="text-center space-y-2 px-1">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+          Track Your Mood
+        </h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
+          Select the mood that best matches your current feelings and add some
+          notes
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="card">
-          <h2 className="text-xl font-semibold mb-4">How are you feeling today?</h2>
-          <div className="grid grid-cols-5 gap-4">
-            {moods.map(({ id, label, icon: Icon, color, bg }) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => setSelectedMood(id)}
-                className={`p-4 rounded-lg border-2 transition-all ${selectedMood === id
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
-                  } ${bg}`}
-              >
-                <Icon className={`w-8 h-8 mx-auto mb-2 ${color}`} />
-                <span className="text-sm font-medium">{label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="card">
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <Tag className="w-5 h-5 mr-2" />
-            Trigger
-          </h2>
-          <div className="grid grid-cols-3 gap-3 mb-2">
-            {triggerOptions.map(trigger => (
-              <button
-                key={trigger}
-                type="button"
-                onClick={() => toggleTrigger(trigger)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${selectedTriggers.includes(trigger)
-                  ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
-                  : 'bg-gray-100 text-gray-700 border-2 border-transparent hover:bg-gray-200'
-                  }`}
-              >
-                {trigger}
-              </button>
-            ))}
-          </div>
-          {selectedTriggers.length > 0 && (
-            <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-700 mb-2">Selected triggers:</p>
-              <div className="flex flex-wrap gap-2">
-                {selectedTriggers.map(trigger => (
-                  <span
-                    key={trigger}
-                    className="inline-block bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full"
-                  >
-                    {trigger}
-                  </span>
-                ))}
-              </div>
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+        <Card>
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-base sm:text-lg">
+              How are you feeling today?
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4 sm:p-6 pt-0">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3">
+              {moods.map(({ id, label, icon: Icon, color, bg }) => (
+                <Button
+                  key={id}
+                  type="button"
+                  variant={selectedMood === id ? 'default' : 'outline'}
+                  className={`h-auto flex-col gap-1 sm:gap-2 py-3 sm:py-4 min-h-[72px] sm:min-h-0 ${selectedMood === id ? '' : bg}`}
+                  onClick={() => setSelectedMood(id)}
+                >
+                  <Icon className={`w-7 h-7 sm:w-8 sm:h-8 ${color}`} />
+                  <span className="text-xs font-medium">{label}</span>
+                </Button>
+              ))}
             </div>
-          )}
-        </div>
+          </CardContent>
+        </Card>
 
-        <div className="card">
-          <h2 className="text-xl font-semibold mb-4">Add Notes</h2>
-          <textarea
-            value={note}
-            onChange={e => setNote(e.target.value)}
-            placeholder="Record what happened today, or describe your feelings..."
-            className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            rows={4}
-          />
-        </div>
-
-        {/* Share to community options */}
-        <div className="card">
-          <h2 className="text-xl font-semibold mb-4">Share Settings</h2>
-
-          {/* Share to community switch */}
-          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
-            <div className="flex-1">
-              <label htmlFor="public-switch" className="text-sm font-medium text-gray-700 cursor-pointer">
-                Share to Community
-              </label>
-              <p className="text-xs text-gray-500 mt-1">
-                When enabled, your mood entry will be displayed in the community
+        <Card>
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Tag className="w-4 h-4 sm:w-5 sm:h-5" />
+              Triggers
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4 sm:p-6 pt-0">
+            <div className="flex flex-wrap gap-2">
+              {triggerOptions.map(trigger => (
+                <Button
+                  key={trigger}
+                  type="button"
+                  variant={
+                    selectedTriggers.includes(trigger) ? 'default' : 'secondary'
+                  }
+                  size="sm"
+                  className="min-h-[40px] sm:min-h-0"
+                  onClick={() => toggleTrigger(trigger)}
+                >
+                  {trigger}
+                </Button>
+              ))}
+            </div>
+            {selectedTriggers.length > 0 && (
+              <p className="text-sm text-muted-foreground mt-3">
+                Selected: {selectedTriggers.join(', ')}
               </p>
-            </div>
-            <Switch
-              id="public-switch"
-              checked={isPublic}
-              onCheckedChange={setIsPublic}
-            />
-          </div>
+            )}
+          </CardContent>
+        </Card>
 
-          {/* Anonymous share switch - only shown when public */}
-          {isPublic && (
+        <Card>
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-base sm:text-lg">Add Notes</CardTitle>
+          </CardHeader>
+          <CardContent className="p-4 sm:p-6 pt-0">
+            <Textarea
+              value={note}
+              onChange={e => setNote(e.target.value)}
+              placeholder="Record what happened today, or describe your feelings..."
+              rows={4}
+              className="resize-none"
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-base sm:text-lg">
+              Share Settings
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6 p-4 sm:p-6 pt-0">
             <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <label htmlFor="anonymous-switch" className="text-sm font-medium text-gray-700 cursor-pointer">
-                  Share Anonymously
-                </label>
-                <p className="text-xs text-gray-500 mt-1">
-                  When enabled, your username will not be displayed
+              <div>
+                <p className="font-medium">Share to Community</p>
+                <p className="text-sm text-muted-foreground">
+                  When enabled, your mood entry will be displayed in the
+                  community
                 </p>
               </div>
-              <Switch
-                id="anonymous-switch"
-                checked={isAnonymous}
-                onCheckedChange={setIsAnonymous}
-              />
+              <Switch checked={isPublic} onCheckedChange={setIsPublic} />
             </div>
-          )}
-        </div>
-        <div className="text-center">
-          <button
+            {isPublic && (
+              <div className="flex items-center justify-between pt-4 border-t">
+                <div>
+                  <p className="font-medium">Share Anonymously</p>
+                  <p className="text-sm text-muted-foreground">
+                    When enabled, your username will not be displayed
+                  </p>
+                </div>
+                <Switch
+                  checked={isAnonymous}
+                  onCheckedChange={setIsAnonymous}
+                />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <div className="flex justify-center">
+          <Button
             type="submit"
+            size="lg"
             disabled={selectedMood === null || loading}
-            className={`btn text-lg px-8 py-3 ${selectedMood === null
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'btn-primary'
-              }`}
+            className="gap-2 min-h-[48px] w-full sm:w-auto"
           >
             {loading ? (
               <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Sharing...
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Saving...
               </>
             ) : (
               <>
                 <Star className="w-5 h-5" />
-                Share Mood
+                Save Mood
               </>
             )}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

@@ -1,172 +1,105 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Heart, TrendingUp, Calendar, Brain } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { Button } from '@/components/ui/button';
 import {
-  Heart,
-  TrendingUp,
-  Calendar,
-  Brain,
-  Loader2,
-  FileText,
-} from 'lucide-react';
-import { apiRequest } from '../utils/api';
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { MoodCharts } from '@/components/MoodCharts';
 
 const HomePage = () => {
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<string | null>(null);
-
-  // Get date range for last 7 days
-  const getLast7DateRange = (): { startDate: string; endDate: string } => {
-    const endDate = new Date();
-    const startDate = new Date(endDate);
-    startDate.setDate(endDate.getDate() - 6);
-
-    return {
-      startDate: startDate.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0],
-    };
-  };
-
-  // AI analysis API call
-  const generateAnalysisReport = async () => {
-    setIsGenerating(true);
-    setAnalysisResult(null);
-
-    try {
-      const dateRange = getLast7DateRange();
-      const reqBody = {
-        analysisType: 'weekly',
-        dateRange,
-        preferences: {
-          language: 'en-US',
-          depth: 'detailed',
-          focusAreas: ['stress', 'sleep', 'work'],
-        },
-      };
-
-      const response = await apiRequest('/api/v1/ai-analysis/generate', {
-        method: 'POST',
-        data: reqBody,
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Analysis request failed');
-      }
-
-      console.log('AI analysis result:', result.data);
-      setAnalysisResult(result.data);
-    } catch (error) {
-      console.error('Failed to generate analysis:', error);
-      setAnalysisResult('An error occurred during analysis. Please try again later.');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+  const { resolvedTheme } = useTheme();
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="text-center space-y-3 sm:space-y-4 px-1">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
           Welcome to MoodTrack
         </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Track your mood changes, understand emotional patterns, and make every day more meaningful
+        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+          Track your mood changes, understand emotional patterns, and make every
+          day more meaningful.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 mt-8">
-        <div className="card text-center">
-          <Heart className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">Track Mood</h3>
-          <p className="text-gray-600 mb-4">Quickly record your current mood</p>
-          <Link to="/track" className="btn btn-primary">
-            Start Tracking
-          </Link>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+        <Card className="text-center transition-shadow hover:shadow-md">
+          <CardHeader className="p-4 sm:p-6">
+            <Heart className="w-10 h-10 sm:w-12 sm:h-12 text-red-500 mx-auto mb-2" />
+            <CardTitle className="text-lg sm:text-xl">Track Mood</CardTitle>
+            <CardDescription>Quickly record your current mood</CardDescription>
+          </CardHeader>
+          <CardContent className="p-4 sm:p-6 pt-0">
+            <Button asChild className="w-full min-h-[44px]">
+              <Link to="/track">Start Tracking</Link>
+            </Button>
+          </CardContent>
+        </Card>
 
-        <div className="card text-center">
-          <TrendingUp className="w-12 h-12 text-green-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">Trend Analysis</h3>
-          <p className="text-gray-600 mb-4">View mood trends and statistics</p>
-          <Link to="/history" className="btn btn-secondary">
-            View Analysis
-          </Link>
-        </div>
+        <Card className="text-center transition-shadow hover:shadow-md">
+          <CardHeader className="p-4 sm:p-6">
+            <TrendingUp className="w-10 h-10 sm:w-12 sm:h-12 text-green-500 mx-auto mb-2" />
+            <CardTitle className="text-lg sm:text-xl">Trend Analysis</CardTitle>
+            <CardDescription>View mood trends and statistics</CardDescription>
+          </CardHeader>
+          <CardContent className="p-4 sm:p-6 pt-0">
+            <Button asChild className="w-full min-h-[44px]">
+              <Link to="/analysis">View Analysis</Link>
+            </Button>
+          </CardContent>
+        </Card>
 
-        <div className="card text-center">
-          <Calendar className="w-12 h-12 text-blue-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">History</h3>
-          <p className="text-gray-600 mb-4">Browse past mood records</p>
-          <Link to="/history" className="btn btn-secondary">
-            View History
-          </Link>
-        </div>
+        <Card className="text-center transition-shadow hover:shadow-md">
+          <CardHeader className="p-4 sm:p-6">
+            <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-blue-500 mx-auto mb-2" />
+            <CardTitle className="text-lg sm:text-xl">History</CardTitle>
+            <CardDescription>Browse past mood records</CardDescription>
+          </CardHeader>
+          <CardContent className="p-4 sm:p-6 pt-0">
+            <Button asChild className="w-full min-h-[44px]">
+              <Link to="/history">View History</Link>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* AI Analysis Panel */}
-      <div className="card bg-gradient-to-r from-purple-50 to-blue-50 border-none">
-        <div className="text-center">
-          <div className="flex items-center justify-center mb-4">
-            <Brain className="w-8 h-8 text-purple-600 mr-2" />
-            <h2 className="text-2xl font-semibold text-gray-800">
-              AI Mood Analysis
-            </h2>
+      <Card>
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
+            Trend Analysis
+          </CardTitle>
+          <CardDescription>
+            Mood curve (last 7 days) and distribution. Data shown is mock for
+            demo.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-4 sm:p-6 pt-0">
+          <MoodCharts theme={resolvedTheme === 'dark' ? 'dark' : 'light'} />
+        </CardContent>
+      </Card>
+
+      <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+        <CardHeader className="text-center p-4 sm:p-6">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Brain className="w-8 h-8 text-primary" />
+            <CardTitle className="text-2xl">AI Mood Analysis</CardTitle>
           </div>
-          <p className="text-gray-600 mb-6">
-            Generate personalized emotional analysis reports based on your mood records
-          </p>
-
-          {!analysisResult ? (
-            <button
-              onClick={generateAnalysisReport}
-              disabled={isGenerating}
-              className={`btn text-lg px-8 py-3 ${
-                isGenerating
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'btn-primary'
-              }`}
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Analyzing...
-                </>
-              ) : (
-                <>
-                  <FileText className="w-5 h-5 mr-2" />
-                  Generate Analysis Report
-                </>
-              )}
-            </button>
-          ) : (
-            <div className="text-left">
-              <div className="bg-white p-6 rounded-lg border border-gray-200 mb-4 max-h-96 overflow-y-auto">
-                <div className="prose prose-sm max-w-none">
-                  <pre className="whitespace-pre-wrap text-sm text-gray-700 font-sans leading-relaxed">
-                    {analysisResult}
-                  </pre>
-                </div>
-              </div>
-              <div className="flex justify-center space-x-4">
-                <button
-                  onClick={generateAnalysisReport}
-                  disabled={isGenerating}
-                  className="btn btn-secondary"
-                >
-                  🔄 Regenerate Analysis
-                </button>
-                <button
-                  onClick={() => setAnalysisResult(null)}
-                  className="btn bg-gray-100 text-gray-700 hover:bg-gray-200"
-                >
-                  ✨ Generate New Report
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+          <CardDescription className="text-base text-center">
+            Generate personalized emotional analysis reports based on your mood
+            records (coming soon).
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex justify-center p-4 sm:p-6 pt-0">
+          <Button variant="outline" size="lg" disabled className="min-h-[44px]">
+            Coming Soon
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };

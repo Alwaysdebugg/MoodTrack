@@ -37,7 +37,8 @@ export const generateAnonymousUser = (): AnonymousUser => {
 
   return {
     id: randomId,
-    nickname: randomNickname,
+    name: randomNickname,
+    email: '',
     avatar: randomAvatar,
     isOnline: Math.random() > 0.5,
     lastActive: new Date(Date.now() - Math.random() * 1800000).toISOString(), // 0-30 minutes ago

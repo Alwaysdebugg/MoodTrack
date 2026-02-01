@@ -1,16 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Smile, Frown, Meh, Heart, Calendar, Tag } from 'lucide-react';
-import { moodAPI } from '@/utils/api';
-import { Loader2 } from 'lucide-react';
-
-interface MoodEntry {
-  mood_type: string;
-  note: string;
-  triggers: string[];
-  is_public: boolean;
-  is_anonymous: boolean;
-  created_at: string;
-}
+import { Card, CardContent } from '@/components/ui/card';
+import { getMoodEntries, type StoredMoodEntry } from '@/utils/moodStorage';
 
 const moodTypeMapping: { [key: string]: number } = {
   very_bad: 1,
@@ -21,52 +12,34 @@ const moodTypeMapping: { [key: string]: number } = {
 };
 
 const HistoryPage = () => {
-  const [entries, setEntries] = useState<MoodEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch mood entries from backend
-  const fetchMoodEntries = async () => {
-    try {
-      setLoading(true);
-      // Call API to get mood entries
-      const res = await moodAPI.getMoods();
-      console.log('Successfully fetched mood entries:', res);
-      setEntries(res || []);
-    } catch (error) {
-      console.error('Failed to fetch mood entries:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [entries, setEntries] = useState<StoredMoodEntry[]>([]);
 
   useEffect(() => {
-    fetchMoodEntries();
+    setEntries(getMoodEntries());
   }, []);
 
   const getMoodIcon = (mood: string) => {
-    switch (moodTypeMapping[mood]) {
-      case 1:
-      case 2:
-        return <Frown className="w-6 h-6 text-red-500" />;
-      case 3:
-        return <Meh className="w-6 h-6 text-yellow-500" />;
-      case 4:
-        return <Smile className="w-6 h-6 text-green-500" />;
-      case 5:
-        return <Heart className="w-6 h-6 text-pink-500" />;
-      default:
-        return null;
-    }
+    const n = moodTypeMapping[mood];
+    if (n === 1 || n === 2) return <Frown className="w-6 h-6 text-red-500" />;
+    if (n === 3) return <Meh className="w-6 h-6 text-yellow-500" />;
+    if (n === 4) return <Smile className="w-6 h-6 text-green-500" />;
+    if (n === 5) return <Heart className="w-6 h-6 text-pink-500" />;
+    return null;
   };
 
   const getMoodLabel = (mood: string) => {
-    const labels = ['', 'Very Bad', 'Bad', 'Neutral', 'Good', 'Excellent'];
-    return labels[moodTypeMapping[mood]] || 'Unknown';
+    const labels: Record<string, string> = {
+      very_bad: 'Very Bad',
+      bad: 'Bad',
+      neutral: 'Neutral',
+      good: 'Good',
+      excellent: 'Excellent',
+    };
+    return labels[mood] || mood;
   };
 
   const formatDate = (timestamp: string) => {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString('en-US', {
+    return new Date(timestamp).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -75,77 +48,73 @@ const HistoryPage = () => {
     });
   };
 
-  if (entries.length === 0 && !loading) {
-    // If no mood entries, show prompt
+  if (entries.length === 0) {
     return (
-      <div className="text-center py-12">
-        <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-        <h2 className="text-2xl font-semibold text-gray-600 mb-2">
+      <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center px-4">
+        <Calendar className="w-14 h-14 sm:w-16 sm:h-16 text-muted-foreground mb-4" />
+        <h2 className="text-xl sm:text-2xl font-semibold text-foreground mb-2">
           No Mood Records Yet
         </h2>
-        <p className="text-gray-500">Start recording your first mood!</p>
+        <p className="text-sm sm:text-base text-muted-foreground">
+          Start recording your first mood on the Track page.
+        </p>
       </div>
     );
   }
 
   return (
-    <div>
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Mood History</h1>
-        <p className="text-lg text-gray-600">View your mood change records</p>
+    <div className="space-y-4 sm:space-y-6">
+      <div className="text-center space-y-2 px-1">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+          Mood History
+        </h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
+          View your mood change records
+        </p>
       </div>
 
-      {/* Mood entries list */}
-      {entries.length > 0 && !loading && (
-        <div className="space-y-4">
-          {entries.map((entry, index) => (
-            <div key={index} className="card">
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0">
-                  {getMoodIcon(entry.mood_type)}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-semibold">
-                      {getMoodLabel(entry.mood_type)}
-                    </h3>
-                    <span className="text-sm text-gray-500">
-                      {formatDate(entry.created_at)}
-                    </span>
+      <div className="space-y-3 sm:space-y-4">
+        {entries
+          .slice()
+          .reverse()
+          .map((entry, index) => (
+            <Card key={`${entry.created_at}-${index}`}>
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    {getMoodIcon(entry.mood_type)}
                   </div>
-                  {entry.note && (
-                    <p className="text-gray-700 mb-3">{entry.note}</p>
-                  )}
-                  {/* Triggers display */}
-                  {entry.triggers && entry.triggers.length > 0 && (
-                    <div className="flex items-center space-x-2">
-                      <Tag className="w-4 h-4 text-gray-500" />
-                      <div className="flex flex-wrap gap-2">
-                        {entry.triggers.map((trigger, triggerIndex) => (
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                      <h3 className="text-lg font-semibold">
+                        {getMoodLabel(entry.mood_type)}
+                      </h3>
+                      <span className="text-sm text-muted-foreground">
+                        {formatDate(entry.created_at)}
+                      </span>
+                    </div>
+                    {entry.note && (
+                      <p className="text-muted-foreground mb-3">{entry.note}</p>
+                    )}
+                    {entry.triggers && entry.triggers.length > 0 && (
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Tag className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        {entry.triggers.map((trigger, i) => (
                           <span
-                            key={triggerIndex}
-                            className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full"
+                            key={i}
+                            className="inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium"
                           >
                             {trigger}
                           </span>
                         ))}
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
-        </div>
-      )}
-
-      {/* Loading state */}
-      {loading && (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="animate-spin w-8 h-8 text-blue-500" />
-          <span className="ml-2 text-gray-600">Loading...</span>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

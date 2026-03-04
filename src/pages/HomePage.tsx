@@ -29,7 +29,7 @@ const HomePage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
         <Card className="text-center transition-shadow hover:shadow-md">
           <CardHeader className="p-4 sm:p-6">
-            <Heart className="w-10 h-10 sm:w-12 sm:h-12 text-red-500 mx-auto mb-2" />
+            <Heart className="w-10 h-10 sm:w-12 sm:h-12 text-primary mx-auto mb-2" />
             <CardTitle className="text-lg sm:text-xl">Track Mood</CardTitle>
             <CardDescription>Quickly record your current mood</CardDescription>
           </CardHeader>
@@ -42,7 +42,7 @@ const HomePage = () => {
 
         <Card className="text-center transition-shadow hover:shadow-md">
           <CardHeader className="p-4 sm:p-6">
-            <TrendingUp className="w-10 h-10 sm:w-12 sm:h-12 text-green-500 mx-auto mb-2" />
+            <TrendingUp className="w-10 h-10 sm:w-12 sm:h-12 text-primary mx-auto mb-2" />
             <CardTitle className="text-lg sm:text-xl">Trend Analysis</CardTitle>
             <CardDescription>View mood trends and statistics</CardDescription>
           </CardHeader>
@@ -55,7 +55,7 @@ const HomePage = () => {
 
         <Card className="text-center transition-shadow hover:shadow-md">
           <CardHeader className="p-4 sm:p-6">
-            <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-blue-500 mx-auto mb-2" />
+            <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-primary mx-auto mb-2" />
             <CardTitle className="text-lg sm:text-xl">History</CardTitle>
             <CardDescription>Browse past mood records</CardDescription>
           </CardHeader>

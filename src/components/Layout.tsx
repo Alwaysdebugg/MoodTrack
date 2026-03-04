@@ -38,15 +38,15 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="min-h-screen bg-background min-h-[100dvh]">
-      <nav className="border-b bg-card sticky top-0 z-40 pt-[env(safe-area-inset-top)]">
-        <div className="container mx-auto px-4 sm:px-6">
+      <nav className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 sticky top-0 z-40 pt-[env(safe-area-inset-top)]">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           <div className="flex items-center justify-between h-14 min-h-[44px]">
             <Link
               to="/home"
-              className="text-lg font-semibold text-primary py-2 min-w-[44px] min-h-[44px] flex items-center"
+              className="text-lg font-semibold text-foreground tracking-tight py-2 min-w-[44px] min-h-[44px] flex items-center"
               aria-label="MoodTrack Home"
             >
-              MoodTrack
+              <span className="text-primary">Mood</span>Track
             </Link>
 
             {/* Desktop nav: visible from md */}
@@ -137,7 +137,7 @@ const Layout = ({ children }: LayoutProps) => {
         </div>
       </nav>
 
-      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+      <main className="container mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-8 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
         {children}
       </main>
     </div>

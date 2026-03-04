@@ -19,52 +19,53 @@
   }
 
   .btn-primary {
-    background-color: #3b82f6;
-    color: white;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
   }
 
   .btn-primary:hover {
-    background-color: #2563eb;
+    filter: brightness(1.06);
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 12px oklch(0.72 0.17 166 / 0.25);
   }
 
   .btn-secondary {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
   }
 
   .btn-secondary:hover {
-    background-color: #d1d5db;
+    filter: brightness(0.97);
     transform: translateY(-1px);
   }
 
   .card {
-    background: white;
-    border-radius: 0.75rem;
+    background: var(--card);
+    border-radius: var(--radius);
     padding: 1.5rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.04);
+    border: 1px solid var(--border);
     transition: all 0.2s ease-in-out;
   }
 
   .card:hover {
-    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 14px 0 oklch(0 0 0 / 0.06);
   }
 
-  /* 社交功能专用样式 */
+  /* 社交功能专用样式 - Wealthsimple 风格 */
   .social-card {
-    background: white;
-    border-radius: 0.75rem;
+    background: var(--card);
+    border-radius: var(--radius);
     padding: 1.5rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    border: 1px solid #f3f4f6;
+    box-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.04);
+    border: 1px solid var(--border);
     transition: all 0.3s ease;
   }
 
   .social-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px 0 rgba(0, 0, 0, 0.1);
-    border-color: #e5e7eb;
+    box-shadow: 0 8px 24px 0 oklch(0 0 0 / 0.08);
+    border-color: var(--primary);
   }
 
   /* 匿名用户头像渐变 */
@@ -99,18 +100,18 @@
     transform: translateX(100%);
   }
 
-  /* 情绪匹配卡片 */
+  /* 情绪匹配卡片 - Wealthsimple 风格 */
   .mood-match-card {
-    background: white;
-    border-radius: 0.75rem;
+    background: var(--card);
+    border-radius: var(--radius);
     padding: 1rem;
-    border: 2px solid #f3f4f6;
+    border: 1px solid var(--border);
     transition: all 0.3s ease;
   }
 
   .mood-match-card:hover {
-    border-color: #3b82f6;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    border-color: var(--primary);
+    box-shadow: 0 4px 14px oklch(0.72 0.17 166 / 0.12);
   }
 
   /* 互动按钮动画 */
@@ -127,7 +128,7 @@
     left: 50%;
     width: 0;
     height: 0;
-    background: rgba(59, 130, 246, 0.1);
+    background: oklch(0.72 0.17 166 / 0.12);
     border-radius: 50%;
     transition: all 0.3s ease;
     transform: translate(-50%, -50%);
@@ -138,11 +139,12 @@
     height: 120%;
   }
 
-  /* 话题卡片 */
+  /* 话题卡片 - Wealthsimple 风格 */
   .topic-card {
-    background: white;
-    border-radius: 0.75rem;
+    background: var(--card);
+    border-radius: var(--radius);
     padding: 1.5rem;
+    border: 1px solid var(--border);
     border-left: 4px solid transparent;
     transition: all 0.3s ease;
     cursor: pointer;
@@ -150,12 +152,12 @@
 
   .topic-card:hover {
     transform: translateX(4px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 20px oklch(0 0 0 / 0.06);
   }
 
   .topic-card.trending {
-    border-left-color: #f97316;
-    background: linear-gradient(135deg, #fff7ed 0%, #ffffff 100%);
+    border-left-color: var(--primary);
+    background: linear-gradient(135deg, oklch(0.94 0.02 166 / 0.5) 0%, var(--card) 100%);
   }
 
   /* 通知动画 */
@@ -181,15 +183,15 @@
     transition: all 0.3s ease-in;
   }
 
-  /* 相似度进度条 */
+  /* 相似度进度条 - 绿色主调 */
   .similarity-progress {
     background: linear-gradient(
       90deg,
-      #ef4444 0%,
-      #f97316 25%,
-      #eab308 50%,
-      #22c55e 75%,
-      #3b82f6 100%
+      oklch(0.65 0.2 25) 0%,
+      oklch(0.75 0.14 85) 25%,
+      oklch(0.78 0.16 166) 50%,
+      oklch(0.72 0.17 166) 75%,
+      oklch(0.7 0.15 200) 100%
     );
     height: 4px;
     border-radius: 2px;
@@ -243,7 +245,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #3b82f6;
+    background: var(--primary);
     animation: pulse 1.5s infinite;
   }
 
@@ -351,15 +353,15 @@
 /* 高对比度模式支持 */
 @media (prefers-contrast: high) {
   .card {
-    border: 2px solid #000;
+    border: 2px solid var(--foreground);
   }
 
   .btn-primary {
-    border: 2px solid #000;
+    border: 2px solid var(--foreground);
   }
 
   .btn-secondary {
-    border: 2px solid #000;
+    border: 2px solid var(--foreground);
   }
 }
 
@@ -404,73 +406,74 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Wealthsimple-inspired palette: clean, professional, green accent */
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --radius: 0.75rem;
+  --background: oklch(0.985 0.002 247);
+  --foreground: oklch(0.18 0.02 260);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.18 0.02 260);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.18 0.02 260);
+  --primary: oklch(0.72 0.17 166);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.96 0.01 247);
+  --secondary-foreground: oklch(0.28 0.02 260);
+  --muted: oklch(0.96 0.01 247);
+  --muted-foreground: oklch(0.48 0.02 260);
+  --accent: oklch(0.94 0.02 166);
+  --accent-foreground: oklch(0.22 0.02 260);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --border: oklch(0.91 0.01 247);
+  --input: oklch(0.91 0.01 247);
+  --ring: oklch(0.72 0.17 166);
+  --chart-1: oklch(0.72 0.17 166);
+  --chart-2: oklch(0.65 0.15 200);
+  --chart-3: oklch(0.7 0.12 280);
+  --chart-4: oklch(0.75 0.14 85);
+  --chart-5: oklch(0.68 0.16 25);
+  --sidebar: oklch(0.99 0.002 247);
+  --sidebar-foreground: oklch(0.18 0.02 260);
+  --sidebar-primary: oklch(0.72 0.17 166);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.94 0.02 166);
+  --sidebar-accent-foreground: oklch(0.22 0.02 260);
+  --sidebar-border: oklch(0.91 0.01 247);
+  --sidebar-ring: oklch(0.72 0.17 166);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: oklch(0.16 0.02 260);
+  --foreground: oklch(0.96 0.01 247);
+  --card: oklch(0.21 0.02 260);
+  --card-foreground: oklch(0.96 0.01 247);
+  --popover: oklch(0.21 0.02 260);
+  --popover-foreground: oklch(0.96 0.01 247);
+  --primary: oklch(0.75 0.16 166);
+  --primary-foreground: oklch(0.16 0.02 260);
+  --secondary: oklch(0.28 0.02 260);
+  --secondary-foreground: oklch(0.96 0.01 247);
+  --muted: oklch(0.28 0.02 260);
+  --muted-foreground: oklch(0.65 0.02 260);
+  --accent: oklch(0.28 0.03 166);
+  --accent-foreground: oklch(0.96 0.01 247);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --border: oklch(0.32 0.02 260);
+  --input: oklch(0.32 0.02 260);
+  --ring: oklch(0.75 0.16 166);
+  --chart-1: oklch(0.75 0.16 166);
+  --chart-2: oklch(0.65 0.15 200);
+  --chart-3: oklch(0.7 0.12 280);
+  --chart-4: oklch(0.75 0.14 85);
+  --chart-5: oklch(0.68 0.16 25);
+  --sidebar: oklch(0.18 0.02 260);
+  --sidebar-foreground: oklch(0.96 0.01 247);
+  --sidebar-primary: oklch(0.75 0.16 166);
+  --sidebar-primary-foreground: oklch(0.16 0.02 260);
+  --sidebar-accent: oklch(0.28 0.03 166);
+  --sidebar-accent-foreground: oklch(0.96 0.01 247);
+  --sidebar-border: oklch(0.32 0.02 260);
+  --sidebar-ring: oklch(0.75 0.16 166);
 }
 
 @layer base {
@@ -478,9 +481,11 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    @apply bg-background text-foreground antialiased;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
+    letter-spacing: -0.01em;
   }
 }
 

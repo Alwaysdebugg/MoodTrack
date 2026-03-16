@@ -26,11 +26,10 @@ const SocialPage = () => {
     <div className="space-y-4 sm:space-y-6">
       <div className="text-center space-y-2 px-1">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          Emotion Social Space
+          Feel together.
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-          Build warm connections with people who share similar feelings in an
-          anonymous and safe environment.
+          Connect anonymously with people who feel the way you do.
         </p>
       </div>
 
@@ -45,7 +44,7 @@ const SocialPage = () => {
                   <span className="text-xl">😊</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold">Current Identity</h3>
+                  <h3 className="font-semibold">Your identity</h3>
                   <p className="text-muted-foreground">{currentUser.name}</p>
                   <p className="text-xs text-muted-foreground">
                     Anonymous ID: {currentUser.id.slice(-8)}
@@ -72,7 +71,7 @@ const SocialPage = () => {
           <CardContent className="pt-6 text-center">
             <Users className="w-8 h-8 text-primary mx-auto mb-2" />
             <p className="text-2xl font-bold">{onlineUsers}</p>
-            <p className="text-sm text-muted-foreground">Online Users</p>
+            <p className="text-sm text-muted-foreground">Online now</p>
           </CardContent>
         </Card>
         <Card>
@@ -80,7 +79,7 @@ const SocialPage = () => {
             <Heart className="w-8 h-8 text-primary mx-auto mb-2" />
             <p className="text-2xl font-bold">1.2k</p>
             <p className="text-sm text-muted-foreground">
-              Today&apos;s Interactions
+              Interactions today
             </p>
           </CardContent>
         </Card>
@@ -88,7 +87,7 @@ const SocialPage = () => {
 
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Discover & Connect</h2>
+          <h2 className="text-xl font-semibold">Discover</h2>
           <Button
             variant="outline"
             className="w-full h-auto py-4 justify-start gap-4"
@@ -99,12 +98,12 @@ const SocialPage = () => {
                 <Search className="w-6 h-6 text-primary" />
               </div>
               <div className="text-left">
-                <p className="font-semibold">Find Like-Minded</p>
+                <p className="font-semibold">Mood match</p>
                 <p className="text-sm text-muted-foreground">
-                  Find people with similar emotional experiences
+                  Find people who feel like you
                 </p>
                 <p className="text-sm text-primary mt-1">
-                  Found 3 matching users
+                  3 matches found
                 </p>
               </div>
             </Link>
@@ -119,18 +118,17 @@ const SocialPage = () => {
                 <MessageCircle className="w-6 h-6 text-primary" />
               </div>
               <div className="text-left">
-                <p className="font-semibold">Emotion Community</p>
+                <p className="font-semibold">Community</p>
                 <p className="text-sm text-muted-foreground">
-                  Participate in topic discussions and share emotional
-                  experiences
+                  Join conversations, share experiences
                 </p>
-                <p className="text-sm text-primary mt-1">7 trending topics</p>
+                <p className="text-sm text-primary mt-1">7 trending</p>
               </div>
             </Link>
           </Button>
         </div>
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Personal Insights</h2>
+          <h2 className="text-xl font-semibold">Insights</h2>
           <Button
             variant="outline"
             className="w-full h-auto py-4 justify-start gap-4"
@@ -141,12 +139,12 @@ const SocialPage = () => {
                 <TrendingUp className="w-6 h-6 text-primary" />
               </div>
               <div className="text-left">
-                <p className="font-semibold">Social Insights</p>
+                <p className="font-semibold">Your impact</p>
                 <p className="text-sm text-muted-foreground">
-                  Understand your social influence and growth
+                  See how you're making a difference
                 </p>
                 <p className="text-sm text-primary mt-1">
-                  Interactions this month +25%
+                  +25% this month
                 </p>
               </div>
             </Link>

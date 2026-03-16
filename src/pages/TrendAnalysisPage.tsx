@@ -312,10 +312,10 @@ const TrendAnalysisPage = () => {
       <Card>
         <CardHeader className="p-4 sm:p-6">
           <CardTitle className="text-base sm:text-lg">
-            Mood trend (last 30 days)
+            30-day mood curve
           </CardTitle>
           <CardDescription className="text-sm">
-            Daily mood score over the past 30 days. Data shown is mock for demo.
+            Your daily mood score at a glance
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 sm:p-6 pt-0">
@@ -330,10 +330,10 @@ const TrendAnalysisPage = () => {
         <Card>
           <CardHeader className="p-4 sm:p-6">
             <CardTitle className="text-base sm:text-lg">
-              Mood distribution
+              Mood breakdown
             </CardTitle>
             <CardDescription className="text-sm">
-              Share of each mood type in your records.
+              How your moods split up
             </CardDescription>
           </CardHeader>
           <CardContent className="p-4 sm:p-6 pt-0">
@@ -347,10 +347,10 @@ const TrendAnalysisPage = () => {
         <Card>
           <CardHeader className="p-4 sm:p-6">
             <CardTitle className="text-base sm:text-lg">
-              Average mood by weekday
+              Mood by weekday
             </CardTitle>
             <CardDescription className="text-sm">
-              Which days you tend to feel better or worse.
+              Your best and worst days
             </CardDescription>
           </CardHeader>
           <CardContent className="p-4 sm:p-6 pt-0">
@@ -365,10 +365,10 @@ const TrendAnalysisPage = () => {
       <Card>
         <CardHeader className="p-4 sm:p-6">
           <CardTitle className="text-base sm:text-lg">
-            Weekly comparison
+            Week over week
           </CardTitle>
           <CardDescription className="text-sm">
-            Average mood for the last 4 weeks.
+            How your last 4 weeks compare
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 sm:p-6 pt-0">
@@ -382,10 +382,10 @@ const TrendAnalysisPage = () => {
       <Card>
         <CardHeader className="p-4 sm:p-6">
           <CardTitle className="text-base sm:text-lg">
-            Trigger frequency
+            Top triggers
           </CardTitle>
           <CardDescription className="text-sm">
-            How often each trigger appears in your mood entries.
+            What affects your mood most
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 sm:p-6 pt-0">

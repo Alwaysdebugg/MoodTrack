@@ -34,20 +34,20 @@ const LoginPage = () => {
             <h1 className="text-4xl font-bold text-gray-900">MoodTrack</h1>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Welcome to Mood Tracker
+            Understand your emotions.
           </h2>
           <p className="text-gray-600 mb-8">
-            Record your daily moods, share emotional experiences with others, and build better emotional health habits
+            Track moods. Spot patterns. Connect with others who feel the same.
           </p>
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-8">
           <div className="text-center mb-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Login to Your Account
+              Sign in
             </h3>
             <p className="text-gray-600 text-sm">
-              Quick login with Google account, secure and convenient
+              Continue with Google to get started
             </p>
           </div>
 
@@ -57,7 +57,7 @@ const LoginPage = () => {
 
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500">
-              By logging in, you agree to our Terms of Service and Privacy Policy
+              By signing in, you agree to our Terms and Privacy Policy
             </p>
           </div>
         </div>
@@ -66,15 +66,15 @@ const LoginPage = () => {
           <div className="flex justify-center space-x-8 text-sm text-gray-600">
             <div className="flex items-center">
               <div className="w-2 h-2 bg-blue-600 rounded-full mr-2"></div>
-              Mood Tracking
+              Track
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-purple-600 rounded-full mr-2"></div>
-              Social Sharing
+              Share
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-green-600 rounded-full mr-2"></div>
-              Data Analysis
+              Analyze
             </div>
           </div>
         </div>

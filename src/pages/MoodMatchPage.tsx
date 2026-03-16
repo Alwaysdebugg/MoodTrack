@@ -75,7 +75,7 @@ const MoodMatchPage = () => {
               Back to Social
             </Link>
           </Button>
-          <h1 className="text-2xl font-bold">Find Like-Minded</h1>
+          <h1 className="text-2xl font-bold">Mood match</h1>
         </div>
         <Button
           variant="secondary"
@@ -92,7 +92,7 @@ const MoodMatchPage = () => {
         <CardContent className="pt-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <h3 className="font-semibold mb-2">Your Current Status</h3>
+              <h3 className="font-semibold mb-2">Your status</h3>
               <div className="flex items-center gap-4 flex-wrap">
                 <Badge className={getMoodColor(currentMood)}>
                   Mood: {currentMood}/5
@@ -116,10 +116,10 @@ const MoodMatchPage = () => {
           <CardContent className="py-12 text-center">
             <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
             <p className="text-muted-foreground">
-              Finding like-minded people for you...
+              Finding your matches...
             </p>
             <p className="text-sm text-muted-foreground mt-2">
-              Intelligent matching based on your emotional state and tags
+              Matching by mood and triggers
             </p>
           </CardContent>
         </Card>
@@ -130,7 +130,7 @@ const MoodMatchPage = () => {
               Found {matches.length} matching users
             </h2>
             <p className="text-sm text-muted-foreground">
-              Sorted by similarity · Active in last 2 hours
+              By similarity · Active in 2h
             </p>
           </div>
 
@@ -239,12 +239,12 @@ const MoodMatchPage = () => {
               <CardContent className="py-12 text-center">
                 <Heart className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">
-                  No matching users found yet
+                  No matches yet
                 </h3>
                 <p className="text-muted-foreground mb-4">
-                  Try adjusting your mood records or check back later
+                  Try again later or update your mood
                 </p>
-                <Button onClick={searchMatches}>Search Again</Button>
+                <Button onClick={searchMatches}>Retry</Button>
               </CardContent>
             </Card>
           )}
@@ -265,13 +265,13 @@ const MoodMatchPage = () => {
                 &quot;{selectedMatch.emotionPreview}&quot;
               </p>
               <Textarea
-                placeholder="Write your reply... (max 100 characters)"
+                placeholder="Say something kind..."
                 maxLength={100}
                 rows={4}
                 className="resize-none"
               />
               <p className="text-xs text-muted-foreground">
-                Reply content will be reviewed by AI to ensure friendliness
+                Replies are reviewed for friendliness
               </p>
             </div>
           )}

@@ -77,7 +77,7 @@ const SocialInsightsPage = () => {
     {
       id: 'warm-supporter',
       name: 'Warm Supporter',
-      description: 'Gave support to others 50 times',
+      description: 'Supported others 50 times',
       icon: '🤗',
       earned: true,
     },
@@ -91,28 +91,28 @@ const SocialInsightsPage = () => {
     {
       id: 'community-star',
       name: 'Community Star',
-      description: 'Active participation for 7 consecutive days',
+      description: '7-day active streak',
       icon: '⭐',
       earned: true,
     },
     {
       id: 'wisdom-sharer',
       name: 'Wisdom Sharer',
-      description: 'Shared content marked as helpful 20 times',
+      description: '20 posts marked helpful',
       icon: '💡',
       earned: false,
     },
     {
       id: 'mood-matcher',
       name: 'Mood Matcher',
-      description: 'Successfully matched similar moods 100 times',
+      description: '100 mood matches made',
       icon: '💝',
       earned: false,
     },
     {
       id: 'positive-energy',
-      name: 'Positive Energy Spreader',
-      description: 'Published content received 500 positive reactions',
+      name: 'Positive Energy',
+      description: '500 positive reactions earned',
       icon: '☀️',
       earned: false,
     },
@@ -168,7 +168,7 @@ const SocialInsightsPage = () => {
               Back to Social
             </Link>
           </Button>
-          <h1 className="text-2xl font-bold">Social Insights</h1>
+          <h1 className="text-2xl font-bold">Your impact</h1>
         </div>
         <div className="flex gap-2">
           {(['week', 'month', 'year'] as const).map(period => (
@@ -189,7 +189,7 @@ const SocialInsightsPage = () => {
           <CardContent className="pt-6 text-center">
             <Heart className="w-8 h-8 text-primary mx-auto mb-2" />
             <p className="text-2xl font-bold">{insights.totalInteractions}</p>
-            <p className="text-sm text-muted-foreground">Total Interactions</p>
+            <p className="text-sm text-muted-foreground">Interactions</p>
           </CardContent>
         </Card>
         <Card>
@@ -212,26 +212,26 @@ const SocialInsightsPage = () => {
           <CardContent className="pt-6 text-center">
             <TrendingUp className="w-8 h-8 text-primary mx-auto mb-2" />
             <p className="text-2xl font-bold">{insights.positiveInfluence}%</p>
-            <p className="text-sm text-muted-foreground">Positive Influence</p>
+            <p className="text-sm text-muted-foreground">Positive impact</p>
           </CardContent>
         </Card>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Social Influence Score</CardTitle>
+          <CardTitle>Influence score</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {[
             {
-              label: 'Ability to Support Others',
+              label: 'Support given',
               value: insights.supportImpact,
             },
             {
-              label: 'Community Engagement',
+              label: 'Engagement',
               value: insights.communityEngagement,
             },
-            { label: 'Positive Influence', value: insights.positiveInfluence },
+            { label: 'Positive impact', value: insights.positiveInfluence },
           ].map(({ label, value }) => (
             <div
               key={label}
@@ -259,7 +259,7 @@ const SocialInsightsPage = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="w-5 h-5" />
-              Mood Match Distribution
+              Match distribution
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -285,8 +285,7 @@ const SocialInsightsPage = () => {
               </div>
             ))}
             <p className="text-sm text-muted-foreground mt-4">
-              You most often resonate with users in a &quot;Neutral&quot;
-              emotional state
+              You resonate most with &quot;Neutral&quot; moods
             </p>
           </CardContent>
         </Card>
@@ -295,7 +294,7 @@ const SocialInsightsPage = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Award className="w-5 h-5" />
-              Achievement Badges
+              Badges
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -332,7 +331,7 @@ const SocialInsightsPage = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="w-5 h-5" />
-            Recent Interaction Records
+            Recent activity
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -371,7 +370,7 @@ const SocialInsightsPage = () => {
           ))}
           <div className="text-center pt-2">
             <Button variant="link" size="sm">
-              View more interaction records →
+              View all activity →
             </Button>
           </div>
         </CardContent>
@@ -379,20 +378,17 @@ const SocialInsightsPage = () => {
 
       <Card className="bg-muted/30 border-primary/20">
         <CardHeader>
-          <CardTitle>Personal Growth Suggestions</CardTitle>
+          <CardTitle>Growth tips</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-muted-foreground">
           <p>
-            🌟 You excel in emotional support, keep up this warm interaction
-            style
+            🌟 Your support style is warm — keep it up
           </p>
           <p>
-            💡 Try participating more in community topic discussions to increase
-            community engagement
+            💡 Join more topic discussions to boost engagement
           </p>
           <p>
-            🎯 You&apos;re 5 helpful marks away from the &quot;Wisdom
-            Sharer&quot; badge, keep going!
+            🎯 5 helpful marks from &quot;Wisdom Sharer&quot; — almost there
           </p>
         </CardContent>
       </Card>

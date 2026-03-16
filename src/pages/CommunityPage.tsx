@@ -132,7 +132,7 @@ const CommunityPage = () => {
           <h1 className="text-2xl font-bold">
             {showingPosts && selectedTopic
               ? topics.find(t => t.id === selectedTopic)?.name
-              : 'Emotion Community'}
+              : 'Community'}
           </h1>
         </div>
       </div>
@@ -144,7 +144,7 @@ const CommunityPage = () => {
               <CardContent className="pt-6 text-center">
                 <Hash className="w-6 h-6 text-primary mx-auto mb-2" />
                 <p className="text-2xl font-bold">{topics.length}</p>
-                <p className="text-sm text-muted-foreground">Active Topics</p>
+                <p className="text-sm text-muted-foreground">Topics</p>
               </CardContent>
             </Card>
             <Card>
@@ -163,7 +163,7 @@ const CommunityPage = () => {
                   {topics.reduce((s, t) => s + t.recentPosts, 0)}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Today&apos;s Shares
+                  Shared today
                 </p>
               </CardContent>
             </Card>
@@ -179,7 +179,7 @@ const CommunityPage = () => {
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold mb-4">All Topics</h2>
+            <h2 className="text-lg font-semibold mb-4">Topics</h2>
             <div className="grid md:grid-cols-2 gap-4">
               {topics.map(topic => (
                 <Card

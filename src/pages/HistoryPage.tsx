@@ -53,10 +53,10 @@ const HistoryPage = () => {
       <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center px-4">
         <Calendar className="w-14 h-14 sm:w-16 sm:h-16 text-muted-foreground mb-4" />
         <h2 className="text-xl sm:text-2xl font-semibold text-foreground mb-2">
-          No Mood Records Yet
+          Nothing here yet
         </h2>
         <p className="text-sm sm:text-base text-muted-foreground">
-          Start recording your first mood on the Track page.
+          Log your first mood to get started.
         </p>
       </div>
     );
@@ -66,10 +66,10 @@ const HistoryPage = () => {
     <div className="space-y-4 sm:space-y-6">
       <div className="text-center space-y-2 px-1">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          Mood History
+          History
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground">
-          View your mood change records
+          Every mood you've logged
         </p>
       </div>
 

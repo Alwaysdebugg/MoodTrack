@@ -18,11 +18,10 @@ const HomePage = () => {
     <div className="space-y-6 sm:space-y-8">
       <div className="text-center space-y-3 sm:space-y-4 px-1">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          Welcome to MoodTrack
+          Know yourself better.
         </h1>
         <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-          Track your mood changes, understand emotional patterns, and make every
-          day more meaningful.
+          Track how you feel. See what shapes your days.
         </p>
       </div>
 
@@ -30,12 +29,12 @@ const HomePage = () => {
         <Card className="text-center transition-shadow hover:shadow-md">
           <CardHeader className="p-4 sm:p-6">
             <Heart className="w-10 h-10 sm:w-12 sm:h-12 text-primary mx-auto mb-2" />
-            <CardTitle className="text-lg sm:text-xl">Track Mood</CardTitle>
-            <CardDescription>Quickly record your current mood</CardDescription>
+            <CardTitle className="text-lg sm:text-xl">Track</CardTitle>
+            <CardDescription>Capture how you feel right now</CardDescription>
           </CardHeader>
           <CardContent className="p-4 sm:p-6 pt-0">
             <Button asChild className="w-full min-h-[44px]">
-              <Link to="/track">Start Tracking</Link>
+              <Link to="/track">Log mood</Link>
             </Button>
           </CardContent>
         </Card>
@@ -43,12 +42,12 @@ const HomePage = () => {
         <Card className="text-center transition-shadow hover:shadow-md">
           <CardHeader className="p-4 sm:p-6">
             <TrendingUp className="w-10 h-10 sm:w-12 sm:h-12 text-primary mx-auto mb-2" />
-            <CardTitle className="text-lg sm:text-xl">Trend Analysis</CardTitle>
-            <CardDescription>View mood trends and statistics</CardDescription>
+            <CardTitle className="text-lg sm:text-xl">Trends</CardTitle>
+            <CardDescription>Spot patterns in your mood</CardDescription>
           </CardHeader>
           <CardContent className="p-4 sm:p-6 pt-0">
             <Button asChild className="w-full min-h-[44px]">
-              <Link to="/analysis">View Analysis</Link>
+              <Link to="/analysis">See trends</Link>
             </Button>
           </CardContent>
         </Card>
@@ -57,11 +56,11 @@ const HomePage = () => {
           <CardHeader className="p-4 sm:p-6">
             <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-primary mx-auto mb-2" />
             <CardTitle className="text-lg sm:text-xl">History</CardTitle>
-            <CardDescription>Browse past mood records</CardDescription>
+            <CardDescription>Look back at your journey</CardDescription>
           </CardHeader>
           <CardContent className="p-4 sm:p-6 pt-0">
             <Button asChild className="w-full min-h-[44px]">
-              <Link to="/history">View History</Link>
+              <Link to="/history">Browse</Link>
             </Button>
           </CardContent>
         </Card>
@@ -71,11 +70,10 @@ const HomePage = () => {
         <CardHeader className="p-4 sm:p-6">
           <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
-            Trend Analysis
+            Your Week
           </CardTitle>
           <CardDescription>
-            Mood curve (last 7 days) and distribution. Data shown is mock for
-            demo.
+            7-day mood curve and distribution
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 sm:p-6 pt-0">
@@ -87,11 +85,10 @@ const HomePage = () => {
         <CardHeader className="text-center p-4 sm:p-6">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Brain className="w-8 h-8 text-primary" />
-            <CardTitle className="text-2xl">AI Mood Analysis</CardTitle>
+            <CardTitle className="text-2xl">AI Insights</CardTitle>
           </div>
           <CardDescription className="text-base text-center">
-            Generate personalized emotional analysis reports based on your mood
-            records (coming soon).
+            Personalized mood analysis, powered by AI. Coming soon.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center p-4 sm:p-6 pt-0">

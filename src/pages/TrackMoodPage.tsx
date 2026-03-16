@@ -103,7 +103,7 @@ const TrackMoodPage = () => {
     setLoading(true);
     try {
       saveMoodEntry(moodEntry);
-      toast.success('Mood recorded successfully');
+      toast.success('Mood saved');
       setSelectedMood(null);
       setNote('');
       setSelectedTriggers([]);
@@ -118,11 +118,10 @@ const TrackMoodPage = () => {
     <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6 px-0 sm:px-0">
       <div className="text-center space-y-2 px-1">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          Track Your Mood
+          How are you?
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground">
-          Select the mood that best matches your current feelings and add some
-          notes
+          Pick a mood, add context, save.
         </p>
       </div>
 
@@ -130,7 +129,7 @@ const TrackMoodPage = () => {
         <Card>
           <CardHeader className="p-4 sm:p-6">
             <CardTitle className="text-base sm:text-lg">
-              How are you feeling today?
+              Right now, I feel...
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-6 pt-0">
@@ -185,13 +184,13 @@ const TrackMoodPage = () => {
 
         <Card>
           <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="text-base sm:text-lg">Add Notes</CardTitle>
+            <CardTitle className="text-base sm:text-lg">Notes</CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-6 pt-0">
             <Textarea
               value={note}
               onChange={e => setNote(e.target.value)}
-              placeholder="Record what happened today, or describe your feelings..."
+              placeholder="What's on your mind?"
               rows={4}
               className="resize-none"
             />
@@ -201,16 +200,15 @@ const TrackMoodPage = () => {
         <Card>
           <CardHeader className="p-4 sm:p-6">
             <CardTitle className="text-base sm:text-lg">
-              Share Settings
+              Sharing
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-4 sm:p-6 pt-0">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium">Share to Community</p>
+                <p className="font-medium">Post to community</p>
                 <p className="text-sm text-muted-foreground">
-                  When enabled, your mood entry will be displayed in the
-                  community
+                  Others can see and respond to your entry
                 </p>
               </div>
               <Switch checked={isPublic} onCheckedChange={setIsPublic} />
@@ -218,9 +216,9 @@ const TrackMoodPage = () => {
             {isPublic && (
               <div className="flex items-center justify-between pt-4 border-t">
                 <div>
-                  <p className="font-medium">Share Anonymously</p>
+                  <p className="font-medium">Stay anonymous</p>
                   <p className="text-sm text-muted-foreground">
-                    When enabled, your username will not be displayed
+                    Your name stays hidden
                   </p>
                 </div>
                 <Switch
